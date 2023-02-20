@@ -1,4 +1,4 @@
-# project-boilerplate
+# Fish demo
 
 ## Requirements and initialization
 
@@ -29,29 +29,3 @@ If you want to develop inside a container
 ## Endpoint to execute mock
 
 <http://localhost/api/mock/execute?mockScriptName=fillDBScript>
-
-## TODO
-
-- [ ] password recovery|reset
-
-- [ ] connect testing libraries
-
-- [ ] Move dependencies one level higher
-
-- [ ] Merge typescript, prettier and eslint configs and place it in project root directory
-
-- [ ] write script for fast adding new modules and connecting it to app module
-
-- [ ] write script for getting sql from all migrations into one .sql file which then will be fed to dbml documentation generator
-
-- [ ] add healthcheck
-
-- [ ] wrap mock into transaction
-
-- [ ] add removing expired tokens from whitelisted store
-
-- [ ] add redis as session token store
-
-- [ ] update customFetch in frontend to use latest version made in tda project
-
-- [ ] make universal data repo and way of typing so it will require to initialize this.repo only once in constructor
