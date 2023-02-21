@@ -53,6 +53,7 @@
     "@tippyjs/react": "^4.2.6",
     "@types/js-cookie": "^3.0.2",
     "@types/react-datepicker": "^4.8.0",
+    "@types/react-plotly.js": "^2.6.0",
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-window": "^1.8.5",

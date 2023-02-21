@@ -110,9 +110,3 @@ const GridWith2Rows = styled.div`
   gap: 20px;
   grid-template-columns: 1fr;
 `;
-
-function unpack(rows, key) {
-  return rows.map(function (row) {
-    return row[key];
-  });
-}
