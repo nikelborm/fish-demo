@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { sub } from 'date-fns';
 import { assertMockScriptNameIsCorrect } from 'src/config';
 import { repo, UserUseCase } from 'src/modules';
 import { AccessScopeType } from 'src/types';
@@ -9,6 +10,7 @@ export class MockDataUseCase {
     private readonly userUseCase: UserUseCase,
     private readonly userToAccessScopeRepo: repo.UserToAccessScopeRepo,
     private readonly accessScopeRepo: repo.AccessScopeRepo,
+    private readonly sensorMeasurementRepo: repo.SensorMeasurementRepo,
   ) {}
 
   async executeMock(scriptName?: string): Promise<void> {
@@ -41,5 +43,36 @@ export class MockDataUseCase {
       accessScopeId: systemAdminScope.id,
       userId: user.id,
     });
+  }
+
+  async fillSensorMeasurements(): Promise<void> {
+    await this.sensorMeasurementRepo.createMany(
+      this.#getFakeMeasurements('O2', 0.5, 2),
+    );
+
+    await this.sensorMeasurementRepo.createMany(
+      this.#getFakeMeasurements('Temp', 20, 40),
+    );
+  }
+
+  #getFakeMeasurements(
+    sensorCodeName: string,
+    minValue: number,
+    maxValue: number,
+  ): Parameters<repo.SensorMeasurementRepo['createMany']>[0] {
+    const sinDegrees = (angleDegrees: number): number =>
+      Math.sin((angleDegrees * Math.PI) / 180);
+    return Array.from({ length: 720 }, (_, i) => i).map(
+      (v): Parameters<repo.SensorMeasurementRepo['createMany']>[0][0] => ({
+        date: sub(new Date(), { seconds: 720 - v }),
+        value: `${
+          minValue +
+          (((sinDegrees(v) + 1) / 2) * (maxValue - minValue) +
+            ((maxValue - minValue) / 5) * Math.random()) *
+            0.8
+        }`,
+        sensorCodeName,
+      }),
+    );
   }
 }

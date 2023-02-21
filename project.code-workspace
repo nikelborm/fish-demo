@@ -103,6 +103,22 @@
         }
       },
       {
+        "label": "shallow clone apache superset ",
+        "type": "shell", // https://superset.apache.org/docs/installation/installing-superset-using-docker-compose/
+        "command": "git clone --depth 1 -b master https://github.com/apache/superset.git; cd superset;",
+        "problemMatcher": [],
+        "promptOnClose": true,
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": true,
+          "panel": "new",
+          "close": true,
+          "showReuseMessage": false,
+          "clear": true
+        }
+      },
+      {
         "label": "Restart dev",
         "type": "shell",
         "dependsOn": [
@@ -306,6 +322,22 @@
         "label": "Apply default mock to database",
         "type": "shell",
         "command": "curl http://localhost/api/mock/execute?mockScriptName=fillDBScript; echo",
+        "promptOnClose": false,
+        "problemMatcher": [],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": true,
+          "panel": "new",
+          "close": false,
+          "showReuseMessage": false,
+          "clear": true
+        }
+      },
+      {
+        "label": "Apply sensors mock to database",
+        "type": "shell",
+        "command": "curl http://localhost/api/mock/execute?mockScriptName=fillSensorMeasurements; echo",
         "promptOnClose": false,
         "problemMatcher": [],
         "presentation": {

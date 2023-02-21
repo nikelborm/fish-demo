@@ -5,3 +5,5 @@ export * from './refreshToken.dto';
 export * from './setMyPassword.dto';
 export * from './updateAccessScope.dto';
 export * from './useInviteLink.dto';
+export * from './createSensorMeasurement.dto';
+export * from './createSensorMeasurements.dto';

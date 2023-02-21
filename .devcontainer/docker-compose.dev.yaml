@@ -123,6 +123,7 @@ services:
       pgadmin-db-net-dev:
       vscode-db-net-dev:
       pgcli-db-net-dev:
+      apache_superset_network:
 
   postgres-admin-dev:
     image: dpage/pgadmin4:latest
@@ -158,6 +159,8 @@ networks:
       config:
         - subnet: 10.5.0.0/16
           gateway: 10.5.0.1
+  apache_superset_network:
+    external: true
 
   back-db-net-dev: {}
   pgadmin-db-net-dev: {}
