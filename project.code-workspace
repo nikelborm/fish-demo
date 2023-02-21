@@ -444,7 +444,7 @@
     "workbench.colorCustomizations": {},
     "editor.linkedEditing": true,
     "editor.minimap.enabled": false,
-    "workbench.editor.enablePreview": true,
+    "workbench.editor.enablePreview": false,
     "diffEditor.ignoreTrimWhitespace": true,
     "terminal.integrated.scrollback": 100000,
     "[sql]": {
@@ -513,6 +513,30 @@
     "editor.stickyScroll.enabled": true,
     "rapidapi.terminalLink.enabled": false,
     "files.exclude": {
+      "**/.git": false,
+      "**/.svn": false,
+      "**/.hg": false,
+      "**/CVS": false,
+      "**/.DS_Store": false,
+      "**/Thumbs.db": false,
+      "**/node_modules": false,
+      "**/.nvmrc": false,
+      "**/.prettierrc": false,
+      "**/tsconfig.build.json": false,
+      "**/yarn.lock": false,
+      "**/ormconfig.json": false,
+      "**/nest-cli.json": false,
+      ".env": false,
+      "**/.dockerignore": false,
+      "**/.htpasswd": false,
+      "**/.htpasswd_example": false,
+      "**/dev.nginx.template.conf": false,
+      "**/prod.nginx.template.conf": false,
+      "frontend/scripts": false,
+      "frontend/config": false,
+      "**/.github": false
+    },
+    "explorerExclude.backup": {
       "**/.git": true,
       "**/.svn": true,
       "**/.hg": true,
@@ -536,7 +560,6 @@
       "frontend/config": true,
       "**/.github": true
     },
-    "explorerExclude.backup": {},
     "window.title": "${dirty}${activeEditorLong}${separator}${profileName}"
   },
   "launch": {

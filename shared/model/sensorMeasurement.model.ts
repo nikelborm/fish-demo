@@ -1,9 +1,27 @@
+import { Type } from 'class-transformer';
+import {
+  IsDate,
+  IsNumber,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
+
 export class ISensorMeasurement {
+  @IsNumber()
   id!: number;
 
-  sensorCodeName!: string;
-
+  @IsDate()
+  @Type(() => Date)
   date!: Date;
 
+  @IsString()
+  @MaxLength(5)
+  @MinLength(1)
+  sensorCodeName!: string;
+
+  @IsString()
+  @MaxLength(50)
+  @MinLength(1)
   value!: string;
 }
