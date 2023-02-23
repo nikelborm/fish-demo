@@ -6,9 +6,12 @@ export function useRegistrationMutation() {
   const { mutate, isLoading, isError, isSuccess, data } = useMutation(
     ({ confirm, ...user }: CreateUserDTO & { confirm: string }) =>
       user.password === confirm
-        ? customFetch<RegisterUserResponseDTO>('auth/local/register', {
+        ? customFetch('auth/local/register', {
             method: 'POST',
             needsAccessToken: false,
+            needsJsonResponseBodyParsing: true,
+            requestDTOclass: CreateUserDTO,
+            responseDTOclass: RegisterUserResponseDTO,
             body: user,
           })
         : Promise.reject(new Error('Passwords does not match!')),

@@ -1,10 +1,11 @@
-import { Post, Query, Request, UseGuards } from '@nestjs/common';
+import { Post, Request, UseGuards } from '@nestjs/common';
 import { ApiController, AuthorizedOnly, ValidatedBody } from 'src/tools';
 import {
   AuthedRequest,
   AuthTokenPairDTO,
   CreateUserDTO,
   EmptyResponseDTO,
+  LoginUserRequestDTO,
   RefreshTokenDTO,
   RegisterUserResponseDTO,
   UserAuthInfo,
@@ -19,9 +20,9 @@ export class AuthController {
   @Post('local/login')
   @UseGuards(LocalAuthGuard)
   async login(
-    // leave here for documentation generation
-    @Query('email') email: string,
-    @Query('password') password: string,
+    // this argument was left here for documentation generation
+    @ValidatedBody()
+    loginUserRequestDTO: LoginUserRequestDTO,
     @Request() req: { user: UserAuthInfo },
   ): Promise<AuthTokenPairDTO> {
     return await this.authUseCase.login(req.user);

@@ -9,16 +9,11 @@ export function customFetch<TRequest>(
   customFetchOptions: CustomFetchOptions<TRequest, 'notParse'>,
 ): Promise<Response>;
 
-export function customFetch<TRequest>(
-  target: RequestInfo,
-  customFetchOptions: CustomFetchOptions<TRequest, 'parseJsonBody'>,
-): Promise<Record<string, any>>;
-
 export function customFetch<TRequest, TResponse>(
   target: RequestInfo,
   customFetchOptions: CustomFetchOptions<
     TRequest,
-    'parseJsonBodyAndValidateWithSchemaDTO',
+    'parseJsonBodyAndValidateIfSchemaDTOProvided',
     TResponse
   >,
 ): Promise<TResponse>;
@@ -132,21 +127,18 @@ type CustomFetchOptions<
   TRequest,
   ResponseBodyParsingMode extends
     | 'notParse'
-    | 'parseJsonBody'
-    | 'parseJsonBodyAndValidateWithSchemaDTO',
+    | 'parseJsonBodyAndValidateIfSchemaDTOProvided',
   TResponse = Record<string, any>,
 > = [ResponseBodyParsingMode] extends ['notParse']
   ? CustomFetchOptionsBase<TRequest> & {
       needsJsonResponseBodyParsing: false;
     }
-  : [ResponseBodyParsingMode] extends ['parseJsonBody']
+  : [ResponseBodyParsingMode] extends [
+      'parseJsonBodyAndValidateIfSchemaDTOProvided',
+    ]
   ? CustomFetchOptionsBase<TRequest> & {
       needsJsonResponseBodyParsing: true;
-    }
-  : [ResponseBodyParsingMode] extends ['parseJsonBodyAndValidateWithSchemaDTO']
-  ? CustomFetchOptionsBase<TRequest> & {
-      needsJsonResponseBodyParsing: true;
-      responseDTOclass: new () => TResponse;
+      responseDTOclass?: new () => TResponse;
     }
   : never;
 
