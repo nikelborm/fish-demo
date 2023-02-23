@@ -15,18 +15,32 @@ export function useSensorsMeasurementsData(
       searchOptions.minDate,
       searchOptions.maxDate,
     ] as [string, string | undefined, Date | undefined, Date | undefined],
-    ({ queryKey: [, sensorCodeName, minDate, maxDate] }) =>
-      validate({ sensorCodeName, minDate, maxDate }, FindSensorMeasurementsDTO)
-        .length
-        ? Promise.reject(new Error('Validation error'))
-        : customFetch<FindManySensorMeasurementsResponseDTO>(
-            'sensorMeasurement/findMany',
-            {
-              method: 'POST',
-              needsAccessToken: true,
-              body: searchOptions,
+    async ({ queryKey: [, sensorCodeName, minDate, maxDate] }) => {
+      const searchOptionsTakenFromQueryKey = ;
+
+      const { errors } = validate(
+        searchOptionsTakenFromQueryKey,
+        FindSensorMeasurementsDTO,
+      );
+
+      return errors.length
+        ? await Promise.reject(
+            ,
+          )
+        : return customFetch('sensorMeasurement/findMany', {
+            method: 'POST',
+            needsAccessToken: true,
+            body: {
+              sensorCodeName,
+              minDate,
+              maxDate,
             },
-          ).then((d) => plainToClass(FindManySensorMeasurementsResponseDTO, d)),
+            requestDTOclass: FindSensorMeasurementsDTO,
+            responseDTOclass: FindManySensorMeasurementsResponseDTO,
+          }).then((d) =>
+            plainToClass(FindManySensorMeasurementsResponseDTO, d),
+          );
+    },
   );
   return {
     isLoading,

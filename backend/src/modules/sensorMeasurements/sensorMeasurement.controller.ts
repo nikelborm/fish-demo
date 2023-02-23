@@ -25,7 +25,7 @@ export class SensorMeasurementController {
   @Post('findMany')
   @AuthorizedOnly()
   async findManySensorMeasurements(
-    @ValidatedBody
+    @ValidatedBody()
     searchOptions: FindSensorMeasurementsDTO,
   ): Promise<FindManySensorMeasurementsResponseDTO> {
     const sensorMeasurements = await this.sensorMeasurementUseCase.findManyWith(
@@ -39,7 +39,7 @@ export class SensorMeasurementController {
   @Post('createOne')
   @AllowedFor(AccessEnum.SYSTEM_ADMIN)
   async createSensorMeasurement(
-    @ValidatedBody
+    @ValidatedBody()
     createSensorMeasurementDTO: CreateSensorMeasurementDTO,
   ): Promise<CreateOneSensorMeasurementResponse> {
     return await this.sensorMeasurementUseCase.createSensorMeasurement(
@@ -49,8 +49,8 @@ export class SensorMeasurementController {
 
   @Post('createMany')
   @AllowedFor(AccessEnum.SYSTEM_ADMIN)
-  async createSensorMeasurements(
-    @ValidatedBody
+  async createManySensorMeasurements(
+    @ValidatedBody()
     { sensorMeasurements }: CreateSensorMeasurementsDTO,
   ): Promise<CreateManySensorMeasurementsResponseDTO> {
     return {

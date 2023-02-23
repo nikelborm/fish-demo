@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-// import { WsAdapter } from '@nestjs/platform-ws';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { json, urlencoded } from 'express';
 import { existsSync } from 'fs';
@@ -15,8 +14,9 @@ import {
   TypedConfigService,
 } from './config';
 import { MockDataUseCase } from './mock';
+import { WebsocketGatewayAdapter } from './tools/websocketGatewayAdapter';
 
-const SKIP_MOCK = true;
+const SKIP_MOCK = false;
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -70,10 +70,10 @@ async function bootstrap(): Promise<void> {
       SwaggerModule.setup('/docs', app, document);
     }
 
-    // app.useWebSocketAdapter(new WsAdapter(app));
     app.use(json({ limit: '3mb' }));
     app.use(urlencoded({ limit: '3mb', extended: true }));
 
+    app.useWebSocketAdapter(new WebsocketGatewayAdapter(app, configService));
     await app.listen(port);
   }
 }

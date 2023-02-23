@@ -29,7 +29,7 @@ export class AuthController {
 
   @Post('local/register')
   async register(
-    @ValidatedBody
+    @ValidatedBody()
     createUserDTO: CreateUserDTO,
   ): Promise<RegisterUserResponseDTO> {
     return await this.authUseCase.registerNewUserAndLogin(createUserDTO);
@@ -55,7 +55,7 @@ export class AuthController {
 
   @Post('refresh')
   async refreshTokens(
-    @ValidatedBody
+    @ValidatedBody()
     { refreshToken }: RefreshTokenDTO,
   ): Promise<AuthTokenPairDTO> {
     return await this.authUseCase.useRefreshTokenAndGetNewTokenPair(

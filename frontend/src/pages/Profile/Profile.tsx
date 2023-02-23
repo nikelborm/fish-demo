@@ -2,20 +2,53 @@ import Plot from 'react-plotly.js';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSensorsMeasurementsData } from 'hooks';
+import { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
+
+const socket = io({
+  path: '/api/ws',
+  transports: ['websockets'],
+  autoConnect: false,
+});
 
 export function Profile() {
-  const asd = useParams();
-  // eslint-disable-next-line no-console
-  console.log('Profile useParams: ', asd);
-  const { isError, isLoading, isSuccess, sensorMeasurements } =
-    useSensorsMeasurementsData({});
-  console.log(
-    'isError, isLoading, isSuccess, sensorMeasurements: ',
-    isError,
-    isLoading,
-    isSuccess,
-    sensorMeasurements,
-  );
+  const { isSuccess, sensorMeasurements } = useSensorsMeasurementsData({});
+  const [isConnected, setIsConnected] = useState(socket.connected);
+  console.log('isConnected: ', isConnected);
+
+  const [lastPong, setLastPong] = useState<null | string>(null);
+  console.log('lastPong: ', lastPong);
+
+  useEffect(() => {
+    socket.on('connect', () => {
+      setIsConnected(true);
+    });
+
+    socket.on('disconnect', () => {
+      setIsConnected(false);
+    });
+
+    socket.on('pong', () => {
+      setLastPong(new Date().toISOString());
+    });
+    socket.connect();
+    return () => {
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.off('pong');
+    };
+  }, []);
+
+  const sendPing = () => {
+    socket.emit('ping');
+  };
+  if (!isSuccess) {
+    console.log(
+      'isError, isLoading, isSuccess, sensorMeasurements: ',
+      sensorMeasurements,
+    );
+  }
+
   if (!isSuccess || !sensorMeasurements) return <div>wait</div>;
   const tempMeasurements = sensorMeasurements.filter(
     ({ sensorCodeName }) => sensorCodeName === 'Temp',
@@ -26,6 +59,12 @@ export function Profile() {
 
   return (
     <div>
+      <p>Connected: {`${isConnected}`}</p>
+      <p>Last pong: {lastPong || '-'}</p>
+      <button onClick={sendPing} type="button">
+        Send ping
+      </button>
+
       <SuperPlot
         title="Кислород моль на литр"
         measurementsByOneSensor={o2Measurements}
