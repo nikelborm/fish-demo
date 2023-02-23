@@ -39,7 +39,7 @@ export async function customFetch<TRequest, TResponse>(
     needsJsonResponseBodyParsing: boolean;
     responseDTOclass?: new () => TResponse;
   },
-): Promise<Response | Record<string, any> | TResponse> {
+): CustomFetchResponse<TResponse> {
   const nextHeaders: HeadersInit = { ...headers };
 
   const options: RequestInit = {};
@@ -83,63 +83,39 @@ export async function customFetch<TRequest, TResponse>(
       : urlParamsAdditionalStringified;
   }
 
-  let getParsedResponse: (
-    res: Response,
-  ) => Promise<Response | Record<string, any> | TResponse>;
-
-  if (needsJsonResponseBodyParsing) {
-    if (responseDTOclass) {
-      getParsedResponse = getResponseParsingFn(true, responseDTOclass);
-    } else {
-      getParsedResponse = getResponseParsingFn(true);
-    }
-  } else getParsedResponse = getResponseParsingFn(false);
-
   const responseData = await fetch(urlToFetch.href, options).then(
-    getParsedResponse,
+    getResponseParsingFn(needsJsonResponseBodyParsing, responseDTOclass),
   );
 
   return responseData;
 }
 
-function getResponseParsingFn(
-  needsJsonResponseBodyParsing: false,
-): (res: Response) => Promise<Response>;
-
-function getResponseParsingFn(
-  needsJsonResponseBodyParsing: true,
-): (res: Response) => Promise<Record<string, any>>;
-
 function getResponseParsingFn<TResponse>(
-  needsJsonResponseBodyParsing: true,
-  validationModelDTO: new () => TResponse,
-): (res: Response) => Promise<TResponse>;
-
-function getResponseParsingFn<TResponse>(
-  needsJsonResponseBodyParsing: boolean,
+  shouldParseJsonBody: boolean,
   validationModelDTO?: new () => TResponse,
-): (res: Response) => Promise<Response | Record<string, any> | TResponse> {
-  if (!needsJsonResponseBodyParsing)
-    return async (
-      res: Response,
-    ): Promise<
-      [TResponse] extends [undefined] ? Record<string, any> : TResponse
-    > => {
-      const parsed = await res.json();
+): (res: Response) => CustomFetchResponse<TResponse> {
+  if (!shouldParseJsonBody) return async (response) => response;
 
-      if (!res.ok) throw parsed ?? res.statusText;
+  return async (
+    res: Response,
+  ): Promise<
+    [TResponse] extends [undefined] ? Record<string, any> : TResponse
+  > => {
+    const parsed = await res.json();
 
-      if (!validationModelDTO) return parsed;
+    if (!res.ok) throw parsed ?? res.statusText;
 
-      const { errors, payloadInstance } = validate(parsed, validationModelDTO);
-      if (errors.length)
-        throw new Error(
-          `Validation error: response body schema does not match DTO schema: ${JSON.stringify(
-            [payloadInstance, errors, validationModelDTO],
-          )}`,
-        );
-      return payloadInstance;
-    };
+    if (!validationModelDTO) return parsed;
+
+    const { errors, payloadInstance } = validate(parsed, validationModelDTO);
+    if (errors.length)
+      throw new Error(
+        `Validation error: response body schema does not match DTO schema: ${JSON.stringify(
+          [payloadInstance, errors, validationModelDTO],
+        )}`,
+      );
+    return payloadInstance;
+  };
 }
 
 type CustomFetchOptionsBase<TRequest> = {
@@ -162,17 +138,18 @@ type CustomFetchOptions<
 > = [ResponseBodyParsingMode] extends ['notParse']
   ? CustomFetchOptionsBase<TRequest> & {
       needsJsonResponseBodyParsing: false;
-      needsValidatingOfJsonBodyByDTO: false;
     }
   : [ResponseBodyParsingMode] extends ['parseJsonBody']
   ? CustomFetchOptionsBase<TRequest> & {
       needsJsonResponseBodyParsing: true;
-      needsValidatingOfJsonBodyByDTO: false;
     }
   : [ResponseBodyParsingMode] extends ['parseJsonBodyAndValidateWithSchemaDTO']
   ? CustomFetchOptionsBase<TRequest> & {
       needsJsonResponseBodyParsing: true;
-      needsValidatingOfJsonBodyByDTO: true;
       responseDTOclass: new () => TResponse;
     }
   : never;
+
+type CustomFetchResponse<TResponse> = Promise<
+  Response | Record<string, any> | TResponse
+>;

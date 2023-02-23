@@ -1,7 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import { useQuery } from 'react-query';
-import { plainToClass } from 'class-transformer';
-import { customFetch, validate } from 'utils';
+import { customFetch } from 'utils';
 import { FindManySensorMeasurementsResponseDTO } from 'types/shared/dto/response_body/query/findManySensorMeasurements.dto';
 import { FindSensorMeasurementsDTO } from 'types/shared/dto/request_body/query/findSensorMeasurements.dto';
 
@@ -15,32 +14,19 @@ export function useSensorsMeasurementsData(
       searchOptions.minDate,
       searchOptions.maxDate,
     ] as [string, string | undefined, Date | undefined, Date | undefined],
-    async ({ queryKey: [, sensorCodeName, minDate, maxDate] }) => {
-      const searchOptionsTakenFromQueryKey = ;
-
-      const { errors } = validate(
-        searchOptionsTakenFromQueryKey,
-        FindSensorMeasurementsDTO,
-      );
-
-      return errors.length
-        ? await Promise.reject(
-            ,
-          )
-        : return customFetch('sensorMeasurement/findMany', {
-            method: 'POST',
-            needsAccessToken: true,
-            body: {
-              sensorCodeName,
-              minDate,
-              maxDate,
-            },
-            requestDTOclass: FindSensorMeasurementsDTO,
-            responseDTOclass: FindManySensorMeasurementsResponseDTO,
-          }).then((d) =>
-            plainToClass(FindManySensorMeasurementsResponseDTO, d),
-          );
-    },
+    ({ queryKey: [, sensorCodeName, minDate, maxDate] }) =>
+      customFetch('sensorMeasurement/findMany', {
+        needsJsonResponseBodyParsing: true,
+        method: 'POST',
+        needsAccessToken: true,
+        body: {
+          sensorCodeName,
+          minDate,
+          maxDate,
+        },
+        requestDTOclass: FindSensorMeasurementsDTO,
+        responseDTOclass: FindManySensorMeasurementsResponseDTO,
+      }),
   );
   return {
     isLoading,
