@@ -23,9 +23,9 @@ export function Profile() {
 
     socket.on('disconnect', () => {});
 
-    socket.on('exception', (error) => {
+    socket.on('exception', (backendError) => {
       // eslint-disable-next-line no-console
-      console.error('error: ', error);
+      console.error('error: ', backendError);
     });
 
     socket.connect();

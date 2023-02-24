@@ -20,6 +20,16 @@ export class SensorMeasurementRepo {
     return await this.repo.find();
   }
 
+  async getAllPossibleSensors(): Promise<string[]> {
+    return (
+      await this.repo
+        .createQueryBuilder('sensorMeasurement')
+        .select('sensorMeasurement.sensorCodeName', 'sensor')
+        .distinct(true)
+        .getRawMany()
+    ).map(({ sensor }) => sensor);
+  }
+
   async findManyWith({
     sensorCodeName,
     maxDate,

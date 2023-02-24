@@ -19,6 +19,7 @@ export class WSMessageValidationPipe extends ValidationPipe {
     try {
       return await super.transform(value, metadata);
     } catch (e: any) {
+      console.log('e: ', e);
       if (e instanceof HttpException) {
         throw new WsException(e.getResponse());
       }
