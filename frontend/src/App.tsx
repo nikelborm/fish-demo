@@ -5,8 +5,6 @@ import {
   AuthPagesWrapper,
   renderAuthFallbackRoute,
 } from 'components';
-import { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
 import {
   routesOnlyForAuthedUsers,
   routesOnlyForNotAuthedUsers,
@@ -18,7 +16,6 @@ import {
 function App() {
   const session = useSession();
   const usePathData = usePath();
-
   return (
     <Routes>
       {Object.entries(publicRoutes).map(([path, { Component }]) => (

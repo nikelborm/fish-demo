@@ -16,7 +16,7 @@ import {
 import { MockDataUseCase } from './mock';
 import { WebsocketGatewayAdapter } from './tools/websocketGatewayAdapter';
 
-const SKIP_MOCK = false;
+const SKIP_MOCK = true;
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
