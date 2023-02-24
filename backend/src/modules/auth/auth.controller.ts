@@ -21,6 +21,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   async login(
     // this argument was left here for documentation generation
+    // the real processing of this handled by passport local strategy
     @ValidatedBody()
     loginUserRequestDTO: LoginUserRequestDTO,
     @Request() req: { user: UserAuthInfo },

@@ -49,12 +49,15 @@ export async function customFetch<TRequest, TResponse>(
   if (body) {
     if (requestDTOclass) {
       const { errors, payloadInstance } = validate(body, requestDTOclass);
-      if (errors.length)
+      if (errors.length) {
+        // eslint-disable-next-line no-console
+        console.error([payloadInstance, errors]);
         throw new Error(
           `Validation error: request body schema does not match DTO schema: ${JSON.stringify(
-            [payloadInstance, errors, requestDTOclass],
+            [payloadInstance, errors],
           )}`,
         );
+      }
     }
     options.body = JSON.stringify(body);
   }
@@ -103,12 +106,14 @@ function getResponseParsingFn<TResponse>(
     if (!validationModelDTO) return parsed;
 
     const { errors, payloadInstance } = validate(parsed, validationModelDTO);
-    if (errors.length)
+    if (errors.length) {
+      console.error([payloadInstance, errors]);
       throw new Error(
         `Validation error: response body schema does not match DTO schema: ${JSON.stringify(
-          [payloadInstance, errors, validationModelDTO],
+          [payloadInstance, errors],
         )}`,
       );
+    }
     return payloadInstance;
   };
 }

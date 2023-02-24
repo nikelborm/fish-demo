@@ -1,36 +1,33 @@
+// eslint-disable-next-line max-classes-per-file
 import {
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer,
 } from '@nestjs/websockets';
+import { IsNotEmpty, MinLength } from 'class-validator';
 import { UseWSMessageValidationPipe } from 'src/tools';
 import { SensorMeasurementUseCase } from './sensorMeasurement.useCase';
 
-// @WebSocketGateway({ namespace: 'sensorMeasurement' })
-@WebSocketGateway()
-export class SensorMeasurementWSGateway {
-  @WebSocketServer()
-  server;
+export class MessageDTO {
+  @IsNotEmpty()
+  username!: string;
 
+  @IsNotEmpty()
+  @MinLength(10)
+  text!: string;
+}
+
+@WebSocketGateway({ namespace: '/sensorMeasurement' })
+export class SensorMeasurementWSGateway {
   constructor(
     private readonly sensorMeasurementUseCase: SensorMeasurementUseCase,
   ) {}
 
   @UseWSMessageValidationPipe()
-  @SubscribeMessage('events')
-  async handleEvent(@MessageBody() data: string): Promise<string> {
-    console.log('data: ', data);
-    await this.sensorMeasurementUseCase.findManyWith({ sensorCodeName: 'O2' });
-    return data;
-  }
-
-  @UseWSMessageValidationPipe()
   @SubscribeMessage('asd')
-  async handleEvent2(@MessageBody() data: string): Promise<string> {
-    console.log('server: ', this.server);
+  async handleEvent2(@MessageBody() data: MessageDTO): Promise<string> {
     console.log('data: ', data);
     await this.sensorMeasurementUseCase.findManyWith({ sensorCodeName: 'O2' });
-    return data;
+    return 'a';
   }
 }

@@ -636,7 +636,7 @@
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
 
-"@types/passport-jwt@^3.0.6":
+"@types/passport-jwt@^3.0.8":
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/@types/passport-jwt/-/passport-jwt-3.0.8.tgz#c8a95bf7d8f330f2560f1b3d07605e23ac01469a"
   integrity sha512-VKJZDJUAHFhPHHYvxdqFcc5vlDht8Q2pL1/ePvKAgqRThDaCc84lSYOTQmnx3+JIkDlN+2KfhFhXIzlcVT+Pcw==
@@ -645,7 +645,7 @@
     "@types/jsonwebtoken" "*"
     "@types/passport-strategy" "*"
 
-"@types/passport-local@^1.0.34":
+"@types/passport-local@^1.0.35":
   version "1.0.35"
   resolved "https://registry.yarnpkg.com/@types/passport-local/-/passport-local-1.0.35.tgz#233d370431b3f93bb43cf59154fb7519314156d9"
   integrity sha512-K4eLTJ8R0yYW8TvCqkjB0pTKoqfUSdl5PfZdidTjV2ETV3604fQxtY6BHKjQWAx50WUS0lqzBvKv3LoI1ZBPeA==
@@ -3560,7 +3560,7 @@ parsimmon@^1.13.0:
   resolved "https://registry.yarnpkg.com/parsimmon/-/parsimmon-1.18.1.tgz#d8dd9c28745647d02fc6566f217690897eed7709"
   integrity sha512-u7p959wLfGAhJpSDJVYXoyMCXWYwHia78HhRBWqk7AIbxdmlrfdp5wX0l3xv/iTSH5HvhN9K7o26hwwpgS5Nmw==
 
-passport-jwt@^4.0.0:
+passport-jwt@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/passport-jwt/-/passport-jwt-4.0.1.tgz#c443795eff322c38d173faa0a3c481479646ec3d"
   integrity sha512-UCKMDYhNuGOBE9/9Ycuoyh7vP6jpeTp/+sfMJl7nLff/t6dps+iaeE0hhNkKN8/HZHcJ7lCdOyDxHdDoxoSvdQ==

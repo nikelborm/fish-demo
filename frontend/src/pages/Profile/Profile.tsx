@@ -1,53 +1,42 @@
 import Plot from 'react-plotly.js';
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSensorsMeasurementsData } from 'hooks';
-import { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
+import { useEffect } from 'react';
+import { Manager } from 'socket.io-client';
 
-const socket = io({
+const manager = new Manager({
+  transports: ['websocket', 'polling'],
   path: '/api/ws',
-  transports: ['websockets'],
   autoConnect: false,
 });
 
 export function Profile() {
   const { isSuccess, sensorMeasurements } = useSensorsMeasurementsData({});
-  const [isConnected, setIsConnected] = useState(socket.connected);
-  console.log('isConnected: ', isConnected);
-
-  const [lastPong, setLastPong] = useState<null | string>(null);
-  console.log('lastPong: ', lastPong);
+  const socket = manager.socket('/sensorMeasurement', {
+    auth: {
+      token: '123',
+    },
+  });
 
   useEffect(() => {
-    socket.on('connect', () => {
-      setIsConnected(true);
+    socket.on('connect', () => {});
+
+    socket.on('disconnect', () => {});
+
+    socket.on('exception', (error) => {
+      console.error('error: ', error);
     });
 
-    socket.on('disconnect', () => {
-      setIsConnected(false);
-    });
-
-    socket.on('pong', () => {
-      setLastPong(new Date().toISOString());
-    });
     socket.connect();
     return () => {
+      // do not forget to off every new socket.on event handlers
       socket.off('connect');
       socket.off('disconnect');
-      socket.off('pong');
+      socket.off('exception');
     };
   }, []);
 
-  const sendPing = () => {
-    socket.emit('ping');
-  };
-  if (!isSuccess) {
-    console.log(
-      'isError, isLoading, isSuccess, sensorMeasurements: ',
-      sensorMeasurements,
-    );
-  }
+  if (isSuccess) console.log('sensorMeasurements: ', sensorMeasurements);
 
   if (!isSuccess || !sensorMeasurements) return <div>wait</div>;
   const tempMeasurements = sensorMeasurements.filter(
@@ -59,12 +48,6 @@ export function Profile() {
 
   return (
     <div>
-      <p>Connected: {`${isConnected}`}</p>
-      <p>Last pong: {lastPong || '-'}</p>
-      <button onClick={sendPing} type="button">
-        Send ping
-      </button>
-
       <SuperPlot
         title="Кислород моль на литр"
         measurementsByOneSensor={o2Measurements}
@@ -134,6 +117,7 @@ function SuperPlot({ measurementsByOneSensor, title, color }) {
     />
   );
 }
+
 const GridWith3Columns = styled.div`
   display: grid;
   grid-template-rows: 1fr;

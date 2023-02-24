@@ -18,27 +18,19 @@ export class WebsocketGatewayAdapter
   handleConnection(client: unknown, ...args: any[]): void {
     console.log('client: any, ...args: ', client, args);
   }
+
   createIOServer(
     _: /* previously web socket port */ number,
     options?: ServerOptions,
   ): any {
-    console.log(
-      'this.configService.get(ConfigKeys.WEB_SOCKET_SERVER_PORT): ',
-      this.configService.get(ConfigKeys.WEB_SOCKET_SERVER_PORT),
-    );
-    console.log(
-      'this.configService.get(ConfigKeys.WEB_SOCKET_SERVER_PATH): ',
-      this.configService.get(ConfigKeys.WEB_SOCKET_SERVER_PATH),
-    );
     const server = super.createIOServer(
       this.configService.get(ConfigKeys.WEB_SOCKET_SERVER_PORT),
       {
         ...options,
-        transports: ['websocket'],
+        transports: ['websocket', 'polling'],
         path: `/${this.configService.get(ConfigKeys.WEB_SOCKET_SERVER_PATH)}`,
       },
     );
-    console.log(server);
     return server;
   }
 }
