@@ -31,11 +31,10 @@ export const routesOnlyForAuthedUsers: RoutesMap<AuthedRouteEntity> = {
     Component: Profile,
     isMenuPoint: true,
     menuTitle: 'Profile menu item',
-    pageTitle: 'Profile page header',
-    description: 'Профиль',
+    pageTitle: 'Дэшборд бассейна',
     menuIcon: <UserOutlined />,
     canUserOpenThisRoute: () => true,
-    Extras: () => <>Extras react component</>,
+    // Extras: () => <>Extras react component</>,
   },
   [RoutesEnum.USER]: {
     Component: Profile,

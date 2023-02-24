@@ -1,60 +1,30 @@
+import { useSensorsMeasurementsData } from 'hooks';
+import { useState } from 'react';
 import Plot from 'react-plotly.js';
 import styled from 'styled-components';
-import { useSensorsMeasurementsData } from 'hooks';
-import { validate } from 'utils';
-import { useEffect, useState } from 'react';
-import { Manager } from 'socket.io-client';
 import { ISensorMeasurement } from 'types';
-
-const manager = new Manager({
-  transports: ['websocket', 'polling'],
-  path: '/api/ws',
-  autoConnect: false,
-});
+import { getWsMessageValidator, useSocket } from 'utils';
 
 export function Profile() {
   const { isSuccess, sensorMeasurements } = useSensorsMeasurementsData({});
+
   const { getLatestMeasurementsFor, setNewLatestMeasurements } =
     useLatestMeasurements();
+
   const validateAndTransformMeasurement =
     getWsMessageValidator(ISensorMeasurement);
-  const socket = manager.socket('/sensorMeasurement', {
-    auth: {
-      token: '123',
+
+  useSocket({
+    namespace: '/',
+    handlers: {
+      many: (messages) =>
+        setNewLatestMeasurements(messages.map(validateAndTransformMeasurement)),
+      latest: (messages) =>
+        setNewLatestMeasurements(messages.map(validateAndTransformMeasurement)),
+      one: (message) =>
+        setNewLatestMeasurements([validateAndTransformMeasurement(message)]),
     },
   });
-
-  useEffect(() => {
-    socket.on('connect', () => {});
-
-    socket.on('disconnect', () => {});
-
-    socket.on('many', (messages: any[]) =>
-      setNewLatestMeasurements(messages.map(validateAndTransformMeasurement)),
-    );
-    socket.on('latest', (messages: any[]) =>
-      setNewLatestMeasurements(messages.map(validateAndTransformMeasurement)),
-    );
-    socket.on('one', (message) =>
-      setNewLatestMeasurements([validateAndTransformMeasurement(message)]),
-    );
-
-    socket.on('exception', (backendError) => {
-      // eslint-disable-next-line no-console
-      console.error('error: ', backendError);
-    });
-
-    socket.connect();
-    return () => {
-      // do not forget to off every new socket.on event handlers
-      socket.off('connect');
-      socket.off('disconnect');
-      socket.off('many');
-      socket.off('latest');
-      socket.off('one');
-      socket.off('exception');
-    };
-  }, []);
 
   // eslint-disable-next-line no-console
   if (isSuccess) console.log('sensorMeasurements: ', sensorMeasurements);
@@ -68,20 +38,57 @@ export function Profile() {
   );
 
   return (
-    <div>
-      <p>Latest value for O2 is {getLatestMeasurementsFor('O2')?.value}</p>
-      <p>Latest value for Temp is {getLatestMeasurementsFor('Temp')?.value}</p>
+    <MainWrapper>
+      <VideoBox />
       <SuperPlot
         title="Кислород моль на литр"
         measurementsByOneSensor={o2Measurements}
         color="blue"
       />
+      <RealTimeSensorGrid>
+        <RealTimeSensorInfo invert>
+          <RealTimeSensorName>°C</RealTimeSensorName>
+          <RealTimeSensorValue>
+            {parseFloat(
+              parseFloat(
+                getLatestMeasurementsFor('Temp')?.value || '0',
+              ).toFixed(2),
+            )}
+          </RealTimeSensorValue>
+        </RealTimeSensorInfo>
+        <RealTimeSensorInfo>
+          <RealTimeSensorName>
+            O<sub>2</sub>
+          </RealTimeSensorName>
+          <RealTimeSensorValue>
+            {parseFloat(
+              parseFloat(getLatestMeasurementsFor('O2')?.value || '0').toFixed(
+                2,
+              ),
+            )}
+          </RealTimeSensorValue>
+        </RealTimeSensorInfo>
+        <RealTimeSensorInfo invert>
+          <RealTimeSensorName>Ph</RealTimeSensorName>
+          <RealTimeSensorValue>
+            {parseFloat(
+              parseFloat(getLatestMeasurementsFor('Ph')?.value || '0').toFixed(
+                2,
+              ),
+            )}
+          </RealTimeSensorValue>
+        </RealTimeSensorInfo>
+        <BehavioralInfo>
+          Тип поведения:{' '}
+          {getLatestMeasurementsFor('behavior')?.value || 'Норма'}
+        </BehavioralInfo>
+      </RealTimeSensorGrid>
       <SuperPlot
         title="Температура oC"
         color="red"
         measurementsByOneSensor={tempMeasurements}
       />
-    </div>
+    </MainWrapper>
   );
 }
 
@@ -141,20 +148,61 @@ function SuperPlot({ measurementsByOneSensor, title, color }) {
   );
 }
 
-const GridWith3Columns = styled.div`
+const RealTimeSensorGrid = styled.div`
   display: grid;
-  grid-template-rows: 1fr;
   width: 100%;
   gap: 20px;
+  place-items: center center;
   grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 2fr 1fr;
 `;
 
-const GridWith2Rows = styled.div`
+const RealTimeSensorInfo = styled.div<{ invert?: boolean }>`
+  display: flex;
+  flex-flow: column nowrap;
+  border-radius: 15px;
+  width: 140px;
+  height: 180px;
+  color: ${(props) => (props.invert ? 'white' : '#5aa7ff')};
+  background-color: ${(props) => (!props.invert ? 'white' : '#5aa7ff')};
+  font-weight: 700;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
+  border-top: 1px solid #eee;
+  border-left: 1px solid #eee;
+`;
+
+const BehavioralInfo = styled.div<{ invert?: boolean }>`
   display: grid;
-  grid-template-rows: 1fr 400px;
-  width: 100%;
-  gap: 20px;
-  grid-template-columns: 1fr;
+  place-items: center;
+  border-radius: 15px;
+  width: 500px;
+  height: 60px;
+  grid-column: 1 / 4;
+  font-size: 26px;
+  color: ${(props) => (props.invert ? 'white' : '#5aa7ff')};
+  background-color: ${(props) => (!props.invert ? 'white' : '#5aa7ff')};
+  font-weight: 700;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
+  border-top: 1px solid #eee;
+  border-left: 1px solid #eee;
+`;
+
+const RealTimeSensorName = styled.div`
+  padding-left: 15px;
+  padding-top: 15px;
+  font-size: 20px;
+`;
+
+const RealTimeSensorValue = styled.div`
+  place-items: center;
+  height: 100%;
+  display: grid;
+  align-items: center;
+  font-size: 42px;
+`;
+
+const VideoBox = styled.div`
+  background-color: black;
 `;
 
 function useLatestMeasurements() {
@@ -184,15 +232,12 @@ function useLatestMeasurements() {
   };
 }
 
-function getWsMessageValidator<T>(dto: new () => T) {
-  function validateWsMessage(message: any) {
-    const { errors, payloadInstance } = validate<T>(message, dto);
-    if (errors.length) {
-      throw new Error(
-        `WS incoming message validation error: ${JSON.stringify(errors)}`,
-      );
-    }
-    return payloadInstance;
-  }
-  return validateWsMessage;
-}
+const MainWrapper = styled.div`
+  /* background-color: gray; */
+  height: 100%;
+  overflow-y: hidden;
+  display: grid;
+  grid-gap: 30px;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+`;
