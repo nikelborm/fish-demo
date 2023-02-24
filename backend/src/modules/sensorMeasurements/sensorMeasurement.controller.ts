@@ -1,11 +1,5 @@
 import { Post } from '@nestjs/common';
-import {
-  AccessEnum,
-  AllowedFor,
-  ApiController,
-  AuthorizedOnly,
-  ValidatedBody,
-} from 'src/tools';
+import { ApiController, ValidatedBody } from 'src/tools';
 import {
   CreateManySensorMeasurementsResponseDTO,
   CreateOneSensorMeasurementResponse,
@@ -23,7 +17,7 @@ export class SensorMeasurementController {
   ) {}
 
   @Post('findMany')
-  @AuthorizedOnly()
+  // @AuthorizedOnly()
   async findManySensorMeasurements(
     @ValidatedBody()
     searchOptions: FindSensorMeasurementsDTO,
@@ -36,8 +30,19 @@ export class SensorMeasurementController {
     };
   }
 
+  // @Get('latestForEachSensor')
+  // // @AuthorizedOnly()
+  // async getLatestMeasurementsForEachSensor(): Promise<FindManySensorMeasurementsResponseDTO> {
+  //   const sensorMeasurements = await this.sensorMeasurementUseCase.findManyWith(
+  //     searchOptions,
+  //   );
+  //   return {
+  //     sensorMeasurements,
+  //   };
+  // }
+
   @Post('createOne')
-  @AllowedFor(AccessEnum.SYSTEM_ADMIN)
+  // @AllowedFor(AccessEnum.SYSTEM_ADMIN)
   async createSensorMeasurement(
     @ValidatedBody()
     createSensorMeasurementDTO: CreateSensorMeasurementDTO,
@@ -48,7 +53,7 @@ export class SensorMeasurementController {
   }
 
   @Post('createMany')
-  @AllowedFor(AccessEnum.SYSTEM_ADMIN)
+  // @AllowedFor(AccessEnum.SYSTEM_ADMIN)
   async createManySensorMeasurements(
     @ValidatedBody()
     { sensorMeasurements }: CreateSensorMeasurementsDTO,

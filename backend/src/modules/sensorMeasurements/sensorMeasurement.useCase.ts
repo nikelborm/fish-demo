@@ -1,21 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { WebSocketServer } from '@nestjs/websockets';
-import { Server } from 'socket.io';
 import {
   CreateSensorMeasurementDTO,
   FindSensorMeasurementsDTO,
   ISensorMeasurement,
 } from 'src/types';
 import { repo } from '../infrastructure';
+import { SensorMeasurementWSGateway } from './sensorMeasurements.gateway';
 
 @Injectable()
 export class SensorMeasurementUseCase {
   constructor(
     private readonly sensorMeasurementRepo: repo.SensorMeasurementRepo,
+    private readonly wsGateway: SensorMeasurementWSGateway,
   ) {}
-
-  @WebSocketServer()
-  server!: Server;
 
   async findManyWith(
     searchOptions: FindSensorMeasurementsDTO,
@@ -28,15 +25,7 @@ export class SensorMeasurementUseCase {
   ): Promise<ISensorMeasurement[]> {
     const insertedSensorMeasurements =
       await this.sensorMeasurementRepo.createMany(sensorMeasurements);
-    this.server
-      .to(
-        [
-          ...new Set(
-            sensorMeasurements.map(({ sensorCodeName }) => sensorCodeName),
-          ),
-        ].map((sensor) => `newSensorMeasurement{${sensor}}`),
-      )
-      .emit('manyNewMeasurements', insertedSensorMeasurements);
+    this.wsGateway.broadcastManyNew(insertedSensorMeasurements);
     return insertedSensorMeasurements;
   }
 
@@ -45,9 +34,7 @@ export class SensorMeasurementUseCase {
   ): Promise<ISensorMeasurement> {
     const insertedSensorMeasurement =
       await this.sensorMeasurementRepo.createOne(sensorMeasurement);
-    this.server
-      .to(`newSensorMeasurement{${sensorMeasurement.sensorCodeName}}`)
-      .emit('manyNewMeasurements', insertedSensorMeasurement);
+    this.wsGateway.broadcastOneNew(insertedSensorMeasurement);
     return insertedSensorMeasurement;
   }
 }
