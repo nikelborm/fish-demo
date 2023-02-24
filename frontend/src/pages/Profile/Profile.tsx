@@ -1,8 +1,10 @@
 import Plot from 'react-plotly.js';
 import styled from 'styled-components';
 import { useSensorsMeasurementsData } from 'hooks';
-import { useEffect } from 'react';
+import { validate } from 'utils';
+import { useEffect, useState } from 'react';
 import { Manager } from 'socket.io-client';
+import { ISensorMeasurement } from 'types';
 
 const manager = new Manager({
   transports: ['websocket', 'polling'],
@@ -12,6 +14,10 @@ const manager = new Manager({
 
 export function Profile() {
   const { isSuccess, sensorMeasurements } = useSensorsMeasurementsData({});
+  const { getLatestMeasurementsFor, setNewLatestMeasurements } =
+    useLatestMeasurements();
+  const validateAndTransformMeasurement =
+    getWsMessageValidator(ISensorMeasurement);
   const socket = manager.socket('/sensorMeasurement', {
     auth: {
       token: '123',
@@ -23,6 +29,16 @@ export function Profile() {
 
     socket.on('disconnect', () => {});
 
+    socket.on('many', (messages: any[]) =>
+      setNewLatestMeasurements(messages.map(validateAndTransformMeasurement)),
+    );
+    socket.on('latest', (messages: any[]) =>
+      setNewLatestMeasurements(messages.map(validateAndTransformMeasurement)),
+    );
+    socket.on('one', (message) =>
+      setNewLatestMeasurements([validateAndTransformMeasurement(message)]),
+    );
+
     socket.on('exception', (backendError) => {
       // eslint-disable-next-line no-console
       console.error('error: ', backendError);
@@ -33,6 +49,9 @@ export function Profile() {
       // do not forget to off every new socket.on event handlers
       socket.off('connect');
       socket.off('disconnect');
+      socket.off('many');
+      socket.off('latest');
+      socket.off('one');
       socket.off('exception');
     };
   }, []);
@@ -50,6 +69,8 @@ export function Profile() {
 
   return (
     <div>
+      <p>Latest value for O2 is {getLatestMeasurementsFor('O2')?.value}</p>
+      <p>Latest value for Temp is {getLatestMeasurementsFor('Temp')?.value}</p>
       <SuperPlot
         title="Кислород моль на литр"
         measurementsByOneSensor={o2Measurements}
@@ -135,3 +156,43 @@ const GridWith2Rows = styled.div`
   gap: 20px;
   grid-template-columns: 1fr;
 `;
+
+function useLatestMeasurements() {
+  const [latestMeasurements, setLatestMeasurementsState] = useState<
+    Map<string, ISensorMeasurement>
+  >(new Map());
+
+  return {
+    getLatestMeasurementsFor(sensorName: string) {
+      return latestMeasurements.get(sensorName);
+    },
+    setNewLatestMeasurements(candidates: ISensorMeasurement[]) {
+      let hasChanged = false;
+      candidates.forEach((v) => {
+        const currentLatestDate = latestMeasurements.get(
+          v.sensorCodeName,
+        )?.date;
+        if (!currentLatestDate || currentLatestDate < v.date) {
+          latestMeasurements.set(v.sensorCodeName, v);
+          hasChanged = true;
+        }
+      });
+      if (hasChanged) {
+        setLatestMeasurementsState(new Map(latestMeasurements));
+      }
+    },
+  };
+}
+
+function getWsMessageValidator<T>(dto: new () => T) {
+  function validateWsMessage(message: any) {
+    const { errors, payloadInstance } = validate<T>(message, dto);
+    if (errors.length) {
+      throw new Error(
+        `WS incoming message validation error: ${JSON.stringify(errors)}`,
+      );
+    }
+    return payloadInstance;
+  }
+  return validateWsMessage;
+}

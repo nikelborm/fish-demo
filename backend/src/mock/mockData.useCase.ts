@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { sub } from 'date-fns';
 import { assertMockScriptNameIsCorrect } from 'src/config';
 import { repo, UserUseCase } from 'src/modules';
-import { AccessScopeType } from 'src/types';
+import { AccessScopeType, CreateSensorMeasurementDTO } from 'src/types';
 
 @Injectable()
 export class MockDataUseCase {
@@ -62,17 +62,22 @@ export class MockDataUseCase {
   ): Parameters<repo.SensorMeasurementRepo['createMany']>[0] {
     const sinDegrees = (angleDegrees: number): number =>
       Math.sin((angleDegrees * Math.PI) / 180);
-    return Array.from({ length: 720 }, (_, i) => i).map(
-      (v): Parameters<repo.SensorMeasurementRepo['createMany']>[0][0] => ({
-        date: sub(new Date(), { seconds: 720 - v }),
-        value: `${
-          minValue +
-          (((sinDegrees(v) + 1) / 2) * (maxValue - minValue) +
-            ((maxValue - minValue) / 5) * Math.random()) *
-            0.8
-        }`,
-        sensorCodeName,
-      }),
-    );
+    return Array.from({ length: 720 }, (_, i) => i)
+      .map(
+        (v): CreateSensorMeasurementDTO => ({
+          date: sub(new Date(), { seconds: 720 - v + Math.random() * 3 }),
+          value: `${
+            minValue +
+            0.8 *
+              (((sinDegrees(v + Math.random() * 60) + 1) / 2) *
+                (maxValue - minValue) +
+                ((maxValue - minValue) / 5) * Math.random()) -
+            1 +
+            Math.random()
+          }`,
+          sensorCodeName,
+        }),
+      )
+      .sort(({ date: a }, { date: b }) => a.getTime() - b.getTime());
   }
 }

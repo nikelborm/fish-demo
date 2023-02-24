@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   createManyWithRelations,
   createOneWithRelations,
-  NewEntity,
+  NewPlainEntity,
 } from 'src/tools';
 import { FindSensorMeasurementsDTO } from 'src/types';
 import { Between, Repository, LessThanOrEqual } from 'typeorm';
@@ -17,7 +17,7 @@ export class SensorMeasurementRepo {
   ) {}
 
   async getAll(): Promise<SensorMeasurement[]> {
-    return await this.repo.find();
+    return await this.repo.find({ order: { date: 'desc' } });
   }
 
   async getAllPossibleSensors(): Promise<string[]> {
@@ -57,6 +57,7 @@ export class SensorMeasurementRepo {
     minDate,
   }: FindSensorMeasurementsDTO): Promise<SensorMeasurement[]> {
     return await this.repo.find({
+      order: { date: 'desc' },
       where: {
         ...(sensorCodeName && { sensorCodeName }),
         ...(minDate && maxDate && { date: Between(minDate, maxDate) }),
@@ -67,7 +68,7 @@ export class SensorMeasurementRepo {
   }
 
   async createOne(
-    newSensorMeasurement: NewEntity<SensorMeasurement, 'id'>,
+    newSensorMeasurement: NewPlainEntity<SensorMeasurement, 'id'>,
   ): Promise<SensorMeasurement> {
     return (await createOneWithRelations(
       this.repo,
@@ -76,7 +77,7 @@ export class SensorMeasurementRepo {
   }
 
   async createMany(
-    newSensorMeasurements: NewEntity<SensorMeasurement, 'id'>[],
+    newSensorMeasurements: NewPlainEntity<SensorMeasurement, 'id'>[],
   ): Promise<SensorMeasurement[]> {
     return (await createManyWithRelations(
       this.repo,
