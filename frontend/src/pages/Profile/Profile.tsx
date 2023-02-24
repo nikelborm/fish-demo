@@ -24,6 +24,7 @@ export function Profile() {
     socket.on('disconnect', () => {});
 
     socket.on('exception', (error) => {
+      // eslint-disable-next-line no-console
       console.error('error: ', error);
     });
 
@@ -36,6 +37,7 @@ export function Profile() {
     };
   }, []);
 
+  // eslint-disable-next-line no-console
   if (isSuccess) console.log('sensorMeasurements: ', sensorMeasurements);
 
   if (!isSuccess || !sensorMeasurements) return <div>wait</div>;
