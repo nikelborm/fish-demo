@@ -164,7 +164,7 @@
         "dependsOn": [
           "Use docker builder"
         ],
-        "command": "DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose --env-file ./env/prod.env -f ./docker-compose.yaml up --build --remove-orphans --force-recreate -d; echo; echo $(docker inspect -f \"{{(index .NetworkSettings.Networks \\`${COMPOSE_PROJECT_NAME}_nginx-back-net\\`).IPAddress}}\" ${COMPOSE_PROJECT_NAME}_nginx-prod_1):80",
+        "command": "DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose --env-file ./env/prod.env -f ./docker-compose.yaml up --build --remove-orphans --force-recreate -d",
         "problemMatcher": [],
         "promptOnClose": true
       },
