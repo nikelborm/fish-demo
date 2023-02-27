@@ -15,7 +15,7 @@ export function Profile() {
     getWsMessageValidator(ISensorMeasurement);
 
   useSocket({
-    namespace: '/',
+    namespace: '/sensorMeasurement',
     handlers: {
       many: (messages) =>
         setNewLatestMeasurements(messages.map(validateAndTransformMeasurement)),

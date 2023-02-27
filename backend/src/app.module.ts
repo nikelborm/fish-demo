@@ -8,8 +8,10 @@ import {
   AccessScopeModule,
   AuthModule,
   InfrastructureModule,
+  PredictModule,
   SensorMeasurementModule,
   UserModule,
+  VideoLogModule,
 } from './modules';
 
 @Module({
@@ -20,6 +22,8 @@ import {
     AuthModule,
     UserModule,
     SensorMeasurementModule,
+    PredictModule,
+    VideoLogModule,
   ],
   controllers: [MockDataController],
   providers: [...Object.values(MockServices)],

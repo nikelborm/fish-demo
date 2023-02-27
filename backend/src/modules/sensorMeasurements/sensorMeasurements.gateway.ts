@@ -24,13 +24,15 @@ export class SensorMeasurementWSGateway implements OnGatewayConnection {
         'sensorCodeName',
       ),
     ).forEach(([sensorCodeName, sensorMeasurements]) => {
-      this.server.to(`new{${sensorCodeName}}`).emit('many', sensorMeasurements);
+      this.server
+        .to(`newSensorMeasurement/${sensorCodeName}`)
+        .emit('many', sensorMeasurements);
     });
   }
 
   broadcastOneNew(sensorMeasurement: ISensorMeasurement): void {
     this.server
-      .to(`new{${sensorMeasurement.sensorCodeName}}`)
+      .to(`newSensorMeasurement/${sensorMeasurement.sensorCodeName}`)
       .emit('one', sensorMeasurement);
   }
 
@@ -40,7 +42,7 @@ export class SensorMeasurementWSGateway implements OnGatewayConnection {
 
     await Promise.all(
       latestMeasurements.map(({ sensorCodeName }) =>
-        client.join(`new{${sensorCodeName}}`),
+        client.join(`newSensorMeasurement/${sensorCodeName}`),
       ),
     );
 
