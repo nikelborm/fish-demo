@@ -184,7 +184,7 @@
         "dependsOn": [
           "Use docker builder"
         ],
-        "command": "DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker buildx bake -f ./docker-compose.yml --set *.platform=linux/amd64,linux/arm64/v8 --pull --push",
+        "command": "DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker buildx bake -f ./docker-compose.yaml --set *.platform=linux/amd64,linux/arm64/v8 --pull --push",
         "problemMatcher": [],
         "promptOnClose": true
       },
@@ -194,7 +194,7 @@
         "dependsOn": [
           "Use docker builder"
         ],
-        "command": "DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker buildx bake -f ./docker-compose.yml --set *.platform=linux/amd64 --pull --push",
+        "command": "DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker buildx bake -f ./docker-compose.yaml --set *.platform=linux/amd64 --pull --push",
         "problemMatcher": [],
         "promptOnClose": true
       },
@@ -204,7 +204,7 @@
         "dependsOn": [
           "Use docker builder"
         ],
-        "command": "DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker buildx bake -f ./docker-compose.yml --set *.platform=linux/arm64/v8 --pull --push",
+        "command": "DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker buildx bake -f ./docker-compose.yaml --set *.platform=linux/arm64/v8 --pull --push",
         "problemMatcher": [],
         "promptOnClose": true
       },
@@ -225,6 +225,16 @@
           "Run dev"
         ],
         "command": "DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose --env-file ./env/dev.env -f ./.devcontainer/docker-compose.dev.yaml exec backend-dev sh ./scripts/migrate.sh",
+        "problemMatcher": [],
+        "promptOnClose": true
+      },
+      {
+        "label": "Migrate prod database",
+        "type": "shell",
+        "dependsOn": [
+          "Run dev"
+        ],
+        "command": "DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose --env-file ./env/dev.env -f ./docker-compose.yaml exec backend-prod sh ./scripts/migrate.sh",
         "problemMatcher": [],
         "promptOnClose": true
       },
@@ -486,7 +496,7 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "yaml.schemas": {
-        "file:///home/nikel/.vscode/extensions/atlassian.atlascode-2.10.12/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml"
+        "file:///home/nikel/.vscode/extensions/atlassian.atlascode-2.10.12/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yaml"
     },
     "atlascode.bitbucket.enabled": true,
     "atlascode.showWelcomeOnInstall": false,
