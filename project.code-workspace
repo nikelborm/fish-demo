@@ -369,6 +369,22 @@
         }
       },
       {
+        "label": "Create empty migration",
+        "type": "shell",
+        "command": " . ${HOME}/.nvm/nvm.sh; cd ./backend; ./scripts/createEmptyMigration.sh",
+        "promptOnClose": false,
+        "problemMatcher": [],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": true,
+          "panel": "new",
+          "close": false,
+          "showReuseMessage": false,
+          "clear": true
+        }
+      },
+      {
         "label": "Apply default mock to database",
         "type": "shell",
         "command": "curl http://localhost/api/mock/execute?mockScriptName=fillDBScript; echo",
