@@ -177,7 +177,14 @@
         "dependsOn": [
           "Use docker builder"
         ],
-        "command": "DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose --env-file ./env/prod.env -f ./docker-compose.yaml up --no-build --pull --remove-orphans --force-recreate -d",
+        "command": "DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose --env-file ./env/prod.env -f ./docker-compose.yaml up --no-build --pull always --remove-orphans --force-recreate -d",
+        "problemMatcher": [],
+        "promptOnClose": true
+      },
+      {
+        "label": "docker stats",
+        "type": "shell",
+        "command": "docker network ls; echo; docker stats --no-stream",
         "problemMatcher": [],
         "promptOnClose": true
       },
