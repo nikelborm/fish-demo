@@ -18,7 +18,5 @@ export class CreatePredictDTO {
   predictCodeName!: string;
 
   @IsNumber()
-  @MaxLength(50)
-  @MinLength(1)
   value!: number;
 }

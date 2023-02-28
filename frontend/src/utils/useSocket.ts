@@ -1,18 +1,11 @@
 import { Manager } from 'socket.io-client';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 const socketManager = new Manager({
   transports: ['websocket', 'polling'],
   path: '/api/ws',
   autoConnect: false,
 });
-// const manager =
-
-// export const MyGlobalContext = createContext<{ manager: Manager }>({
-//   manager: socketManager,
-// });
-
-// export const WebSocketManagerContextProvider = () => <MyGlobalContext.Provider value={}/>;
 
 export function useSocket(config: {
   namespace: string;
@@ -20,7 +13,6 @@ export function useSocket(config: {
   onConnect?: () => void;
   onDisconnect?: () => void;
 }) {
-  // const ref =  useRef({});
   const socket = socketManager.socket(config.namespace, {
     auth: {
       // TODO: подключить сюда токен из локалхоста
