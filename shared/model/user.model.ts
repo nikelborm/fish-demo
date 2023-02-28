@@ -23,6 +23,8 @@ export class IUser {
 
   phone?: string;
 
+  avatarURL?: string;
+
   createdAt!: Date;
 
   updatedAt!: Date;
