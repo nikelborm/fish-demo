@@ -3,6 +3,7 @@ services:
   nginx-prod:
     image: "${DOCKER_HUB_NICKNAME}/private:${COMPOSE_PROJECT_NAME}-nginx-prod"
     restart: always
+    network_mode: "host"
     depends_on:
       - backend-prod
     build:
@@ -14,6 +15,7 @@ services:
     environment:
       - TZ=${TZ}
       - GENERATE_SOURCEMAP=${GENERATE_SOURCEMAP}
+      - INNER_NGINX_HTTP_PORT=${INNER_NGINX_HTTP_PORT}
       - EXTERNAL_NGINX_HTTP_PORT=${EXTERNAL_NGINX_HTTP_PORT}
       - INNER_BACKEND_HTTP_SERVER_PORT=${INNER_BACKEND_HTTP_SERVER_PORT}
       - INNER_BACKEND_WS_SERVER_PORT=${INNER_BACKEND_WS_SERVER_PORT}

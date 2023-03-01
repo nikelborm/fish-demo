@@ -4,16 +4,53 @@ import Plot from 'react-plotly.js';
 import styled from 'styled-components';
 import { ISensorMeasurement } from 'types';
 import { getWsMessageValidator, useSocket } from 'utils';
+import { mockVideoSrc } from 'assets';
 
 export function Profile() {
   const { isSuccess, sensorMeasurements } = useSensorsMeasurementsData({});
   const { refOfVideoElement } = useVideo();
 
+  // eslint-disable-next-line no-console
+  if (isSuccess) console.log('sensorMeasurements: ', sensorMeasurements);
+
+  if (!isSuccess || !sensorMeasurements) return <div>wait</div>;
+  const tempMeasurements = sensorMeasurements.filter(
+    ({ sensorCodeName }) => sensorCodeName === 'Temp',
+  );
+  const o2Measurements = sensorMeasurements
+    .filter(({ sensorCodeName }) => sensorCodeName === 'O2')
+    .map((meauserement) => ({
+      ...meauserement,
+      value: meauserement.value * 100,
+    }));
+
+  return (
+    <MainWrapper>
+      <VideoBoxWrapper>
+        <VideoBox autoPlay playsInline ref={refOfVideoElement} />
+      </VideoBoxWrapper>
+      <SuperPlot
+        title="Кислород (%)"
+        measurementsByOneSensor={o2Measurements}
+        color="blue"
+        min={80}
+        max={120}
+      />
+      <LiveSensors />
+      <SuperPlot
+        title="Температура (°C)"
+        color="red"
+        min={19}
+        max={20}
+        measurementsByOneSensor={tempMeasurements}
+      />
+    </MainWrapper>
+  );
+}
+
+function LiveSensors() {
   const { getLatestMeasurementsFor, setNewLatestMeasurements } =
     useLatestMeasurements();
-
-  const validateAndTransformMeasurement =
-    getWsMessageValidator(ISensorMeasurement);
 
   useSocket({
     namespace: '/sensorMeasurement',
@@ -27,69 +64,53 @@ export function Profile() {
     },
   });
 
-  // eslint-disable-next-line no-console
-  if (isSuccess) console.log('sensorMeasurements: ', sensorMeasurements);
-
-  if (!isSuccess || !sensorMeasurements) return <div>wait</div>;
-  const tempMeasurements = sensorMeasurements.filter(
-    ({ sensorCodeName }) => sensorCodeName === 'Temp',
-  );
-  const o2Measurements = sensorMeasurements.filter(
-    ({ sensorCodeName }) => sensorCodeName === 'O2',
-  );
-
   return (
-    <MainWrapper>
-      <VideoBoxWrapper>
-        <VideoBox autoPlay playsInline ref={refOfVideoElement} />
-      </VideoBoxWrapper>
-      <SuperPlot
-        title="Кислород моль на литр"
-        measurementsByOneSensor={o2Measurements}
-        color="blue"
-      />
-      <RealTimeSensorGrid>
-        <RealTimeSensorInfo invert>
-          <RealTimeSensorName>°C</RealTimeSensorName>
-          <RealTimeSensorValue>
-            {parseFloat(
-              (getLatestMeasurementsFor('Temp')?.value || 0).toFixed(3),
-            )}
-          </RealTimeSensorValue>
-        </RealTimeSensorInfo>
-        <RealTimeSensorInfo>
-          <RealTimeSensorName>
-            O<sub>2</sub>
-          </RealTimeSensorName>
-          <RealTimeSensorValue>
-            {parseFloat(
-              (getLatestMeasurementsFor('O2')?.value || 0).toFixed(3),
-            )}
-          </RealTimeSensorValue>
-        </RealTimeSensorInfo>
-        <RealTimeSensorInfo invert>
-          <RealTimeSensorName>Ph</RealTimeSensorName>
-          <RealTimeSensorValue>
-            {parseFloat(
-              (getLatestMeasurementsFor('pH')?.value || 0).toFixed(3),
-            )}
-          </RealTimeSensorValue>
-        </RealTimeSensorInfo>
-        <BehavioralInfo>
-          Тип поведения:{' '}
-          {getLatestMeasurementsFor('behavior')?.value || 'Норма'}
-        </BehavioralInfo>
-      </RealTimeSensorGrid>
-      <SuperPlot
-        title="Температура oC"
-        color="red"
-        measurementsByOneSensor={tempMeasurements}
-      />
-    </MainWrapper>
+    <RealTimeSensorGrid>
+      <RealTimeSensorInfo invert>
+        <RealTimeSensorName>t, °C</RealTimeSensorName>
+        <RealTimeSensorValue>
+          {parseFloat(
+            (getLatestMeasurementsFor('Temp')?.value || 0).toFixed(3),
+          )}
+        </RealTimeSensorValue>
+      </RealTimeSensorInfo>
+      <RealTimeSensorInfo>
+        <RealTimeSensorName>
+          O<sub>2</sub>
+        </RealTimeSensorName>
+        <RealTimeSensorValue>
+          {parseFloat(
+            ((getLatestMeasurementsFor('O2')?.value || 0) * 100).toFixed(3),
+          )}
+          %
+        </RealTimeSensorValue>
+      </RealTimeSensorInfo>
+      <RealTimeSensorInfo invert>
+        <RealTimeSensorName>Ph</RealTimeSensorName>
+        <RealTimeSensorValue>
+          {parseFloat((getLatestMeasurementsFor('pH')?.value || 0).toFixed(3))}
+        </RealTimeSensorValue>
+      </RealTimeSensorInfo>
+      <BehavioralInfo>
+        Тип поведения: {getLatestMeasurementsFor('behavior')?.value || 'Норма'}
+      </BehavioralInfo>
+    </RealTimeSensorGrid>
   );
 }
 
-function SuperPlot({ measurementsByOneSensor, title, color }) {
+function SuperPlot({
+  measurementsByOneSensor,
+  title,
+  color,
+  min,
+  max,
+}: {
+  measurementsByOneSensor: any;
+  title: any;
+  color: any;
+  min?: number;
+  max?: number;
+}) {
   const dates = measurementsByOneSensor.map(({ date }) => date);
   const datesNumbers = dates.map((e) => e.getTime());
   const maxDate = new Date(Math.max(...datesNumbers));
@@ -137,13 +158,16 @@ function SuperPlot({ measurementsByOneSensor, title, color }) {
         },
         yaxis: {
           // autorange: true,
-          range: [minValue, maxValue],
+          range: [min || minValue, max || maxValue],
           type: 'linear',
         },
       }}
     />
   );
 }
+
+const validateAndTransformMeasurement =
+  getWsMessageValidator(ISensorMeasurement);
 
 const RealTimeSensorGrid = styled.div`
   display: grid;
@@ -198,7 +222,7 @@ const RealTimeSensorValue = styled.div`
   font-size: 42px;
 `;
 
-const VideoBox = styled.video`
+const VideoBox = styled.video<{ shown?: boolean }>`
   background-color: black;
   position: absolute;
   height: 100%;
@@ -206,12 +230,15 @@ const VideoBox = styled.video`
   right: 0;
   margin-left: auto;
   margin-right: auto;
+  display: ${({ shown }) => (shown ? 'block' : 'none')};
   /* margin: 0% auto; */
 `;
 
 const VideoBoxWrapper = styled.div`
   background-color: black;
   position: relative;
+  background-image: url(${mockVideoSrc});
+  background-size: cover;
 `;
 
 function useLatestMeasurements() {
@@ -258,15 +285,19 @@ export function useVideo() {
 
   useEffect(() => {
     const { dc, pc } = initPeerConnectionAndDataChannel(ref);
-    void startDataStream(pc);
-    return getStopper({ dc, pc });
+    void startDataStream({ pc, refOfVideoElement: ref });
+    return getStopper({ dc, pc, refOfVideoElement: ref });
   }, []);
 
   return { refOfVideoElement: ref };
 }
 
-const getStopper = ({ pc, dc }) =>
+const getStopper = ({ pc, dc, refOfVideoElement }) =>
   function stop() {
+    if (refOfVideoElement.current?.style) {
+      // eslint-disable-next-line no-param-reassign
+      refOfVideoElement.current.style.display = 'none';
+    }
     // close data channel
     if (dc) dc.close();
 
@@ -288,7 +319,7 @@ const getStopper = ({ pc, dc }) =>
     }, 500);
   };
 
-async function startDataStream(pc) {
+async function startDataStream({ pc, refOfVideoElement }) {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
     for (const track of stream.getTracks()) {
@@ -321,6 +352,10 @@ async function startDataStream(pc) {
       method: 'POST',
     });
     await pc.setRemoteDescription(await response.json());
+    if (refOfVideoElement.current?.style) {
+      // eslint-disable-next-line no-param-reassign
+      refOfVideoElement.current.style.display = 'block';
+    }
   } catch (error) {
     console.log('error: ', error);
   }
@@ -333,6 +368,8 @@ function initPeerConnectionAndDataChannel(refOfVideoElement) {
   pc.addEventListener('track', (evt) => {
     // eslint-disable-next-line prefer-destructuring, no-param-reassign
     refOfVideoElement.current.srcObject = evt.streams[0];
+    // // eslint-disable-next-line no-param-reassign
+    // refOfVideoElement.current.style.display = 'block';
   });
 
   const ref = { dcInterval: null as any, timeStart: null as any };
