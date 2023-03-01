@@ -19,9 +19,9 @@ services:
       - EXTERNAL_NGINX_HTTP_PORT=${EXTERNAL_NGINX_HTTP_PORT}
       - INNER_BACKEND_HTTP_SERVER_PORT=${INNER_BACKEND_HTTP_SERVER_PORT}
       - INNER_BACKEND_WS_SERVER_PORT=${INNER_BACKEND_WS_SERVER_PORT}
-#     ports:
-#       - ${EXTERNAL_NGINX_HTTP_PORT}:${INNER_NGINX_HTTP_PORT}/tcp
-# #      - ${EXTERNAL_NGINX_HTTPS_PORT}:443/tcp
+    ports:
+      - ${EXTERNAL_NGINX_HTTP_PORT}:${INNER_NGINX_HTTP_PORT}/tcp
+#      - ${EXTERNAL_NGINX_HTTPS_PORT}:443/tcp
 #     networks:
 #       nginx-back-net-prod:
 #       # nginx-cv_webrtc_service-net-prod:

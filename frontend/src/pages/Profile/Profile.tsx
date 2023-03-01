@@ -4,7 +4,7 @@ import Plot from 'react-plotly.js';
 import styled from 'styled-components';
 import { ISensorMeasurement } from 'types';
 import { getWsMessageValidator, useSocket } from 'utils';
-import { mockVideoSrc } from 'assets';
+import { mockVideoSrc2 } from 'assets';
 
 export function Profile() {
   const { isSuccess, sensorMeasurements } = useSensorsMeasurementsData({});
@@ -33,15 +33,15 @@ export function Profile() {
         title="Кислород (%)"
         measurementsByOneSensor={o2Measurements}
         color="blue"
-        min={80}
-        max={120}
+        // min={80}
+        // max={120}
       />
       <LiveSensors />
       <SuperPlot
         title="Температура (°C)"
         color="red"
-        min={19}
-        max={20}
+        // min={19}
+        // max={20}
         measurementsByOneSensor={tempMeasurements}
       />
     </MainWrapper>
@@ -70,7 +70,7 @@ function LiveSensors() {
         <RealTimeSensorName>t, °C</RealTimeSensorName>
         <RealTimeSensorValue>
           {parseFloat(
-            (getLatestMeasurementsFor('Temp')?.value || 0).toFixed(3),
+            (getLatestMeasurementsFor('Temp')?.value || 0).toFixed(2),
           )}
         </RealTimeSensorValue>
       </RealTimeSensorInfo>
@@ -80,9 +80,15 @@ function LiveSensors() {
         </RealTimeSensorName>
         <RealTimeSensorValue>
           {parseFloat(
-            ((getLatestMeasurementsFor('O2')?.value || 0) * 100).toFixed(3),
+            ((getLatestMeasurementsFor('O2')?.value || 0) * 100).toFixed(2),
           )}
           %
+        </RealTimeSensorValue>
+      </RealTimeSensorInfo>
+      <RealTimeSensorInfo invert>
+        <RealTimeSensorName>Ph</RealTimeSensorName>
+        <RealTimeSensorValue>
+          {parseFloat((getLatestMeasurementsFor('pH')?.value || 0).toFixed(3))}
         </RealTimeSensorValue>
       </RealTimeSensorInfo>
       <RealTimeSensorInfo invert>
@@ -174,7 +180,7 @@ const RealTimeSensorGrid = styled.div`
   width: 100%;
   gap: 20px;
   place-items: center center;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 2fr 1fr;
 `;
 
@@ -198,7 +204,7 @@ const BehavioralInfo = styled.div<{ invert?: boolean }>`
   border-radius: 15px;
   width: 500px;
   height: 60px;
-  grid-column: 1 / 4;
+  grid-column: 1 / -1;
   font-size: 26px;
   color: ${(props) => (props.invert ? 'white' : '#5aa7ff')};
   background-color: ${(props) => (!props.invert ? 'white' : '#5aa7ff')};
@@ -237,7 +243,8 @@ const VideoBox = styled.video<{ shown?: boolean }>`
 const VideoBoxWrapper = styled.div`
   background-color: black;
   position: relative;
-  background-image: url(${mockVideoSrc});
+  background-position: 0px -200px;
+  background-image: url(${mockVideoSrc2});
   background-size: cover;
 `;
 
