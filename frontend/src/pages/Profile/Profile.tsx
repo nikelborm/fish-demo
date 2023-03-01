@@ -1,5 +1,5 @@
 import { useSensorsMeasurementsData } from 'hooks';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Plot from 'react-plotly.js';
 import styled from 'styled-components';
 import { ISensorMeasurement } from 'types';
@@ -7,6 +7,7 @@ import { getWsMessageValidator, useSocket } from 'utils';
 
 export function Profile() {
   const { isSuccess, sensorMeasurements } = useSensorsMeasurementsData({});
+  const { refOfVideoElement } = useVideo();
 
   const { getLatestMeasurementsFor, setNewLatestMeasurements } =
     useLatestMeasurements();
@@ -39,7 +40,9 @@ export function Profile() {
 
   return (
     <MainWrapper>
-      <VideoBox />
+      <VideoBoxWrapper>
+        <VideoBox autoPlay playsInline ref={refOfVideoElement} />
+      </VideoBoxWrapper>
       <SuperPlot
         title="Кислород моль на литр"
         measurementsByOneSensor={o2Measurements}
@@ -50,9 +53,7 @@ export function Profile() {
           <RealTimeSensorName>°C</RealTimeSensorName>
           <RealTimeSensorValue>
             {parseFloat(
-              parseFloat(
-                getLatestMeasurementsFor('Temp')?.value || '0',
-              ).toFixed(2),
+              (getLatestMeasurementsFor('Temp')?.value || 0).toFixed(3),
             )}
           </RealTimeSensorValue>
         </RealTimeSensorInfo>
@@ -62,9 +63,7 @@ export function Profile() {
           </RealTimeSensorName>
           <RealTimeSensorValue>
             {parseFloat(
-              parseFloat(getLatestMeasurementsFor('O2')?.value || '0').toFixed(
-                2,
-              ),
+              (getLatestMeasurementsFor('O2')?.value || 0).toFixed(3),
             )}
           </RealTimeSensorValue>
         </RealTimeSensorInfo>
@@ -72,9 +71,7 @@ export function Profile() {
           <RealTimeSensorName>Ph</RealTimeSensorName>
           <RealTimeSensorValue>
             {parseFloat(
-              parseFloat(getLatestMeasurementsFor('Ph')?.value || '0').toFixed(
-                2,
-              ),
+              (getLatestMeasurementsFor('pH')?.value || 0).toFixed(3),
             )}
           </RealTimeSensorValue>
         </RealTimeSensorInfo>
@@ -201,8 +198,20 @@ const RealTimeSensorValue = styled.div`
   font-size: 42px;
 `;
 
-const VideoBox = styled.div`
+const VideoBox = styled.video`
   background-color: black;
+  position: absolute;
+  height: 100%;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  /* margin: 0% auto; */
+`;
+
+const VideoBoxWrapper = styled.div`
+  background-color: black;
+  position: relative;
 `;
 
 function useLatestMeasurements() {
@@ -220,7 +229,9 @@ function useLatestMeasurements() {
         const currentLatestDate = latestMeasurements.get(
           v.sensorCodeName,
         )?.date;
-        if (!currentLatestDate || currentLatestDate < v.date) {
+        console.log(currentLatestDate, v.date);
+        // eslint-disable-next-line prettier/prettier
+        if (!currentLatestDate || (currentLatestDate < v.date)) {
           latestMeasurements.set(v.sensorCodeName, v);
           hasChanged = true;
         }
@@ -241,3 +252,108 @@ const MainWrapper = styled.div`
   grid-template-rows: 1fr 1fr;
   grid-template-columns: 1fr 1fr;
 `;
+
+export function useVideo() {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const { dc, pc } = initPeerConnectionAndDataChannel(ref);
+    void startDataStream(pc);
+    return getStopper({ dc, pc });
+  }, []);
+
+  return { refOfVideoElement: ref };
+}
+
+const getStopper = ({ pc, dc }) =>
+  function stop() {
+    // close data channel
+    if (dc) dc.close();
+
+    // close transceivers
+    if (pc.getTransceivers) {
+      for (const transceiver of pc.getTransceivers()) {
+        if (transceiver.stop) transceiver.stop();
+      }
+    }
+
+    // close local audio / video
+    for (const sender of pc.getSenders()) {
+      sender.track.stop();
+    }
+
+    // close peer connection
+    setTimeout(() => {
+      pc.close();
+    }, 500);
+  };
+
+async function startDataStream(pc) {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    for (const track of stream.getTracks()) {
+      pc.addTrack(track, stream);
+    }
+    await pc.setLocalDescription(await pc.createOffer());
+    await new Promise<void>((resolve) => {
+      if (pc.iceGatheringState === 'complete') {
+        resolve();
+      } else {
+        const checkState = () => {
+          if (pc.iceGatheringState === 'complete') {
+            pc.removeEventListener('icegatheringstatechange', checkState);
+            resolve();
+          }
+        };
+        pc.addEventListener('icegatheringstatechange', checkState);
+      }
+    });
+
+    const response = await fetch('/rtc/offer', {
+      body: JSON.stringify({
+        sdp: pc.localDescription.sdp,
+        type: pc.localDescription.type,
+        video_transform: 'none',
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    });
+    await pc.setRemoteDescription(await response.json());
+  } catch (error) {
+    console.log('error: ', error);
+  }
+}
+
+function initPeerConnectionAndDataChannel(refOfVideoElement) {
+  const pc = new RTCPeerConnection();
+
+  // connect audio / video
+  pc.addEventListener('track', (evt) => {
+    // eslint-disable-next-line prefer-destructuring, no-param-reassign
+    refOfVideoElement.current.srcObject = evt.streams[0];
+  });
+
+  const ref = { dcInterval: null as any, timeStart: null as any };
+
+  function currentStamp() {
+    if (ref.timeStart === null) {
+      ref.timeStart = new Date().getTime();
+      return 0;
+    }
+    return new Date().getTime() - ref.timeStart;
+  }
+
+  const dc = pc.createDataChannel('chat', { ordered: true });
+  dc.onclose = () => {
+    clearInterval(ref.dcInterval);
+  };
+  dc.onopen = () => {
+    ref.dcInterval = setInterval(() => {
+      const message = `ping ${currentStamp()}`;
+      dc.send(message);
+    }, 1000);
+  };
+  return { pc, dc };
+}

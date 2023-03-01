@@ -3,6 +3,7 @@ import {
   IsArray,
   IsDate,
   IsDefined,
+  IsNumber,
   IsString,
   MaxLength,
   MinLength,
@@ -22,10 +23,8 @@ export class CreateSensorMeasurementDTO
   @MinLength(1)
   sensorCodeName!: string;
 
-  @IsString()
-  @MaxLength(50)
-  @MinLength(1)
-  value!: string;
+  @IsNumber()
+  value!: number;
 }
 
 export class CreateSensorMeasurementsDTO {

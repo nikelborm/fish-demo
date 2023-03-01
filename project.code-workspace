@@ -612,8 +612,8 @@
       "**/.dockerignore": true,
       "**/.htpasswd": true,
       "**/.htpasswd_example": true,
-      "**/dev.nginx.template.conf": true,
-      "**/prod.nginx.template.conf": true,
+      "**/dev.nginx.template.conf": false,
+      "**/prod.nginx.template.conf": false,
       "frontend/scripts": true,
       "frontend/config": true,
       "**/.github": true

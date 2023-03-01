@@ -23,10 +23,8 @@ export class CreateOneSensorMeasurementResponse {
   @MinLength(1)
   sensorCodeName!: string;
 
-  @IsString()
-  @MaxLength(50)
-  @MinLength(1)
-  value!: string;
+  @IsNumber()
+  value!: number;
 }
 
 export class CreateManySensorMeasurementsResponseDTO {

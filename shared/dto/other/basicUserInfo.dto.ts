@@ -21,17 +21,17 @@ export class BasicUserInfoDTO {
   @IsString()
   @MinLength(2)
   @MaxLength(50)
-  nickname!: string;
-
-  @IsString()
-  @MinLength(2)
-  @MaxLength(50)
   patronymic!: string;
 
   @IsString()
   @MinLength(2)
   @MaxLength(50)
   gender!: string;
+
+  @IsString()
+  @MinLength(2)
+  @MaxLength(50)
+  nickname!: string;
 
   @IsOptional()
   @IsString()
@@ -46,5 +46,6 @@ export class BasicUserInfoDTO {
 
   @IsOptional()
   @IsUrl()
+  @MinLength(2)
   avatarURL?: string;
 }

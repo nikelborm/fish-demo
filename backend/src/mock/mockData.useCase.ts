@@ -68,15 +68,14 @@ export class MockDataUseCase {
       .map(
         (v): CreateSensorMeasurementDTO => ({
           date: sub(new Date(), { seconds: 720 - v + Math.random() * 3 }),
-          value: `${
+          value:
             minValue +
             0.8 *
               (((sinDegrees(v + Math.random() * 60) + 1) / 2) *
                 (maxValue - minValue) +
                 ((maxValue - minValue) / 5) * Math.random()) -
             1 +
-            Math.random()
-          }`,
+            Math.random(),
           sensorCodeName,
         }),
       )

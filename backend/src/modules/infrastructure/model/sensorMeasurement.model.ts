@@ -25,6 +25,16 @@ export class SensorMeasurement implements ISensorMeasurement {
   @Column({
     name: 'value',
     nullable: false,
+    transformer: {
+      from(raw: string): number {
+        return parseFloat(raw);
+      },
+      to(norRaw: number): string {
+        return norRaw.toString();
+      },
+    },
+
+    type: 'numeric',
   })
-  value!: string;
+  value!: number;
 }
