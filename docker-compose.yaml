@@ -11,6 +11,8 @@ services:
       target: prod_nginx_with_front_static
       args:
         - REACT_APP_NAME=${COMPOSE_PROJECT_NAME}
+        - INNER_NGINX_HTTP_PORT=${INNER_NGINX_HTTP_PORT}
+        - INNER_NGINX_HTTPS_PORT=${INNER_NGINX_HTTPS_PORT}
     environment:
       - TZ=${TZ}
       - GENERATE_SOURCEMAP=${GENERATE_SOURCEMAP}
