@@ -2,7 +2,6 @@ version: '3.9'
 services:
   nginx-dev:
     image: "${DOCKER_HUB_NICKNAME}/private:${COMPOSE_PROJECT_NAME}-nginx-dev"
-    network_mode: "host"
     restart: unless-stopped
     depends_on:
       - backend-dev
@@ -19,15 +18,14 @@ services:
       - INNER_DEV_FRONT_LIVE_RELOAD_SERVER_PORT=${INNER_DEV_FRONT_LIVE_RELOAD_SERVER_PORT}
       - INNER_BACKEND_HTTP_SERVER_PORT=${INNER_BACKEND_HTTP_SERVER_PORT}
       - INNER_BACKEND_WS_SERVER_PORT=${INNER_BACKEND_WS_SERVER_PORT}
-    # ports:
-    #   - ${EXTERNAL_NGINX_HTTP_PORT}:${INNER_NGINX_HTTP_PORT}/tcp
-    # networks:
-    #   nginx-front-net-dev:
-    #   nginx-back-net-dev:
-    #   hostnet:
-    #   # nginx-cv_webrtc_service-net-dev:
-    #   nginx-pgadmin-net-dev:
-    #     ipv4_address: 10.5.0.2
+    ports:
+      - ${EXTERNAL_NGINX_HTTP_PORT}:${INNER_NGINX_HTTP_PORT}/tcp
+    networks:
+      nginx-front-net-dev:
+      nginx-back-net-dev:
+      nginx-pgadmin-net-dev:
+        ipv4_address: 10.5.0.2
+      # nginx-cv_webrtc_service-net-dev:
 
   frontend-dev:
     image: "${DOCKER_HUB_NICKNAME}/private:${COMPOSE_PROJECT_NAME}-frontend-dev"
@@ -53,8 +51,6 @@ services:
         source: ../shared
         target: /app/src/types/shared
         consistency: delegated
-    ports:
-      - ${INNER_DEV_FRONT_LIVE_RELOAD_SERVER_PORT}:${INNER_DEV_FRONT_LIVE_RELOAD_SERVER_PORT}
     networks:
       nginx-front-net-dev:
       vscode-front-net-dev:
@@ -94,8 +90,6 @@ services:
       - DEV_BACKEND_DEBUGGER_PORT=${DEV_BACKEND_DEBUGGER_PORT}
     ports:
       - ${DEV_BACKEND_DEBUGGER_PORT}:${DEV_BACKEND_DEBUGGER_PORT}
-      - ${INNER_BACKEND_HTTP_SERVER_PORT}:${INNER_BACKEND_HTTP_SERVER_PORT}
-      - ${INNER_BACKEND_WS_SERVER_PORT}:${INNER_BACKEND_WS_SERVER_PORT}
     volumes:
       - type: bind
         source: ../backend/src
@@ -180,9 +174,6 @@ networks:
           gateway: 10.5.0.1
   apache_superset_network:
     external: true
-  # hostnet:
-  #   external: true
-  #   name: host
 
   back-db-net-dev: {}
   pgadmin-db-net-dev: {}

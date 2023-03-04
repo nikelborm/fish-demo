@@ -2,3 +2,4 @@ data
 node_modules
 .devcontainer/docker-compose.built.yaml
 detection
+__pycache__/

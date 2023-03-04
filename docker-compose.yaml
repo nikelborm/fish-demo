@@ -3,7 +3,6 @@ services:
   nginx-prod:
     image: "${DOCKER_HUB_NICKNAME}/private:${COMPOSE_PROJECT_NAME}-nginx-prod"
     restart: always
-    network_mode: "host"
     depends_on:
       - backend-prod
     build:
@@ -21,12 +20,12 @@ services:
       - INNER_BACKEND_WS_SERVER_PORT=${INNER_BACKEND_WS_SERVER_PORT}
     ports:
       - ${EXTERNAL_NGINX_HTTP_PORT}:${INNER_NGINX_HTTP_PORT}/tcp
-#      - ${EXTERNAL_NGINX_HTTPS_PORT}:443/tcp
-#     networks:
-#       nginx-back-net-prod:
-#       # nginx-cv_webrtc_service-net-prod:
-#       nginx-pgadmin-net-prod:
-#         ipv4_address: 10.5.0.2
+#      - ${EXTERNAL_NGINX_HTTPS_PORT}:${INNER_NGINX_HTTPS_PORT}/tcp
+    networks:
+      nginx-back-net-prod:
+      # nginx-cv_webrtc_service-net-prod:
+      nginx-pgadmin-net-prod:
+        ipv4_address: 10.5.0.2
 
     # volumes:
     #   - ./data/certbot/conf:/etc/letsencrypt
@@ -73,9 +72,6 @@ services:
       - type: bind # for running migrate script inside existing backend container
         source: ./backend/src/modules/infrastructure/
         target: /app/src/modules/infrastructure/
-    ports:
-      - ${INNER_BACKEND_HTTP_SERVER_PORT}:${INNER_BACKEND_HTTP_SERVER_PORT}
-      - ${INNER_BACKEND_WS_SERVER_PORT}:${INNER_BACKEND_WS_SERVER_PORT}
     networks:
       nginx-back-net-prod:
       back-db-net-prod:

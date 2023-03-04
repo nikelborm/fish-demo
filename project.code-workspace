@@ -182,6 +182,13 @@
         "promptOnClose": true
       },
       {
+        "label": "docker stats",
+        "type": "shell",
+        "command": "docker network ls; echo; docker stats --no-stream; echo; docker ps",
+        "problemMatcher": [],
+        "promptOnClose": true
+      },
+      {
         "label": "Up prod with pulling from local",
         "type": "shell",
         "dependsOn": [
@@ -198,13 +205,6 @@
           "Use docker builder"
         ],
         "command": "DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose --env-file ./env/prod.env -f ./docker-compose.yaml up --build --remove-orphans --force-recreate -d",
-        "problemMatcher": [],
-        "promptOnClose": true
-      },
-      {
-        "label": "docker stats",
-        "type": "shell",
-        "command": "docker network ls; echo; docker stats --no-stream; echo; docker ps",
         "problemMatcher": [],
         "promptOnClose": true
       },
@@ -635,8 +635,8 @@
       "**/.dockerignore": true,
       "**/.htpasswd": true,
       "**/.htpasswd_example": true,
-      "**/dev.nginx.template.conf": false,
-      "**/prod.nginx.template.conf": false,
+      "**/dev.nginx.template.conf": true,
+      "**/prod.nginx.template.conf": true,
       "frontend/scripts": true,
       "frontend/config": true,
       "**/.github": true
