@@ -7,6 +7,7 @@ import {
   SimpleRouteEntity,
   ISession,
 } from 'types';
+import { Select } from 'antd';
 
 export const publicRoutes: RoutesMap<SimpleRouteEntity> = {
   [RoutesEnum.ROOT]: {
@@ -31,10 +32,16 @@ export const routesOnlyForAuthedUsers: RoutesMap<AuthedRouteEntity> = {
     Component: Profile,
     isMenuPoint: true,
     menuTitle: 'Profile menu item',
-    pageTitle: 'Дэшборд бассейна',
+    pageTitle: 'Данные по бассейну',
     menuIcon: <UserOutlined />,
     canUserOpenThisRoute: () => true,
-    // Extras: () => <>Extras react component</>,
+    Extras: () => (
+      <Select
+        defaultValue="1"
+        style={{ width: 150 }}
+        options={[{ value: '1', label: 'Бассейн №1' }]}
+      />
+    ),
   },
   [RoutesEnum.USER]: {
     Component: Profile,

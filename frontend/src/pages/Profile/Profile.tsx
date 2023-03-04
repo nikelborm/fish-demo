@@ -33,15 +33,15 @@ export function Profile() {
         title="Кислород (%)"
         measurementsByOneSensor={o2Measurements}
         color="blue"
-        // min={80}
-        // max={120}
+        min={80}
+        max={120}
       />
       <LiveSensors />
       <SuperPlot
         title="Температура (°C)"
         color="red"
-        // min={19}
-        // max={20}
+        min={18}
+        max={23}
         measurementsByOneSensor={tempMeasurements}
       />
     </MainWrapper>
@@ -91,12 +91,12 @@ function LiveSensors() {
           {parseFloat((getLatestMeasurementsFor('pH')?.value || 0).toFixed(3))}
         </RealTimeSensorValue>
       </RealTimeSensorInfo>
-      <RealTimeSensorInfo invert>
+      {/* <RealTimeSensorInfo invert>
         <RealTimeSensorName>Ph</RealTimeSensorName>
         <RealTimeSensorValue>
           {parseFloat((getLatestMeasurementsFor('pH')?.value || 0).toFixed(3))}
         </RealTimeSensorValue>
-      </RealTimeSensorInfo>
+      </RealTimeSensorInfo> */}
       <BehavioralInfo>
         Тип поведения: {getLatestMeasurementsFor('behavior')?.value || 'Норма'}
       </BehavioralInfo>
@@ -117,7 +117,14 @@ function SuperPlot({
   min?: number;
   max?: number;
 }) {
-  const dates = measurementsByOneSensor.map(({ date }) => date);
+  const dates = measurementsByOneSensor.map(({ date }) => {
+    const dateModified = new Date(date);
+    dateModified.setHours(date.getHours() + 13);
+    dateModified.setMinutes(date.getMinutes() + 7);
+    // console.log('date.getHours(): ', dateModified.getHours());
+    // console.log('dateModified: ', dateModified);
+    return dateModified;
+  });
   const datesNumbers = dates.map((e) => e.getTime());
   const maxDate = new Date(Math.max(...datesNumbers));
   const minDate = new Date(Math.min(...datesNumbers));
@@ -178,9 +185,9 @@ const validateAndTransformMeasurement =
 const RealTimeSensorGrid = styled.div`
   display: grid;
   width: 100%;
-  gap: 20px;
+  gap: 0px;
   place-items: center center;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 2fr 1fr;
 `;
 
@@ -188,7 +195,7 @@ const RealTimeSensorInfo = styled.div<{ invert?: boolean }>`
   display: flex;
   flex-flow: column nowrap;
   border-radius: 15px;
-  width: 140px;
+  width: 170px;
   height: 180px;
   color: ${(props) => (props.invert ? 'white' : '#5aa7ff')};
   background-color: ${(props) => (!props.invert ? 'white' : '#5aa7ff')};
@@ -244,7 +251,8 @@ const VideoBoxWrapper = styled.div`
   background-color: black;
   position: relative;
   background-position: 0px -200px;
-  background-image: url(${mockVideoSrc2});
+  /* background-image: url(${mockVideoSrc2}); */
+  background-color: white;
   background-size: cover;
 `;
 
