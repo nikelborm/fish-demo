@@ -2,7 +2,7 @@ import { API_PATH } from 'constant';
 
 // eslint-disable-next-line import/no-cycle
 import { authStore } from './authStore';
-import { validate } from './validate';
+import { validate } from '../shared/validate';
 
 export function customFetch<TRequest>(
   target: RequestInfo,

@@ -1,4 +1,4 @@
-import { validate } from 'tools';
+import { validate } from '../shared';
 
 export function getWsMessageValidator<T>(dto: new () => T) {
   function validateWsMessage(message: any) {

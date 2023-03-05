@@ -11,4 +11,3 @@ export * from './renderTags';
 export * from './sortByNumberField';
 export * from './sortByStringField';
 export * from './useSocket';
-export * from './validate';
