@@ -1,8 +1,5 @@
 import { Type } from 'class-transformer';
-import {
-  IsDate, IsNumber,
-  IsObject
-} from 'class-validator';
+import { IsDate, IsNumber, IsObject } from 'class-validator';
 import { NestedArrayDTO } from '../../../../../tools';
 import type { ISensorMeasurement } from '../../../model/sensorMeasurement.model';
 import type { SensorParameterValueType } from '../../../sensorParameterValueType';

@@ -2,11 +2,11 @@ export function differenceBetweenSetsInArray<T>(
   setA: Set<T>,
   setB: Set<T>,
 ): T[] {
-  const _difference = new Set(setA);
+  const setOfElementsPresentInSetAButNotPresentInSetB = new Set(setA);
 
   for (const elem of setB) {
-    _difference.delete(elem);
+    setOfElementsPresentInSetAButNotPresentInSetB.delete(elem);
   }
 
-  return [..._difference.values()];
+  return [...setOfElementsPresentInSetAButNotPresentInSetB.values()];
 }

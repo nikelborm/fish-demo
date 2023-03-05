@@ -1,4 +1,5 @@
 export * from './createPredict.dto';
+export * from './createReservoirs.dto';
 export * from './createSensorMeasurements.dto';
 export * from './createUsers.dto';
 export * from './deleteEntityById.dto';

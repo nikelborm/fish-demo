@@ -3,22 +3,22 @@ import { ISensorMeasurement } from 'types';
 
 export function useLatestMeasurementsStore() {
   const [latestMeasurements, setLatestMeasurementsState] = useState<
-    Map<string, ISensorMeasurement>
+    Map<number, ISensorMeasurement>
   >(new Map());
 
   return {
-    getLatestMeasurementsFor(sensorName: string) {
-      return latestMeasurements.get(sensorName);
+    getLatestMeasurementsFor(sensorParameterInstanceId: number) {
+      return latestMeasurements.get(sensorParameterInstanceId);
     },
     setNewLatestMeasurements(candidates: ISensorMeasurement[]) {
       let hasChanged = false;
       candidates.forEach((v) => {
         const currentLatestDate = latestMeasurements.get(
-          v.sensorCodeName,
-        )?.date;
+          v.sensorParameterInstanceId,
+        )?.recordedAt;
         // eslint-disable-next-line prettier/prettier
-        if (!currentLatestDate || (currentLatestDate < v.date)) {
-          latestMeasurements.set(v.sensorCodeName, v);
+        if (!currentLatestDate || (currentLatestDate < v.recordedAt)) {
+          latestMeasurements.set(v.sensorParameterInstanceId, v);
           hasChanged = true;
         }
       });

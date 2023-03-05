@@ -5,7 +5,7 @@ import {
   createOneWithRelations,
   NewPlainEntity,
 } from 'src/tools';
-import { SensorParameterValueTypenameEnum } from 'src/types';
+import { ReservoirInfoDTO, SensorParameterValueTypenameEnum } from 'src/types';
 import { Repository } from 'typeorm';
 import { Reservoir } from '../model';
 
@@ -18,7 +18,7 @@ export class ReservoirRepo {
 
   async getReservoirFullInfo(
     reservoirId: number,
-  ): Promise<ReservoirFullInfo | null> {
+  ): Promise<ReservoirInfoDTO | null> {
     return await this.repo.findOne({
       where: { id: reservoirId },
       select: {

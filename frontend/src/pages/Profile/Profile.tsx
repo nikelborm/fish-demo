@@ -1,4 +1,5 @@
 import { useSensorsMeasurementsData } from 'hooks';
+import { useParams } from 'react-router';
 import { useFishRecognitionVideoStream } from './hooks';
 import {
   MainWrapper,
@@ -9,7 +10,11 @@ import {
 } from './components';
 
 export function Profile() {
-  const { isSuccess, sensorMeasurements } = useSensorsMeasurementsData({});
+  const asd = useParams();
+  console.log('asd: ', asd);
+  const { isSuccess, sensorMeasurements } = useSensorsMeasurementsData({
+    reservoirId: 1,
+  });
   const { refOfVideoElement } = useFishRecognitionVideoStream();
 
   // eslint-disable-next-line no-console
@@ -17,18 +22,19 @@ export function Profile() {
 
   if (!isSuccess || !sensorMeasurements) return <div>wait</div>;
   const tempMeasurements = sensorMeasurements.filter(
-    ({ sensorCodeName }) => sensorCodeName === 'Temp',
+    ({ sensorParameterInstanceId }) => sensorParameterInstanceId === 1,
   );
+
   const o2Measurements = sensorMeasurements
-    .filter(({ sensorCodeName }) => sensorCodeName === 'O2')
-    .map((meauserement) => ({
-      ...meauserement,
-      value: meauserement.value * 100,
+    .filter(({ sensorParameterInstanceId }) => sensorParameterInstanceId === 1)
+    .map((measurement) => ({
+      ...measurement,
+      value: +measurement.value * 100,
     }));
 
   return (
     <MainWrapper>
-      <VideoBoxWrapper>
+      {/* <VideoBoxWrapper>
         <VideoBox autoPlay playsInline ref={refOfVideoElement} />
       </VideoBoxWrapper>
       <SensorMeasurementPlot
@@ -45,7 +51,7 @@ export function Profile() {
         min={18}
         max={23}
         measurementsByOneSensor={tempMeasurements}
-      />
+      /> */}
     </MainWrapper>
   );
 }

@@ -1,46 +1,40 @@
 import { Type } from 'class-transformer';
-import {
-  IsDate,
-  IsDefined,
-  IsEnum,
-  IsNumber,
-  IsString
-} from 'class-validator';
+import { IsDate, IsDefined, IsEnum, IsNumber, IsString } from 'class-validator';
 import {
   SensorParameterValueType,
-  SensorParameterValueTypenameEnum
-} from '../../../';
+  SensorParameterValueTypenameEnum,
+} from '../../../sensorParameterValueType';
 import { NestedArrayDTO, NestedDTO } from '../../../../../tools';
 
-class SimpleAbstractSensor {
-  @IsNumber()
-  id!: number;
+// class SimpleAbstractSensor {
+//   @IsNumber()
+//   id!: number;
 
-  @IsString()
-  modelName!: string;
-}
+//   @IsString()
+//   modelName!: string;
+// }
 
-class SimpleSensorParameter {
-  @IsNumber()
-  id!: number;
+// class SimpleSensorParameter {
+//   @IsNumber()
+//   id!: number;
 
-  @IsString()
-  name!: string;
+//   @IsString()
+//   name!: string;
 
-  @IsString()
-  unit!: string;
+//   @IsString()
+//   unit!: string;
 
-  @IsEnum(SensorParameterValueTypenameEnum)
-  valueTypeName!: SensorParameterValueTypenameEnum;
-}
+//   @IsEnum(SensorParameterValueTypenameEnum)
+//   valueTypeName!: SensorParameterValueTypenameEnum;
+// }
 
-class SimpleSensorParameterInstance {
-  @NestedDTO(() => SimpleAbstractSensor)
-  abstractSensor!: SimpleAbstractSensor;
+// class SimpleSensorParameterInstance {
+//   @NestedDTO(() => SimpleAbstractSensor)
+//   abstractSensor!: SimpleAbstractSensor;
 
-  @NestedDTO(() => SimpleSensorParameter)
-  sensorParameter!: SimpleSensorParameter;
-}
+//   @NestedDTO(() => SimpleSensorParameter)
+//   sensorParameter!: SimpleSensorParameter;
+// }
 
 class FlatSensorMeasurement {
   @IsNumber()

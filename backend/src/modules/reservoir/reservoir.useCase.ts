@@ -1,15 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { CreateReservoirDTO, FindReservoirsDTO, IReservoir } from 'src/types';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateReservoirDTO, IReservoir, ReservoirInfoDTO } from 'src/types';
+import { messages } from 'src/config';
 import { repo } from '../infrastructure';
 
 @Injectable()
 export class ReservoirUseCase {
   constructor(private readonly reservoirRepo: repo.ReservoirRepo) {}
 
-  async findOneReservoirById(
-    searchOptions: FindReservoirsDTO,
-  ): Promise<IReservoir[]> {
-    return await this.reservoirRepo.findManyWith(searchOptions);
+  async findOneReservoirById(reservoirId: number): Promise<ReservoirInfoDTO> {
+    const reservoir = await this.reservoirRepo.getReservoirFullInfo(
+      reservoirId,
+    );
+    if (!reservoir)
+      throw new NotFoundException(
+        messages.repo.common.cantGetNotFoundById(reservoirId, 'reservoir'),
+      );
+
+    return reservoir;
   }
 
   async createManyReservoirs(

@@ -12,15 +12,15 @@ export const iterateInChunks = async <T>({
   let chunkIndex = 0;
 
   const iterateInChunk = async (limit: number): Promise<void> => {
-    for (let i = chunkIndex * chunkSize; i < limit; i++) {
+    for (let i = chunkIndex * chunkSize; i < limit; i += 1) {
       // TODO: Покрыть тестами, потому что ts говорит, что тут может быть проблема
-      // @ts-expect-error TODO
       callOnIteration(array[i]);
     }
     await callAfterChunk();
   };
 
-  for (; chunkIndex < Math.floor(array.length / chunkSize); chunkIndex++) {
+  for (; chunkIndex < Math.floor(array.length / chunkSize); chunkIndex += 1) {
+    // eslint-disable-next-line no-await-in-loop
     await iterateInChunk(chunkIndex * chunkSize + chunkSize);
   }
 

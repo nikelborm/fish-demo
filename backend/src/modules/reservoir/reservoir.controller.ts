@@ -1,6 +1,6 @@
-import { Get, Param, ParseIntPipe, Post, Request } from '@nestjs/common';
-import { ApiController, AuthorizedOnly, ValidatedBody } from 'src/tools';
-import { AuthedRequest, FindOneReservoirByIdResponseDTO } from 'src/types';
+import { Get, Param, ParseIntPipe } from '@nestjs/common';
+import { ApiController, AuthorizedOnly } from 'src/tools';
+import { FindOneReservoirByIdResponseDTO } from 'src/types';
 import { ReservoirUseCase } from './reservoir.useCase';
 
 @ApiController('reservoir')

@@ -1,8 +1,4 @@
-import {
-  IsEnum,
-  IsNumber,
-  IsString
-} from 'class-validator';
+import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { NestedArrayDTO, NestedDTO } from '../../../../../tools';
 import { SensorParameterValueTypenameEnum } from '../../../sensorParameterValueType';
 
