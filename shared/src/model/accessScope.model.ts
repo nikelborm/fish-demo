@@ -1,4 +1,4 @@
-import { AccessScopeType } from '../accessScopeType';
+import type { AccessScopeType } from '../accessScopeType';
 import type { IUser, IUserToAccessScope } from '.';
 
 export class IAccessScope {

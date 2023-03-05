@@ -1,5 +1,5 @@
 {
-  "name": "generate_one_to_many_boilerplate",
+  "name": "generate_entity_with_id",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",

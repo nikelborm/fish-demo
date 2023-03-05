@@ -73,7 +73,7 @@
           "focus": true,
           "panel": "shared",
           "close": false,
-          "showReuseMessage": false,
+          "showReuseMessage": true,
           "clear": true
         }
       },
@@ -89,7 +89,7 @@
           "focus": true,
           "panel": "shared",
           "close": false,
-          "showReuseMessage": false,
+          "showReuseMessage": true,
           "clear": true
         }
       },
@@ -105,7 +105,7 @@
           "focus": true,
           "panel": "shared",
           "close": false,
-          "showReuseMessage": false,
+          "showReuseMessage": true,
           "clear": true
         }
       },
@@ -121,7 +121,7 @@
           "focus": true,
           "panel": "shared",
           "close": false,
-          "showReuseMessage": false,
+          "showReuseMessage": true,
           "clear": true
         }
       },
@@ -137,7 +137,7 @@
           "focus": true,
           "panel": "shared",
           "close": false,
-          "showReuseMessage": false,
+          "showReuseMessage": true,
           "clear": true
         }
       },
@@ -330,14 +330,14 @@
           "focus": true,
           "panel": "shared",
           "close": false,
-          "showReuseMessage": false,
+          "showReuseMessage": true,
           "clear": true
         }
       },
       {
         "label": "Install yarn dependencies",
         "type": "shell",
-        "command": ". ${HOME}/.nvm/nvm.sh; yarn --cwd shared; yarn --cwd backend; yarn --cwd frontend; yarn --cwd backend/scripts/generateManyToManyBoilerplate",
+        "command": ". ${HOME}/.nvm/nvm.sh; yarn --cwd shared; yarn --cwd backend; yarn --cwd frontend; yarn --cwd backend/scripts/generateManyToManyBoilerplate; yarn --cwd backend/scripts/generateOneToManyBoilerplate; yarn --cwd backend/scripts/generateEntityWithId",
         "promptOnClose": false,
         "problemMatcher": [],
         "presentation": {
@@ -346,7 +346,7 @@
           "focus": true,
           "panel": "shared",
           "close": false,
-          "showReuseMessage": false,
+          "showReuseMessage": true,
           "clear": true
         }
       },
@@ -362,7 +362,7 @@
           "focus": true,
           "panel": "shared",
           "close": false,
-          "showReuseMessage": false,
+          "showReuseMessage": true,
           "clear": true
         }
       },
@@ -378,7 +378,23 @@
           "focus": true,
           "panel": "shared",
           "close": false,
-          "showReuseMessage": false,
+          "showReuseMessage": true,
+          "clear": true
+        }
+      },
+      {
+        "label": "Generate empty entity with id boilerplate",
+        "type": "shell",
+        "command": ". ${HOME}/.nvm/nvm.sh; node ./backend/scripts/generateEntityWithId/",
+        "promptOnClose": false,
+        "problemMatcher": [],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": true,
+          "panel": "shared",
+          "close": false,
+          "showReuseMessage": true,
           "clear": true
         }
       },
@@ -394,7 +410,7 @@
           "focus": true,
           "panel": "shared",
           "close": false,
-          "showReuseMessage": false,
+          "showReuseMessage": true,
           "clear": true
         }
       },
@@ -410,7 +426,7 @@
           "focus": true,
           "panel": "shared",
           "close": false,
-          "showReuseMessage": false,
+          "showReuseMessage": true,
           "clear": true
         }
       },
@@ -426,7 +442,7 @@
           "focus": true,
           "panel": "shared",
           "close": false,
-          "showReuseMessage": false,
+          "showReuseMessage": true,
           "clear": true
         }
       },
@@ -442,7 +458,7 @@
           "focus": true,
           "panel": "shared",
           "close": false,
-          "showReuseMessage": false,
+          "showReuseMessage": true,
           "clear": true
         }
       },

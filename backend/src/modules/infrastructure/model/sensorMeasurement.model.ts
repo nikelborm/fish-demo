@@ -33,7 +33,6 @@ export class SensorMeasurement implements ISensorMeasurement {
         return norRaw.toString();
       },
     },
-
     type: 'numeric',
   })
   value!: number;
