@@ -1,14 +1,13 @@
-import { applyDecorators } from '@nestjs/common';
 import { Type } from 'class-transformer';
 import { IsDefined, ValidateNested } from 'class-validator';
-import { Column, ColumnOptions } from 'typeorm';
+import { combineDecorators } from '../combineDecorators';
 
 export function NestedDTO<T>(
   DTOClassConstructor: () => {
     new (): T;
   },
 ): PropertyDecorator {
-  return applyDecorators(
+  return combineDecorators(
     IsDefined(),
     ValidateNested(),
     Type(DTOClassConstructor),
