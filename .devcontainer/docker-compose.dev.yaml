@@ -50,8 +50,12 @@ services:
         target: /app/src
         consistency: delegated
       - type: bind
-        source: ../shared/src
+        source: ../shared/src/types
         target: /app/src/types/shared
+        consistency: delegated
+      - type: bind
+        source: ../shared/src/tools
+        target: /app/src/tools/shared
         consistency: delegated
     networks:
       nginx-front-net-dev:
@@ -98,8 +102,12 @@ services:
         target: /app/src
         consistency: delegated
       - type: bind
-        source: ../shared/src
+        source: ../shared/src/types
         target: /app/src/types/shared
+        consistency: delegated
+      - type: bind
+        source: ../shared/src/tools
+        target: /app/src/tools/shared
         consistency: delegated
     networks:
       nginx-back-net-dev:

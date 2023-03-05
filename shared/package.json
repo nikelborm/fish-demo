@@ -1,8 +1,8 @@
 {
-  "name": "shared_types",
+  "name": "shared_stuff",
   "version": "0.0.1",
   "private": true,
-  "description": "shared types",
+  "description": "shared stuff",
   "license": "UNLICENSED",
   "author": {
     "name": "nikelborm",

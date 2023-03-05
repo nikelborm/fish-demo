@@ -1,6 +1,6 @@
 import { differenceBetweenSetsInArray } from './difference';
 
-export function getRedundantAndMissingsValues<T>(
+export function getRedundantAndMissingValues<T>(
   perfectSetOrArray: Set<T> | T[],
   checkableSetOrArray: Set<T> | T[],
 ): {

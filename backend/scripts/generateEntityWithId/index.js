@@ -74,9 +74,9 @@ console.log(`\nnew I${pascal} model interface was generated\n`);
 console.log(getInterface());
 
 if (!dryRun) {
-  await writeFile(`./shared/src/model/${camel}.model.ts`, getInterface());
+  await writeFile(`./shared/src/types/model/${camel}.model.ts`, getInterface());
   await appendFile(
-    `./shared/src/model/index.ts`,
+    `./shared/src/types/model/index.ts`,
     `export * from './${camel}.model';\n`,
   );
 }

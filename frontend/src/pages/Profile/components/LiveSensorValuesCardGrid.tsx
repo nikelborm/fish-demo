@@ -1,4 +1,4 @@
-import { getWsMessageValidator, useSocket } from 'utils';
+import { getWsMessageValidator, useSocket } from 'tools';
 import { ISensorMeasurement } from 'types';
 import { useLatestMeasurementsStore } from '../hooks';
 import {

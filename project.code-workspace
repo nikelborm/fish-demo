@@ -13,6 +13,7 @@
       "path": "frontend"
     },
     {
+      "name": "shared",
       "path": "shared"
     }
   ],
@@ -97,9 +98,9 @@
         }
       },
       {
-        "label": "Mount types/shared in native fs",
+        "label": "Mount shared types and in native fs",
         "type": "shell",
-        "command": "mkdir -p ./frontend/src/types/shared; mkdir -p ./backend/src/types/shared; sudo mount --bind ./shared/src ./frontend/src/types/shared; sudo mount --bind ./shared/src ./backend/src/types/shared",
+        "command": "mkdir -p ./frontend/src/types/shared/ ./backend/src/types/shared/ ./frontend/src/tools/shared/ ./backend/src/tools/shared/; sudo mount --bind ./shared/src/types/ ./frontend/src/types/shared/; sudo mount --bind ./shared/src/types/ ./backend/src/types/shared/; sudo mount --bind ./shared/src/tools/ ./frontend/src/tools/shared/; sudo mount --bind ./shared/src/tools/ ./backend/src/tools/shared/;",
         "problemMatcher": [],
         "promptOnClose": true,
         "presentation": {
@@ -115,7 +116,7 @@
       {
         "label": "Unmount types/shared in native fs",
         "type": "shell",
-        "command": "sudo umount ./frontend/src/types/shared; sudo umount ./backend/src/types/shared",
+        "command": "sudo umount ./frontend/src/types/shared; sudo umount ./backend/src/types/shared; sudo umount ./frontend/src/tools/shared; sudo umount ./backend/src/tools/shared",
         "problemMatcher": [],
         "promptOnClose": true,
         "presentation": {
