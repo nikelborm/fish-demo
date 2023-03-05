@@ -1,10 +1,9 @@
 import { Type } from 'class-transformer';
 import { IsDefined, ValidateNested } from 'class-validator';
+import { NestedDTO } from '../../../../tools';
 import { AuthTokenPairDTO } from '../../other/authTokenPair.dto';
 
 export class RegisterUserResponseDTO {
-  @IsDefined()
-  @ValidateNested()
-  @Type(() => AuthTokenPairDTO)
+  @NestedDTO(() => AuthTokenPairDTO)
   authTokenPair!: AuthTokenPairDTO;
 }

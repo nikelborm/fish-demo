@@ -6,6 +6,7 @@ import {
   IsPositive,
   ValidateNested,
 } from 'class-validator';
+import { NestedArrayDTO } from '../../../../tools';
 
 class UserToHaveAccessScopeDTO {
   @IsPositive()
@@ -16,9 +17,6 @@ export class UpdateAccessScopeDTO {
   @IsPositive()
   id!: number;
 
-  @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => UserToHaveAccessScopeDTO)
+  @NestedArrayDTO(() => UserToHaveAccessScopeDTO)
   usersWithThatAccessScope?: UserToHaveAccessScopeDTO[];
 }

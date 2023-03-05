@@ -1,11 +1,10 @@
 import { Type } from 'class-transformer';
 import {
-  IsArray,
   IsDate,
   IsDefined,
   IsNumber,
-  ValidateNested,
 } from 'class-validator';
+import { NestedArrayDTO } from '../../../../tools';
 
 export class CreateOneSensorMeasurementResponse {
   @IsNumber()
@@ -20,9 +19,6 @@ export class CreateOneSensorMeasurementResponse {
 }
 
 export class CreateManySensorMeasurementsResponseDTO {
-  @IsDefined()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CreateOneSensorMeasurementResponse)
+  @NestedArrayDTO(() => CreateOneSensorMeasurementResponse)
   sensorMeasurements!: CreateOneSensorMeasurementResponse[];
 }

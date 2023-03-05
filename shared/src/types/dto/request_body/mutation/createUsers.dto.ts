@@ -7,6 +7,7 @@ import {
   MinLength,
   ValidateNested,
 } from 'class-validator';
+import { NestedArrayDTO } from '../../../../tools';
 
 import { BasicUserInfoDTO } from '../../other/basicUserInfo.dto';
 
@@ -18,9 +19,6 @@ export class CreateUserDTO extends BasicUserInfoDTO {
 }
 
 export class CreateUsersDTO {
-  @IsDefined()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CreateUserDTO)
+  @NestedArrayDTO(() => CreateUserDTO)
   users!: CreateUserDTO[];
 }

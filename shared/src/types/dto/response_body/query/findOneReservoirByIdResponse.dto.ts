@@ -7,6 +7,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
+import { NestedArrayDTO, NestedDTO } from '../../../../tools';
 
 import { SensorParameterValueTypenameEnum } from '../../../sensorParameterValueType';
 
@@ -36,22 +37,15 @@ class SensorParameterInstanceInReservoir {
   @IsNumber()
   id!: number;
 
-  @IsDefined()
-  @ValidateNested()
-  @Type(() => SensorParameterInReservoir)
+  @NestedDTO(() => SensorParameterInReservoir)
   sensorParameter!: SensorParameterInReservoir;
 }
 
 class AbstractSensorToSensorInstanceInReservoir {
-  @IsDefined()
-  @ValidateNested()
-  @Type(() => AbstractSensorInReservoir)
+  @NestedDTO(() => AbstractSensorInReservoir)
   abstractSensor!: AbstractSensorInReservoir;
 
-  @IsDefined()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => SensorParameterInstanceInReservoir)
+  @NestedArrayDTO(() => SensorParameterInstanceInReservoir)
   sensorParameterInstances!: SensorParameterInstanceInReservoir[];
 }
 
@@ -59,9 +53,7 @@ class SensorInstanceInReservoir {
   @IsNumber()
   id!: number;
 
-  @IsDefined()
-  @ValidateNested()
-  @Type(() => AbstractSensorToSensorInstanceInReservoir)
+  @NestedDTO(() => AbstractSensorToSensorInstanceInReservoir)
   abstractSensorToSensorInstance!: AbstractSensorToSensorInstanceInReservoir;
 }
 
@@ -72,16 +64,11 @@ export class ReservoirInfoDTO {
   @IsString()
   name!: string;
 
-  @IsDefined()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => SensorInstanceInReservoir)
+  @NestedArrayDTO(() => SensorInstanceInReservoir)
   sensorInstances!: SensorInstanceInReservoir[];
 }
 
 export class FindOneReservoirByIdResponseDTO {
-  @IsDefined()
-  @ValidateNested()
-  @Type(() => ReservoirInfoDTO)
+  @NestedDTO(() => ReservoirInfoDTO)
   reservoir!: ReservoirInfoDTO;
 }

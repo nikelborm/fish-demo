@@ -12,6 +12,7 @@ import {
   SensorParameterValueType,
   SensorParameterValueTypenameEnum,
 } from 'src/types';
+import { NestedArrayDTO, NestedDTO } from '../../../../tools';
 
 class SimpleAbstractSensor {
   @IsNumber()
@@ -36,14 +37,10 @@ class SimpleSensorParameter {
 }
 
 class SimpleSensorParameterInstance {
-  @IsDefined()
-  @ValidateNested()
-  @Type(() => SimpleAbstractSensor)
+  @NestedDTO(() => SimpleAbstractSensor)
   abstractSensor!: SimpleAbstractSensor;
 
-  @IsDefined()
-  @ValidateNested()
-  @Type(() => SimpleSensorParameter)
+  @NestedDTO(() => SimpleSensorParameter)
   sensorParameter!: SimpleSensorParameter;
 }
 
@@ -63,9 +60,6 @@ class FlatSensorMeasurement {
 }
 
 export class FindManySensorMeasurementsResponseDTO {
-  @IsDefined()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => FlatSensorMeasurement)
+  @NestedArrayDTO(() => FlatSensorMeasurement)
   sensorMeasurements!: FlatSensorMeasurement[];
 }
