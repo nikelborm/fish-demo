@@ -10,7 +10,9 @@ export class ReservoirUseCase {
     private readonly wsGateway: ReservoirWSGateway,
   ) {}
 
-  async findManyWith(searchOptions: FindReservoirsDTO): Promise<IReservoir[]> {
+  async findOneReservoirById(
+    searchOptions: FindReservoirsDTO,
+  ): Promise<IReservoir[]> {
     return await this.reservoirRepo.findManyWith(searchOptions);
   }
 

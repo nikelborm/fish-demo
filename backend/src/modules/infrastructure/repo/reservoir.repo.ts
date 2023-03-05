@@ -71,26 +71,3 @@ export class ReservoirRepo {
     )) as Reservoir[];
   }
 }
-
-type ReservoirFullInfo = {
-  id: number;
-  name: string;
-  sensorInstances: {
-    id: number;
-    abstractSensorToSensorInstance: {
-      abstractSensor: {
-        id: number;
-        modelName: string;
-      };
-      sensorParameterInstances: {
-        id: number;
-        sensorParameter: {
-          id: number;
-          name: string;
-          unit: string;
-          valueTypeName: SensorParameterValueTypenameEnum;
-        };
-      }[];
-    };
-  }[];
-};

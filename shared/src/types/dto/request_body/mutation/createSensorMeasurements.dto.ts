@@ -25,9 +25,6 @@ export class CreateSensorMeasurementDTO
 }
 
 export class CreateSensorMeasurementsDTO {
-  @IsDefined()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CreateSensorMeasurementDTO)
+  @NestedArrayDTO(() => CreateSensorMeasurementDTO)
   sensorMeasurements!: CreateSensorMeasurementDTO[];
 }
