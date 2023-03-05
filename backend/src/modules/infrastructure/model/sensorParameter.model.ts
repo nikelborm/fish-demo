@@ -34,6 +34,13 @@ export class SensorParameter implements ISensorParameter {
   name!: string;
 
   @Column({
+    name: 'short_name',
+    unique: true,
+    nullable: false,
+  })
+  shortName!: string;
+
+  @Column({
     name: 'value_type_name',
     type: 'enum',
     enum: SensorParameterValueTypenameEnum,

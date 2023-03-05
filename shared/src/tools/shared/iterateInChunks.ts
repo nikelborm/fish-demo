@@ -14,6 +14,8 @@ export const iterateInChunks = async <T>({
   const iterateInChunk = async (limit: number): Promise<void> => {
     for (let i = chunkIndex * chunkSize; i < limit; i += 1) {
       // TODO: Покрыть тестами, потому что ts говорит, что тут может быть проблема
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore idk wtf
       callOnIteration(array[i]);
     }
     await callAfterChunk();

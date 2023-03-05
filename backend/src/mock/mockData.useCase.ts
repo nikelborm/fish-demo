@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { sub } from 'date-fns';
 import { assertMockScriptNameIsCorrect } from 'src/config';
 import { repo, UserUseCase } from 'src/modules';
+import { CreatedPlainEntity } from 'src/tools';
 import {
   AccessScopeType,
-  CreateSensorMeasurementDTO,
   SensorParameterValueTypenameEnum,
+  ISensorParameter,
 } from 'src/types';
 
 @Injectable()
@@ -15,6 +15,12 @@ export class MockDataUseCase {
     private readonly userToAccessScopeRepo: repo.UserToAccessScopeRepo,
     private readonly accessScopeRepo: repo.AccessScopeRepo,
     private readonly sensorMeasurementRepo: repo.SensorMeasurementRepo,
+    private readonly reservoirRepo: repo.ReservoirRepo,
+    private readonly sensorParameterRepo: repo.SensorParameterRepo,
+    private readonly abstractSensorRepo: repo.AbstractSensorRepo,
+    private readonly abstractSensorToSensorInstanceRepoRepo: repo.AbstractSensorToSensorInstanceRepo,
+    private readonly abstractSensorToSensorParameterRepoRepo: repo.AbstractSensorToSensorParameterRepo,
+    private readonly sensorInstanceRepo: repo.SensorInstanceRepo,
   ) {}
 
   async executeMock(scriptName?: string): Promise<void> {
@@ -48,6 +54,59 @@ export class MockDataUseCase {
     await this.userToAccessScopeRepo.createOne({
       accessScopeId: systemAdminScope.id,
       userId: user.id,
+    });
+
+    const reservoir = await this.reservoirRepo.createOne({
+      name: 'Бассейн №1',
+    });
+
+    const sensors = (await this.sensorParameterRepo.createManyPlain([
+      {
+        name: 'Температура',
+        shortName: 'T',
+        valueTypeName: SensorParameterValueTypenameEnum.NUMBER,
+        unit: '°C',
+      },
+      {
+        name: 'Кислород',
+        shortName: 'o2',
+        valueTypeName: SensorParameterValueTypenameEnum.NUMBER,
+        unit: '%',
+      },
+      {
+        name: 'Кислотность',
+        shortName: 'pH',
+        valueTypeName: SensorParameterValueTypenameEnum.NUMBER,
+        unit: '',
+      },
+    ])) as unknown as [
+      CreatedPlainEntity<ISensorParameter, 'id'>,
+      CreatedPlainEntity<ISensorParameter, 'id'>,
+      CreatedPlainEntity<ISensorParameter, 'id'>,
+    ];
+    const [tempSensorParameter, oxygenSensorParameter, pHSensorParameter] =
+      sensors;
+
+    const abstractSensor = await this.abstractSensorRepo.createOnePlain({
+      modelName: 'CHR 3000',
+    });
+
+    await this.abstractSensorToSensorParameterRepoRepo.createMany(
+      sensors.map(({ id: sensorParameterId }) => ({
+        sensorParameterId,
+        abstractSensorId: abstractSensor.id,
+      })),
+    );
+
+    const sensorInstance = await this.sensorInstanceRepo.createOneWithRelations(
+      {
+        reservoirId: reservoir.id,
+      },
+    );
+
+    await this.abstractSensorToSensorInstanceRepoRepo.createOne({
+      abstractSensorId: abstractSensor.id,
+      sensorInstanceId: sensorInstance.id,
     });
   }
 

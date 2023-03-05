@@ -12,6 +12,8 @@ export class ISensorParameter {
 
   name!: string;
 
+  shortName!: string;
+
   abstractSensorsWithThatSensorParameter!: IAbstractSensor[];
 
   abstractSensorToSensorParameterRelations!: IAbstractSensorToSensorParameter[];
