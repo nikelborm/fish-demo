@@ -1,4 +1,4 @@
-import type { IAbstractSensor, IAbstractSensorToSensorParameter } from '.';
+import type { IAbstractSensor, IAbstractSensorToSensorParameter, ISensorInstance } from '.';
 
 export class ISensorParameter {
   id!: number;
@@ -10,6 +10,8 @@ export class ISensorParameter {
   abstractSensorsWithThatSensorParameter!: IAbstractSensor[];
 
   abstractSensorToSensorParameterRelations!: IAbstractSensorToSensorParameter[];
+
+  sensorInstancesWithThatSensorParameter!: ISensorInstance[];
 
   createdAt!: Date;
 

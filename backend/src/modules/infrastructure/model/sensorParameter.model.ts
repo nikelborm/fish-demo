@@ -8,7 +8,11 @@ import {
   OneToMany,
   UpdateDateColumn,
 } from 'typeorm';
-import { AbstractSensor, AbstractSensorToSensorParameter } from '.';
+import {
+  AbstractSensor,
+  AbstractSensorToSensorParameter,
+  SensorInstance,
+} from '.';
 
 @Entity({ name: 'sensor_parameter' })
 export class SensorParameter implements ISensorParameter {
@@ -32,6 +36,12 @@ export class SensorParameter implements ISensorParameter {
     (abstractSensor) => abstractSensor.sensorParameters,
   )
   abstractSensorsWithThatSensorParameter!: AbstractSensor[];
+
+  @ManyToMany(
+    () => SensorInstance,
+    (sensorInstance) => sensorInstance.sensorParameters,
+  )
+  sensorInstancesWithThatSensorParameter!: SensorInstance[];
 
   @OneToMany(
     () => AbstractSensorToSensorParameter,
