@@ -6,12 +6,18 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import {
+  AbstractSensor,
   AbstractSensorToSensorInstance,
   AbstractSensorToSensorParameter,
+  SensorInstance,
+  SensorMeasurement,
+  SensorMeasurementConstraint,
+  SensorParameter,
 } from '.';
 
 @Entity({ name: 'sensor_parameter_instance' })
@@ -45,11 +51,40 @@ export class SensorParameterInstance implements ISensorParameterInstance {
   ])
   abstractSensorToSensorInstance!: AbstractSensorToSensorInstance;
 
+  @ManyToOne(
+    () => SensorInstance,
+    (sensorInstance) => sensorInstance.sensorParameterInstances,
+    { createForeignKeyConstraints: false },
+  )
+  @JoinColumn({ name: 'sensor_instance_id' })
+  sensorInstance!: SensorInstance;
+
+  @Column({
+    name: 'sensor_instance_id',
+    nullable: false,
+  })
+  sensorInstanceId!: number;
+
+  @ManyToOne(
+    () => AbstractSensor,
+    (abstractSensor) => abstractSensor.sensorParameterInstances,
+  )
+  @JoinColumn({ name: 'abstract_sensor_id' })
+  abstractSensor!: AbstractSensor;
+
   @Column({
     name: 'abstract_sensor_id',
     nullable: false,
   })
   abstractSensorId!: number;
+
+  @ManyToOne(
+    () => SensorParameter,
+    (sensorParameter) => sensorParameter.sensorParameterInstances,
+    { createForeignKeyConstraints: false },
+  )
+  @JoinColumn({ name: 'sensor_parameter_id' })
+  sensorParameter!: SensorParameter;
 
   @Column({
     name: 'sensor_parameter_id',
@@ -57,11 +92,18 @@ export class SensorParameterInstance implements ISensorParameterInstance {
   })
   sensorParameterId!: number;
 
-  @Column({
-    name: 'sensor_instance_id',
-    nullable: false,
-  })
-  sensorInstanceId!: number;
+  @OneToMany(
+    () => SensorMeasurement,
+    (sensorMeasurement) => sensorMeasurement.sensorParameterInstance,
+  )
+  sensorMeasurements!: SensorMeasurement[];
+
+  @OneToMany(
+    () => SensorMeasurementConstraint,
+    (sensorMeasurementConstraint) =>
+      sensorMeasurementConstraint.sensorParameterInstance,
+  )
+  sensorMeasurementConstraints!: SensorMeasurementConstraint[];
 
   @CreateDateColumn({
     name: 'created_at',

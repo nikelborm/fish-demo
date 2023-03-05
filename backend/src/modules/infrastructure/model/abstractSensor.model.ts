@@ -13,6 +13,7 @@ import {
   AbstractSensorToSensorInstance,
   AbstractSensorToSensorParameter,
   SensorParameter,
+  SensorParameterInstance,
 } from '.';
 
 @Entity({ name: 'abstract_sensor' })
@@ -54,6 +55,12 @@ export class AbstractSensor implements IAbstractSensor {
       abstractSensorToSensorInstance.abstractSensor,
   )
   abstractSensorToSensorInstanceRelations!: AbstractSensorToSensorInstance[];
+
+  @OneToMany(
+    () => SensorParameterInstance,
+    (sensorParameterInstance) => sensorParameterInstance.abstractSensor,
+  )
+  sensorParameterInstances!: SensorParameterInstance[];
 
   @CreateDateColumn({
     name: 'created_at',

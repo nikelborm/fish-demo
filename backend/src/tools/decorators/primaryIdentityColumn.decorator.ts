@@ -1,7 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
-import { Column } from 'typeorm';
+import { Column, ColumnOptions } from 'typeorm';
 
-export function PrimaryIdentityColumn(columnName: string): PropertyDecorator {
+export function PrimaryIdentityColumn(
+  columnName: string,
+  options?: ColumnOptions,
+): PropertyDecorator {
   return applyDecorators(
     Column({
       name: columnName,
@@ -9,6 +12,7 @@ export function PrimaryIdentityColumn(columnName: string): PropertyDecorator {
       generated: 'identity',
       generatedIdentity: 'ALWAYS',
       nullable: false,
+      ...options,
     }),
   );
 }

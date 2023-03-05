@@ -1,6 +1,7 @@
-import { Post } from '@nestjs/common';
-import { ApiController, ValidatedBody } from 'src/tools';
+import { Post, Request } from '@nestjs/common';
+import { AllowedFor, ApiController, ValidatedBody } from 'src/tools';
 import {
+  AuthedRequest,
   CreateManySensorMeasurementsResponseDTO,
   CreateOneSensorMeasurementResponse,
   CreateSensorMeasurementDTO,
@@ -46,6 +47,7 @@ export class SensorMeasurementController {
   async createSensorMeasurement(
     @ValidatedBody()
     createSensorMeasurementDTO: CreateSensorMeasurementDTO,
+    // @Request() { user }: AuthedRequest,
   ): Promise<CreateOneSensorMeasurementResponse> {
     return await this.sensorMeasurementUseCase.createSensorMeasurement(
       createSensorMeasurementDTO,

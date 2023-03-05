@@ -14,7 +14,7 @@ export class WebsocketGatewayAdapter extends IoAdapter {
 
   createIOServer(
     _: /* declaration of web socket port which we do ignore */ number,
-    options?: ServerOptions & { namespace: string },
+    options?: ServerOptions & { namespace: string | RegExp },
   ): any {
     const server = super.createIOServer(
       this.configService.get(ConfigKeys.WEB_SOCKET_SERVER_PORT),

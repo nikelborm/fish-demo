@@ -1,11 +1,7 @@
 import { Type } from 'class-transformer';
-import {
-  IsDate,
-  IsNumber,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsDate, IsNumber, IsObject, IsOptional } from 'class-validator';
+import { SensorParameterValueType } from '../sensorParameterValueType';
+import type { ISensorParameterInstance } from './sensorParameterInstance.model';
 
 export class ISensorMeasurement {
   @IsNumber()
@@ -13,13 +9,14 @@ export class ISensorMeasurement {
 
   @IsDate()
   @Type(() => Date)
-  date!: Date;
+  recordedAt!: Date;
 
-  @IsString()
-  @MaxLength(5)
-  @MinLength(1)
-  sensorCodeName!: string;
+  @IsObject()
+  value!: SensorParameterValueType;
+
+  @IsOptional()
+  sensorParameterInstance!: ISensorParameterInstance;
 
   @IsNumber()
-  value!: number;
+  sensorParameterInstanceId!: number;
 }

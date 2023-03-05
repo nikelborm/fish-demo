@@ -1,11 +1,22 @@
-import type { IAbstractSensorToSensorInstance, ISensorParameter } from './';
+import type {
+  IAbstractSensorToSensorInstance,
+  IReservoir,
+  ISensorParameter,
+  ISensorParameterInstance,
+} from '.';
 
 export class ISensorInstance {
   id!: number;
 
-  abstractSensorToSensorInstance!: IAbstractSensorToSensorInstance[];
+  abstractSensorToSensorInstance!: IAbstractSensorToSensorInstance;
 
   sensorParameters!: ISensorParameter[];
+
+  sensorParameterInstances!: ISensorParameterInstance[];
+
+  reservoir!: IReservoir;
+
+  reservoirId!: number;
 
   createdAt!: Date;
 

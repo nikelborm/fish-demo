@@ -6,7 +6,7 @@ import {
   NewPlainEntity,
 } from 'src/tools';
 import { FindSensorMeasurementsDTO } from 'src/types';
-import { Between, Repository, LessThanOrEqual } from 'typeorm';
+import { Between, Repository, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import { SensorMeasurement } from '../model';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class SensorMeasurementRepo {
   ) {}
 
   async getAll(): Promise<SensorMeasurement[]> {
-    return await this.repo.find({ order: { date: 'desc' } });
+    return await this.repo.find({ order: { recordedAt: 'desc' } });
   }
 
   async getAllPossibleSensors(): Promise<string[]> {
@@ -33,6 +33,10 @@ export class SensorMeasurementRepo {
   async getLatestForEachSensor(): Promise<SensorMeasurement[]> {
     return await this.repo
       .createQueryBuilder('sensorMeasurement')
+      .innerJoin(
+        'sensorMeasurement.sensorParameterInstance',
+        'sensorParameterInstance',
+      )
       .select([
         'sensorMeasurement.id',
         'sensorMeasurement.sensorCodeName',
@@ -52,17 +56,32 @@ export class SensorMeasurementRepo {
   }
 
   async findManyWith({
-    sensorCodeName,
+    reservoirId,
     maxDate,
     minDate,
   }: FindSensorMeasurementsDTO): Promise<SensorMeasurement[]> {
     return await this.repo.find({
-      order: { date: 'desc' },
+      order: { recordedAt: 'desc' },
+      select: {
+        id: true,
+        recordedAt: true,
+        value: true,
+        sensorParameterInstanceId: true,
+      },
       where: {
-        ...(sensorCodeName && { sensorCodeName }),
-        ...(minDate && maxDate && { date: Between(minDate, maxDate) }),
-        ...(minDate && !maxDate && { date: LessThanOrEqual(minDate) }),
-        ...(!minDate && maxDate && { date: LessThanOrEqual(maxDate) }),
+        sensorParameterInstance: {
+          sensorInstance: {
+            reservoirId,
+          },
+        },
+        ...(minDate && maxDate && { recordedAt: Between(minDate, maxDate) }),
+        ...(minDate && !maxDate && { recordedAt: MoreThanOrEqual(minDate) }),
+        ...(!minDate && maxDate && { recordedAt: LessThanOrEqual(maxDate) }),
+      },
+      relations: {
+        sensorParameterInstance: {
+          sensorInstance: true,
+        },
       },
     });
   }

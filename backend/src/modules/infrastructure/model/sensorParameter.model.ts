@@ -1,5 +1,5 @@
 import { PrimaryIdentityColumn } from 'src/tools';
-import { ISensorParameter } from 'src/types';
+import { ISensorParameter, SensorParameterValueTypenameEnum } from 'src/types';
 import {
   Column,
   CreateDateColumn,
@@ -12,6 +12,7 @@ import {
   AbstractSensor,
   AbstractSensorToSensorParameter,
   SensorInstance,
+  SensorParameterInstance,
 } from '.';
 
 @Entity({ name: 'sensor_parameter' })
@@ -27,9 +28,18 @@ export class SensorParameter implements ISensorParameter {
 
   @Column({
     name: 'name',
+    unique: true,
     nullable: false,
   })
   name!: string;
+
+  @Column({
+    name: 'value_type_name',
+    type: 'enum',
+    enum: SensorParameterValueTypenameEnum,
+    nullable: false,
+  })
+  valueTypeName!: SensorParameterValueTypenameEnum;
 
   @ManyToMany(
     () => AbstractSensor,
@@ -49,6 +59,12 @@ export class SensorParameter implements ISensorParameter {
       abstractSensorToSensorParameter.sensorParameter,
   )
   abstractSensorToSensorParameterRelations!: AbstractSensorToSensorParameter[];
+
+  @OneToMany(
+    () => SensorParameterInstance,
+    (sensorParameterInstance) => sensorParameterInstance.sensorParameter,
+  )
+  sensorParameterInstances!: SensorParameterInstance[];
 
   @CreateDateColumn({
     name: 'created_at',

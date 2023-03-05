@@ -4,9 +4,6 @@ import {
   IsDate,
   IsDefined,
   IsNumber,
-  IsString,
-  MaxLength,
-  MinLength,
   ValidateNested,
 } from 'class-validator';
 
@@ -16,15 +13,10 @@ export class CreateOneSensorMeasurementResponse {
 
   @IsDate()
   @Type(() => Date)
-  date!: Date;
+  recordedAt!: Date;
 
-  @IsString()
-  @MaxLength(5)
-  @MinLength(1)
-  sensorCodeName!: string;
-
-  @IsNumber()
-  value!: number;
+  @IsDefined()
+  value!: any;
 }
 
 export class CreateManySensorMeasurementsResponseDTO {

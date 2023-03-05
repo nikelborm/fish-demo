@@ -3,34 +3,69 @@ import {
   IsArray,
   IsDate,
   IsDefined,
+  IsEnum,
   IsNumber,
   IsString,
-  MaxLength,
-  MinLength,
   ValidateNested,
 } from 'class-validator';
+import {
+  SensorParameterValueType,
+  SensorParameterValueTypenameEnum,
+} from 'src/types';
 
-class ISensorMeasurement {
+class SimpleAbstractSensor {
+  @IsNumber()
+  id!: number;
+
+  @IsString()
+  modelName!: string;
+}
+
+class SimpleSensorParameter {
+  @IsNumber()
+  id!: number;
+
+  @IsString()
+  name!: string;
+
+  @IsString()
+  unit!: string;
+
+  @IsEnum(SensorParameterValueTypenameEnum)
+  valueTypeName!: SensorParameterValueTypenameEnum;
+}
+
+class SimpleSensorParameterInstance {
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => SimpleAbstractSensor)
+  abstractSensor!: SimpleAbstractSensor;
+
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => SimpleSensorParameter)
+  sensorParameter!: SimpleSensorParameter;
+}
+
+class FlatSensorMeasurement {
   @IsNumber()
   id!: number;
 
   @IsDate()
   @Type(() => Date)
-  date!: Date;
+  recordedAt!: Date;
 
-  @IsString()
-  @MaxLength(5)
-  @MinLength(1)
-  sensorCodeName!: string;
+  @IsDefined()
+  value!: SensorParameterValueType;
 
   @IsNumber()
-  value!: number;
+  sensorParameterInstanceId!: number;
 }
 
 export class FindManySensorMeasurementsResponseDTO {
   @IsDefined()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ISensorMeasurement)
-  sensorMeasurements!: ISensorMeasurement[];
+  @Type(() => FlatSensorMeasurement)
+  sensorMeasurements!: FlatSensorMeasurement[];
 }

@@ -1,14 +1,23 @@
 import { PrimaryIdentityColumn } from 'src/tools';
 import { ISensorInstance } from 'src/types';
 import {
+  Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
+  OneToMany,
   OneToOne,
   UpdateDateColumn,
 } from 'typeorm';
-import { AbstractSensorToSensorInstance, SensorParameter } from '.';
+import {
+  AbstractSensorToSensorInstance,
+  Reservoir,
+  SensorParameter,
+  SensorParameterInstance,
+} from '.';
 
 @Entity({ name: 'sensor_instance' })
 export class SensorInstance implements ISensorInstance {
@@ -20,7 +29,7 @@ export class SensorInstance implements ISensorInstance {
     (abstractSensorToSensorInstance) =>
       abstractSensorToSensorInstance.sensorInstance,
   )
-  abstractSensorToSensorInstance!: AbstractSensorToSensorInstance[];
+  abstractSensorToSensorInstance!: AbstractSensorToSensorInstance;
 
   @ManyToMany(
     () => SensorParameter,
@@ -35,6 +44,22 @@ export class SensorInstance implements ISensorInstance {
     synchronize: false,
   })
   sensorParameters!: SensorParameter[];
+
+  @OneToMany(
+    () => SensorParameterInstance,
+    (sensorParameterInstance) => sensorParameterInstance.sensorInstance,
+  )
+  sensorParameterInstances!: SensorParameterInstance[];
+
+  @ManyToOne(() => Reservoir, (reservoir) => reservoir.sensorInstances)
+  @JoinColumn({ name: 'reservoir_id' })
+  reservoir!: Reservoir;
+
+  @Column({
+    name: 'reservoir_id',
+    nullable: false,
+  })
+  reservoirId!: number;
 
   @CreateDateColumn({
     name: 'created_at',

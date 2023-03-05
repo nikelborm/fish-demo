@@ -4,27 +4,24 @@ import {
   IsDate,
   IsDefined,
   IsNumber,
-  IsString,
-  MaxLength,
-  MinLength,
+  IsObject,
   ValidateNested,
 } from 'class-validator';
 import type { ISensorMeasurement } from '../../../model/sensorMeasurement.model';
+import type { SensorParameterValueType } from '../../../sensorParameterValueType';
 
 export class CreateSensorMeasurementDTO
-  implements Omit<ISensorMeasurement, 'id'>
+  implements Omit<ISensorMeasurement, 'id' | 'sensorParameterInstance'>
 {
+  @IsNumber()
+  sensorParameterInstanceId!: number;
+
   @Type(() => Date)
   @IsDate()
-  date!: Date;
+  recordedAt!: Date;
 
-  @IsString()
-  @MaxLength(5)
-  @MinLength(1)
-  sensorCodeName!: string;
-
-  @IsNumber()
-  value!: number;
+  @IsObject()
+  value!: SensorParameterValueType;
 }
 
 export class CreateSensorMeasurementsDTO {

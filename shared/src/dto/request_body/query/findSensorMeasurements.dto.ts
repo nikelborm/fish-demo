@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsDate,
+  IsNumber,
   IsOptional,
   IsString,
   MaxLength,
@@ -8,6 +9,9 @@ import {
 } from 'class-validator';
 
 export class FindSensorMeasurementsDTO {
+  @IsNumber()
+  reservoirId!: number;
+
   @IsOptional()
   @Type(() => Date)
   @IsDate()
@@ -17,10 +21,4 @@ export class FindSensorMeasurementsDTO {
   @Type(() => Date)
   @IsDate()
   maxDate?: Date;
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(5)
-  @MinLength(1)
-  sensorCodeName?: string;
 }

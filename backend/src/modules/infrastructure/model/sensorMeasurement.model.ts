@@ -1,39 +1,37 @@
 import { PrimaryIdentityColumn } from 'src/tools';
-import { ISensorMeasurement } from 'src/types';
-import { Column, Entity } from 'typeorm';
+import { ISensorMeasurement, SensorParameterValueType } from 'src/types';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { SensorParameterInstance } from './sensorParameterInstance.model';
 
 @Entity({ name: 'sensor_measurement' })
 export class SensorMeasurement implements ISensorMeasurement {
-  @PrimaryIdentityColumn('sensor_measurement_id')
+  @PrimaryIdentityColumn('sensor_measurement_id', { type: 'bigint' })
   id!: number;
 
   @Column({
-    name: 'sensor_code_name',
-    nullable: false,
-    type: 'varchar',
-    length: 5,
-  })
-  sensorCodeName!: string;
-
-  @Column({
-    name: 'date',
+    name: 'recorded_at_date',
     nullable: false,
     type: 'timestamptz',
   })
-  date!: Date;
+  recordedAt!: Date;
 
   @Column({
     name: 'value',
     nullable: false,
-    transformer: {
-      from(raw: string): number {
-        return parseFloat(raw);
-      },
-      to(norRaw: number): string {
-        return norRaw.toString();
-      },
-    },
-    type: 'numeric',
+    type: 'jsonb',
   })
-  value!: number;
+  value!: SensorParameterValueType;
+
+  @ManyToOne(
+    () => SensorParameterInstance,
+    (sensorParameterInstance) => sensorParameterInstance.sensorMeasurements,
+  )
+  @JoinColumn({ name: 'sensor_parameter_instance_id' })
+  sensorParameterInstance!: SensorParameterInstance;
+
+  @Column({
+    name: 'sensor_parameter_instance_id',
+    nullable: false,
+  })
+  sensorParameterInstanceId!: number;
 }

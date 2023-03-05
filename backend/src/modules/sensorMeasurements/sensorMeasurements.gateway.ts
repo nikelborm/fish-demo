@@ -1,12 +1,18 @@
 import {
+  ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
+  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { groupBy } from 'src/tools';
+import { groupBy, UseWSMessageValidationPipe } from 'src/tools';
 import { repo } from '../infrastructure';
 import { Server, Socket } from 'socket.io';
-import { ISensorMeasurement } from 'src/types';
+import {
+  ISensorMeasurement,
+  SubscribeToReservoirLiveSensorsDTO,
+} from 'src/types';
 
 @WebSocketGateway({ namespace: '/sensorMeasurement' })
 export class SensorMeasurementWSGateway implements OnGatewayConnection {
@@ -18,16 +24,27 @@ export class SensorMeasurementWSGateway implements OnGatewayConnection {
   server!: Server;
 
   broadcastManyNew(sensorMeasurements: ISensorMeasurement[]): void {
-    Object.entries(
-      groupBy<'sensorCodeName', ISensorMeasurement>(
-        sensorMeasurements,
-        'sensorCodeName',
-      ),
-    ).forEach(([sensorCodeName, sensorMeasurements]) => {
-      this.server
-        .to(`newSensorMeasurement/${sensorCodeName}`)
-        .emit('many', sensorMeasurements);
-    });
+    sensorMeasurements.reduce(
+      (result, item) => ({
+        ...result,
+        [item.sensorParameterInstance.sensorParameter.name]: [
+          ...(result[item.sensorParameterInstance.sensorParameter.name] || []),
+          item,
+        ],
+      }),
+      Object.create(null),
+    );
+
+    // Object.entries(
+    //   groupBy<'sensorCodeName', ISensorMeasurement>(
+    //     sensorMeasurements,
+    //     'sensorCodeName',
+    //   ),
+    // ).forEach(([sensorCodeName, sensorMeasurements]) => {
+    //   this.server
+    //     .to(`newSensorMeasurement/${sensorCodeName}`)
+    //     .emit('many', sensorMeasurements);
+    // });
   }
 
   broadcastOneNew(sensorMeasurement: ISensorMeasurement): void {
@@ -49,11 +66,16 @@ export class SensorMeasurementWSGateway implements OnGatewayConnection {
     client.emit('latest', latestMeasurements);
   }
 
-  // @UseWSMessageValidationPipe()
-  // @SubscribeMessage('asd')
-  // async handleEvent2(@MessageBody() data: MessageDTO): Promise<string> {
-  //   console.log('data: ', data);
-  //   await this.sensorMeasurementRepo.findManyWith({ sensorCodeName: 'O2' });
-  //   return 'a';
-  // }
+  @UseWSMessageValidationPipe()
+  @SubscribeMessage('subscribe/liveSensorMeasurements/byReservoir')
+  async handleEvent2(
+    @MessageBody() { reservoirId }: SubscribeToReservoirLiveSensorsDTO,
+    @ConnectedSocket() client: Socket,
+  ): Promise<string> {
+    // TODO: somehow extract user from ws connection context and validate if user has access to this reservoir
+    console.log('data: ', data);
+    client.join();
+    await this.sensorMeasurementRepo.findManyWith({ reservoirId });
+    return 'a';
+  }
 }

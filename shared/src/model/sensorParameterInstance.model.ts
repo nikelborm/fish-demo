@@ -1,4 +1,12 @@
-import type { IAbstractSensorToSensorInstance, IAbstractSensorToSensorParameter } from '.';
+import type {
+  IAbstractSensor,
+  IAbstractSensorToSensorInstance,
+  IAbstractSensorToSensorParameter,
+  ISensorInstance,
+  ISensorMeasurement,
+  ISensorMeasurementConstraint,
+  ISensorParameter,
+} from '.';
 
 export class ISensorParameterInstance {
   id!: number;
@@ -9,9 +17,19 @@ export class ISensorParameterInstance {
 
   sensorInstanceId!: number;
 
+  sensorInstance!: ISensorInstance;
+
+  sensorParameter!: ISensorParameter;
+
+  abstractSensor!: IAbstractSensor;
+
   abstractSensorToSensorParameter!: IAbstractSensorToSensorParameter;
 
   abstractSensorToSensorInstance!: IAbstractSensorToSensorInstance;
+
+  sensorMeasurements!: ISensorMeasurement[];
+
+  sensorMeasurementConstraints!: ISensorMeasurementConstraint[];
 
   createdAt!: Date;
 
