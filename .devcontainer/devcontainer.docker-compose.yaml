@@ -15,19 +15,19 @@ services:
         target: "/workspaces/${COMPOSE_PROJECT_NAME}"
         consistency: delegated
       - type: bind
-        source: ../shared/src/types
+        source: ../shared/src/types/shared
         target: "/workspaces/${COMPOSE_PROJECT_NAME}/frontend/src/types/shared"
         consistency: delegated
       - type: bind
-        source: ../shared/src/types
+        source: ../shared/src/types/shared
         target: "/workspaces/${COMPOSE_PROJECT_NAME}/backend/src/types/shared"
         consistency: delegated
       - type: bind
-        source: ../shared/src/tools
+        source: ../shared/src/tools/shared
         target: "/workspaces/${COMPOSE_PROJECT_NAME}/frontend/src/tools/shared"
         consistency: delegated
       - type: bind
-        source: ../shared/src/tools
+        source: ../shared/src/tools/shared
         target: "/workspaces/${COMPOSE_PROJECT_NAME}/backend/src/tools/shared"
         consistency: delegated
     networks:

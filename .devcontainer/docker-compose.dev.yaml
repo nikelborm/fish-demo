@@ -50,11 +50,11 @@ services:
         target: /app/src
         consistency: delegated
       - type: bind
-        source: ../shared/src/types
+        source: ../shared/src/types/shared
         target: /app/src/types/shared
         consistency: delegated
       - type: bind
-        source: ../shared/src/tools
+        source: ../shared/src/tools/shared
         target: /app/src/tools/shared
         consistency: delegated
     networks:
@@ -102,11 +102,11 @@ services:
         target: /app/src
         consistency: delegated
       - type: bind
-        source: ../shared/src/types
+        source: ../shared/src/types/shared
         target: /app/src/types/shared
         consistency: delegated
       - type: bind
-        source: ../shared/src/tools
+        source: ../shared/src/tools/shared
         target: /app/src/tools/shared
         consistency: delegated
     networks:

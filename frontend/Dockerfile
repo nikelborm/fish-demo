@@ -33,11 +33,11 @@ RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=private ya
 
 COPY ./frontend/src /app/src/
 
-# we should copy DOCKER_CONTEXT_DIR/[frontend|backend]/src/[types|tools]/ even if they are mounted natively
-# Because pathes to possibly mounted dirs (WORKSPACE_DIR/[frontend|backend]/src/[types|tools]/) were added to .dockerignore
-# as a conseqence DOCKER_CONTEXT_DIR/[frontend|backend]/src/[types|tools]/ will be empty in docker context
-COPY ./shared/src/types /app/src/types/shared
-COPY ./shared/src/tools /app/src/tools/shared
+# we should copy DOCKER_CONTEXT_DIR/[frontend|backend]/src/[types|tools]/shared even if they are mounted natively
+# Because pathes of possibly mounted dirs (WORKSPACE_DIR/[frontend|backend]/src/[types|tools]/shared) were added to .dockerignore
+# as a conseqence DOCKER_CONTEXT_DIR/[frontend|backend]/src/[types|tools]/shared will be empty in docker context
+COPY ./shared/src/types/shared /app/src/types/shared
+COPY ./shared/src/tools/shared /app/src/tools/shared
 
 ARG REACT_APP_NAME
 ENV REACT_APP_NAME=${REACT_APP_NAME}

@@ -6,7 +6,6 @@ export * from './eventHandlerStoppingEventPropagation';
 export * from './getWsMessageValidator';
 export * from './invalidatePassthrough';
 export * from './KeysFilteredByValueType';
-export * from './remapToIndexedObject';
 export * from './renderTags';
 export * from './sortByNumberField';
 export * from './sortByStringField';

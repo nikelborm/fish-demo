@@ -1,18 +1,16 @@
 import { Type } from 'class-transformer';
 import {
-  IsArray,
   IsDate,
   IsDefined,
   IsEnum,
   IsNumber,
-  IsString,
-  ValidateNested,
+  IsString
 } from 'class-validator';
 import {
   SensorParameterValueType,
-  SensorParameterValueTypenameEnum,
-} from 'src/types';
-import { NestedArrayDTO, NestedDTO } from '../../../../tools';
+  SensorParameterValueTypenameEnum
+} from '../../../';
+import { NestedArrayDTO, NestedDTO } from '../../../../../tools';
 
 class SimpleAbstractSensor {
   @IsNumber()

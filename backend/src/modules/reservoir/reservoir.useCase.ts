@@ -1,14 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CreateReservoirDTO, FindReservoirsDTO, IReservoir } from 'src/types';
 import { repo } from '../infrastructure';
-import { ReservoirWSGateway } from './reservoirs.gateway';
 
 @Injectable()
 export class ReservoirUseCase {
-  constructor(
-    private readonly reservoirRepo: repo.ReservoirRepo,
-    private readonly wsGateway: ReservoirWSGateway,
-  ) {}
+  constructor(private readonly reservoirRepo: repo.ReservoirRepo) {}
 
   async findOneReservoirById(
     searchOptions: FindReservoirsDTO,
@@ -20,13 +16,11 @@ export class ReservoirUseCase {
     reservoirs: CreateReservoirDTO[],
   ): Promise<IReservoir[]> {
     const insertedReservoirs = await this.reservoirRepo.createMany(reservoirs);
-    this.wsGateway.broadcastManyNew(insertedReservoirs);
     return insertedReservoirs;
   }
 
   async createReservoir(reservoir: CreateReservoirDTO): Promise<IReservoir> {
     const insertedReservoir = await this.reservoirRepo.createOne(reservoir);
-    this.wsGateway.broadcastOneNew(insertedReservoir);
     return insertedReservoir;
   }
 }

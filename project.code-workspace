@@ -100,7 +100,7 @@
       {
         "label": "Mount shared types and in native fs",
         "type": "shell",
-        "command": "mkdir -p ./frontend/src/types/shared/ ./backend/src/types/shared/ ./frontend/src/tools/shared/ ./backend/src/tools/shared/; sudo mount --bind ./shared/src/types/ ./frontend/src/types/shared/; sudo mount --bind ./shared/src/types/ ./backend/src/types/shared/; sudo mount --bind ./shared/src/tools/ ./frontend/src/tools/shared/; sudo mount --bind ./shared/src/tools/ ./backend/src/tools/shared/;",
+        "command": "mkdir -p ./frontend/src/types/shared/ ./backend/src/types/shared/ ./frontend/src/tools/shared/ ./backend/src/tools/shared/; sudo mount --bind ./shared/src/types/shared/ ./frontend/src/types/shared/; sudo mount --bind ./shared/src/types/shared/ ./backend/src/types/shared/; sudo mount --bind ./shared/src/tools/shared/ ./frontend/src/tools/shared/; sudo mount --bind ./shared/src/tools/shared/ ./backend/src/tools/shared/;",
         "problemMatcher": [],
         "promptOnClose": true,
         "presentation": {

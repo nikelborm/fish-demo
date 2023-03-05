@@ -1,14 +1,9 @@
-import { Type } from 'class-transformer';
 import {
-  IsArray,
-  IsDefined,
   IsEnum,
   IsNumber,
-  IsString,
-  ValidateNested,
+  IsString
 } from 'class-validator';
-import { NestedArrayDTO, NestedDTO } from '../../../../tools';
-
+import { NestedArrayDTO, NestedDTO } from '../../../../../tools';
 import { SensorParameterValueTypenameEnum } from '../../../sensorParameterValueType';
 
 class AbstractSensorInReservoir {

@@ -73,8 +73,7 @@ export class SensorMeasurementWSGateway implements OnGatewayConnection {
     @ConnectedSocket() client: Socket,
   ): Promise<string> {
     // TODO: somehow extract user from ws connection context and validate if user has access to this reservoir
-    console.log('data: ', data);
-    client.join();
+    // client.join();
     await this.sensorMeasurementRepo.findManyWith({ reservoirId });
     return 'a';
   }

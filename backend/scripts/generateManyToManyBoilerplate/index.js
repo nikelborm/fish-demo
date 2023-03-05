@@ -157,11 +157,11 @@ console.log(getIntermediateModelInterface());
 
 if (!dryRun) {
   await writeFile(
-    `./shared/src/types/model/${firstCamel}To${secondPascal}.model.ts`,
+    `./shared/src/types/shared/model/${firstCamel}To${secondPascal}.model.ts`,
     getIntermediateModelInterface(),
   );
   await appendFile(
-    `./shared/src/types/model/index.ts`,
+    `./shared/src/types/shared/model/index.ts`,
     `export * from './${firstCamel}To${secondPascal}.model';\n`,
   );
 }

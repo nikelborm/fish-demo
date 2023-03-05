@@ -1,5 +1,5 @@
 import { QueryRunner } from 'typeorm';
-import { iterateInChunks } from '.';
+import { iterateInChunks } from '../shared';
 
 export async function insertInChunks<T>(
   queryRunner: QueryRunner,

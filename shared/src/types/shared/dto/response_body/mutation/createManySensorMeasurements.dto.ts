@@ -4,7 +4,7 @@ import {
   IsDefined,
   IsNumber,
 } from 'class-validator';
-import { NestedArrayDTO } from '../../../../tools';
+import { NestedArrayDTO } from '../../../../../tools';
 
 export class CreateOneSensorMeasurementResponse {
   @IsNumber()
