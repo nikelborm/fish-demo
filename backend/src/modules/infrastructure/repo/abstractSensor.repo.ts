@@ -1,13 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  CreatedEntity,
-  CreatedPlainEntity,
-  createManyWithRelations,
-  createOnePlain,
-  NewEntity,
-  NewPlainEntity,
-} from 'src/tools';
 import { Repository } from 'typeorm';
 import { AbstractSensor } from '../model';
 
@@ -23,14 +15,24 @@ export class AbstractSensorRepo {
   }
 
   async createOnePlain(
-    newAbstractSensor: NewPlainEntity<AbstractSensor, 'id'>,
-  ): Promise<CreatedPlainEntity<AbstractSensor, 'id'>> {
-    return await createOnePlain(this.repo, newAbstractSensor);
+    newAbstractSensor: Pick<AbstractSensor, 'modelName'>,
+  ): Promise<
+    Pick<AbstractSensor, 'modelName' | 'id' | 'createdAt' | 'updatedAt'>
+  > {
+    const createdAbstractSensor = await this.repo.insert(newAbstractSensor);
+    console.log('createdAbstractSensor: ', createdAbstractSensor);
+    createdAbstractSensor;
+    return {} as any;
   }
 
-  async createManyWithRelations(
-    newAbstractSensors: NewEntity<AbstractSensor, 'id'>[],
-  ): Promise<CreatedEntity<AbstractSensor, 'id'>[]> {
-    return await createManyWithRelations(this.repo, newAbstractSensors);
+  async createManyPlain(
+    newAbstractSensors: Pick<AbstractSensor, 'modelName'>[],
+  ): Promise<
+    Pick<AbstractSensor, 'modelName' | 'id' | 'createdAt' | 'updatedAt'>[]
+  > {
+    const createdAbstractSensor = await this.repo.insert(newAbstractSensors);
+    console.log('createdAbstractSensor: ', createdAbstractSensor);
+    createdAbstractSensor;
+    return {} as any;
   }
 }

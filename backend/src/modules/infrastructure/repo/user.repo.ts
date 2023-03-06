@@ -1,16 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { messages } from 'src/config';
-import {
-  CreatedEntity,
-  createManyWithRelations,
-  createOneWithRelations,
-  NewEntity,
-  UpdateEntity,
-  updateOnePlain,
-  updateOneWithRelations,
-  UpdatePlainEntity,
-} from 'src/tools';
 import { UserAuthInfo, UserForLoginAttemptValidation } from 'src/types';
 import { ILike, Repository } from 'typeorm';
 import { User } from '../model';

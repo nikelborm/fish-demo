@@ -1,10 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  createManyWithRelations,
-  createOneWithRelations,
-  NewPlainEntity,
-} from 'src/tools';
 import { FindSensorMeasurementsDTO } from 'src/types';
 import { Between, Repository, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import { SensorMeasurement } from '../model';
@@ -30,7 +25,9 @@ export class SensorMeasurementRepo {
     ).map(({ sensor }) => sensor);
   }
 
-  async getLatestForEachSensor(): Promise<SensorMeasurement[]> {
+  async getLatestForEachSensorInstanceIn(
+    reservoirId: number,
+  ): Promise<SensorMeasurement[]> {
     return await this.repo
       .createQueryBuilder('sensorMeasurement')
       .innerJoin(
@@ -59,7 +56,9 @@ export class SensorMeasurementRepo {
     reservoirId,
     maxDate,
     minDate,
-  }: FindSensorMeasurementsDTO): Promise<SensorMeasurement[]> {
+  }: FindSensorMeasurementsDTO): Promise<
+    Omit<SensorMeasurement, 'sensorParameterInstance'>[]
+  > {
     return await this.repo.find({
       order: { recordedAt: 'desc' },
       select: {
@@ -86,21 +85,31 @@ export class SensorMeasurementRepo {
     });
   }
 
-  async createOne(
-    newSensorMeasurement: NewPlainEntity<SensorMeasurement, 'id'>,
-  ): Promise<SensorMeasurement> {
-    return (await createOneWithRelations(
-      this.repo,
+  async createOnePlain(
+    newSensorMeasurement: Omit<
+      SensorMeasurement,
+      'sensorParameterInstance' | 'id'
+    >,
+  ): Promise<Omit<SensorMeasurement, 'sensorParameterInstance'>> {
+    const createdSensorMeasurement = await this.repo.insert(
       newSensorMeasurement,
-    )) as SensorMeasurement;
+    );
+    console.log('createdSensorMeasurement: ', createdSensorMeasurement);
+    createdSensorMeasurement;
+    return {} as any;
   }
 
-  async createMany(
-    newSensorMeasurements: NewPlainEntity<SensorMeasurement, 'id'>[],
-  ): Promise<SensorMeasurement[]> {
-    return (await createManyWithRelations(
-      this.repo,
+  async createManyPlain(
+    newSensorMeasurements: Omit<
+      SensorMeasurement,
+      'sensorParameterInstance' | 'id'
+    >[],
+  ): Promise<Omit<SensorMeasurement, 'sensorParameterInstance'>[]> {
+    const createdSensorMeasurements = await this.repo.insert(
       newSensorMeasurements,
-    )) as SensorMeasurement[];
+    );
+    console.log('createdSensorMeasurements: ', createdSensorMeasurements);
+    createdSensorMeasurements;
+    return {} as any;
   }
 }

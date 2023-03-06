@@ -1,11 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  createManyWithRelations,
-  createOneWithRelations,
-  NewPlainEntity,
-} from 'src/tools';
-import { ReservoirInfoDTO, SensorParameterValueTypenameEnum } from 'src/types';
+import { ReservoirInfoDTO } from 'src/types';
 import { Repository } from 'typeorm';
 import { Reservoir } from '../model';
 
@@ -56,18 +51,21 @@ export class ReservoirRepo {
     });
   }
 
-  async createOne(
-    newReservoir: NewPlainEntity<Reservoir, 'id'>,
-  ): Promise<Reservoir> {
-    return (await createOneWithRelations(this.repo, newReservoir)) as Reservoir;
+  async createOnePlain(
+    newReservoir: Pick<Reservoir, 'name'>,
+  ): Promise<Pick<Reservoir, 'id' | 'name' | 'createdAt' | 'updatedAt'>> {
+    const createdReservoir = await this.repo.insert(newReservoir);
+    console.log('createdReservoir: ', createdReservoir);
+    createdReservoir;
+    return {} as any;
   }
 
-  async createMany(
-    newReservoirs: NewPlainEntity<Reservoir, 'id'>[],
-  ): Promise<Reservoir[]> {
-    return (await createManyWithRelations(
-      this.repo,
-      newReservoirs,
-    )) as Reservoir[];
+  async createManyPlain(
+    newReservoirs: Pick<Reservoir, 'name'>[],
+  ): Promise<Pick<Reservoir, 'id' | 'name' | 'createdAt' | 'updatedAt'>[]> {
+    const createdReservoirs = await this.repo.insert(newReservoirs);
+    console.log('createdReservoirs: ', createdReservoirs);
+    createdReservoirs;
+    return {} as any;
   }
 }

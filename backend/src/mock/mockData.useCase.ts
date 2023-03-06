@@ -60,6 +60,10 @@ export class MockDataUseCase {
       name: 'Бассейн №1',
     });
 
+    const sensorInstance = await this.sensorInstanceRepo.createOne({
+      reservoirId: reservoir.id,
+    });
+
     const sensors = (await this.sensorParameterRepo.createManyPlain([
       {
         name: 'Температура',
@@ -96,12 +100,6 @@ export class MockDataUseCase {
         sensorParameterId,
         abstractSensorId: abstractSensor.id,
       })),
-    );
-
-    const sensorInstance = await this.sensorInstanceRepo.createOneWithRelations(
-      {
-        reservoirId: reservoir.id,
-      },
     );
 
     await this.abstractSensorToSensorInstanceRepoRepo.createOne({
