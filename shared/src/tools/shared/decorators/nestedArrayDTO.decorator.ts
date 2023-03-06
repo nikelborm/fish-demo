@@ -2,7 +2,7 @@ import { Type } from 'class-transformer';
 import { IsArray, IsDefined, ValidateNested } from 'class-validator';
 import { combineDecorators } from '../combineDecorators';
 
-export function NestedArrayDTO<T>(
+function NestedArrayDTO<T>(
   DTOClassConstructor: () => {
     new (): T;
   },
@@ -14,3 +14,6 @@ export function NestedArrayDTO<T>(
     Type(DTOClassConstructor),
   );
 }
+console.log('NestedArrayDTO: ', NestedArrayDTO);
+
+export {NestedArrayDTO};

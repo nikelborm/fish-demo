@@ -4,7 +4,7 @@ import {
   SensorParameterValueType,
   SensorParameterValueTypenameEnum,
 } from '../../../sensorParameterValueType';
-import { NestedArrayDTO, NestedDTO } from '../../../../../tools';
+import { NestedArrayDTO, NestedDTO } from '../../../../../tools/shared';
 
 // class SimpleAbstractSensor {
 //   @IsNumber()

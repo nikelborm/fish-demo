@@ -7,7 +7,7 @@ import {
   MinLength,
   ValidateNested,
 } from 'class-validator';
-import { NestedArrayDTO } from '../../../../../tools';
+import { NestedArrayDTO } from '../../../../../tools/shared';
 
 import { BasicUserInfoDTO } from '../../other/basicUserInfo.dto';
 

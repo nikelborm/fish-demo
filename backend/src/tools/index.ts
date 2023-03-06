@@ -1,4 +1,5 @@
 /* eslint-disable */
 export * from './private';
-// @ts-ignore
 export * from './shared';
+
+console.log("tools at index");

@@ -6,7 +6,7 @@ import {
   IsPositive,
   ValidateNested,
 } from 'class-validator';
-import { NestedArrayDTO } from '../../../../../tools';
+import { NestedArrayDTO } from '../../../../../tools/shared';
 
 class UserToHaveAccessScopeDTO {
   @IsPositive()

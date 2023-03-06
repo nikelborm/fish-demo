@@ -11,25 +11,29 @@
  *
  * @publicApi
  */
-export function combineDecorators(
+function combineDecorators(
   ...decorators: Array<ClassDecorator | MethodDecorator | PropertyDecorator>
 ) {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   return <TFunction extends Function, Y>(
     target: TFunction | object,
     propertyKey?: string | symbol,
     descriptor?: TypedPropertyDescriptor<Y>,
-  ) => {
+  ): void => {
     for (const decorator of decorators) {
       if (target instanceof Function && !descriptor) {
         (decorator as ClassDecorator)(target);
+        // eslint-disable-next-line no-continue
         continue;
       }
       (decorator as MethodDecorator | PropertyDecorator)(
         target,
-        //@ts-expect-error i don't understand error here, and leave it on the nest developer's shoulders
+        // @ts-expect-error i don't understand error here, and leave it on the nest developer's shoulders
         propertyKey,
         descriptor,
       );
     }
   };
 }
+
+export {combineDecorators};

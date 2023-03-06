@@ -114,9 +114,9 @@
         }
       },
       {
-        "label": "Unmount types/shared in native fs",
+        "label": "Unmount (umount) types/shared in native fs",
         "type": "shell",
-        "command": "sudo umount ./frontend/src/types/shared; sudo umount ./backend/src/types/shared; sudo umount ./frontend/src/tools/shared; sudo umount ./backend/src/tools/shared",
+        "command": "sudo umount ./frontend/src/types/shared ./backend/src/types/shared ./frontend/src/tools/shared ./backend/src/tools/shared",
         "problemMatcher": [],
         "promptOnClose": true,
         "presentation": {
@@ -283,7 +283,35 @@
         ],
         "command": "DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose --env-file ./env/dev.env -f ./.devcontainer/docker-compose.dev.yaml exec backend-dev sh ./scripts/ormgen.sh",
         "problemMatcher": [],
-        "promptOnClose": true
+        "promptOnClose": true,
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": true,
+          "panel": "shared",
+          "close": false,
+          "showReuseMessage": true,
+          "clear": true
+        }
+      },
+      {
+        "label": "Shell in dev backend",
+        "type": "shell",
+        "dependsOn": [
+          "Run dev"
+        ],
+        "command": "DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose --env-file ./env/dev.env -f ./.devcontainer/docker-compose.dev.yaml exec backend-dev sh",
+        "problemMatcher": [],
+        "promptOnClose": true,
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": true,
+          "panel": "shared",
+          "close": false,
+          "showReuseMessage": true,
+          "clear": true
+        }
       },
       {
         "label": "Migrate dev database",

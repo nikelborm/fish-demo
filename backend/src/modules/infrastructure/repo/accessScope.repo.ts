@@ -26,26 +26,19 @@ export class AccessScopeRepo {
     id,
     usersWithThatAccessScope,
   }: Pick<AccessScope, 'id'> & {
-    usersWithThatAccessScope: Pick<User, 'id'>[];
-  }): Promise<
-    Pick<AccessScope, 'id'> & {
-      userToAccessScopeRelations: Pick<
-        UserToAccessScope,
-        'accessScopeId' | 'userId'
-      >[];
-    }
-  > {
+    usersWithThatAccessScope?: Pick<User, 'id'>[];
+  }): Promise<CreatedAccessScopeWithRelations> {
     const accessScopeToSave = new AccessScope();
 
     accessScopeToSave.id = id;
-    accessScopeToSave.userToAccessScopeRelations = usersWithThatAccessScope.map(
-      ({ id: userId }) => {
-        const relation = new UserToAccessScope();
-        relation.accessScopeId = id;
-        relation.userId = userId;
-        return relation;
-      },
-    );
+    if (usersWithThatAccessScope)
+      accessScopeToSave.userToAccessScopeRelations =
+        usersWithThatAccessScope.map(({ id: userId }) => {
+          const relation = new UserToAccessScope();
+          relation.accessScopeId = id;
+          relation.userId = userId;
+          return relation;
+        });
 
     return await this.repo.save(accessScopeToSave);
   }
@@ -54,25 +47,18 @@ export class AccessScopeRepo {
     type,
     usersWithThatAccessScope,
   }: Pick<AccessScope, 'type'> & {
-    usersWithThatAccessScope: Pick<User, 'id'>[];
-  }): Promise<
-    Pick<AccessScope, 'type' | PlainKeysGeneratedAfterInsert> & {
-      userToAccessScopeRelations: Pick<
-        UserToAccessScope,
-        'accessScopeId' | 'userId'
-      >[];
-    }
-  > {
+    usersWithThatAccessScope?: Pick<User, 'id'>[];
+  }): Promise<CreatedAccessScopeWithRelations> {
     const accessScopeToSave = new AccessScope();
 
     accessScopeToSave.type = type;
-    accessScopeToSave.userToAccessScopeRelations = usersWithThatAccessScope.map(
-      ({ id: userId }) => {
-        const relation = new UserToAccessScope();
-        relation.userId = userId;
-        return relation;
-      },
-    );
+    if (usersWithThatAccessScope)
+      accessScopeToSave.userToAccessScopeRelations =
+        usersWithThatAccessScope.map(({ id: userId }) => {
+          const relation = new UserToAccessScope();
+          relation.userId = userId;
+          return relation;
+        });
 
     return await this.repo.save(accessScopeToSave);
   }
@@ -83,3 +69,13 @@ export class AccessScopeRepo {
 }
 
 type PlainKeysGeneratedAfterInsert = 'id' | 'createdAt' | 'updatedAt';
+
+type CreatedAccessScopeWithRelations = Pick<
+  AccessScope,
+  'type' | PlainKeysGeneratedAfterInsert
+> & {
+  userToAccessScopeRelations: Pick<
+    UserToAccessScope,
+    'accessScopeId' | 'userId'
+  >[];
+};

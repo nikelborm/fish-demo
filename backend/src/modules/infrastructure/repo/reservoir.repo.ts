@@ -53,9 +53,7 @@ export class ReservoirRepo {
 
   async createOnePlain(
     newReservoir: Pick<Reservoir, PlainKeysAllowedToModify>,
-  ): Promise<
-    Pick<Reservoir, PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert>
-  > {
+  ): Promise<CreatedPlainReservoir> {
     const createdReservoir = await this.repo.insert(newReservoir);
     console.log('createdReservoir: ', createdReservoir);
     createdReservoir;
@@ -64,9 +62,7 @@ export class ReservoirRepo {
 
   async createManyPlain(
     newReservoirs: Pick<Reservoir, PlainKeysAllowedToModify>[],
-  ): Promise<
-    Pick<Reservoir, PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert>[]
-  > {
+  ): Promise<CreatedPlainReservoir[]> {
     const createdReservoirs = await this.repo.insert(newReservoirs);
     console.log('createdReservoirs: ', createdReservoirs);
     createdReservoirs;
@@ -76,9 +72,10 @@ export class ReservoirRepo {
   async updateOnePlain({
     id,
     ...existingReservoir
-  }: Pick<Reservoir, PrimaryKeys | PlainKeysAllowedToModify>): Promise<
-    Pick<Reservoir, PrimaryKeys | PlainKeysAllowedToModify>
-  > {
+  }: Pick<
+    Reservoir,
+    PrimaryKeys | PlainKeysAllowedToModify
+  >): Promise<UpdatedPlainReservoir> {
     const updatedReservoir = await this.repo.update(id, existingReservoir);
     console.log('updatedReservoir: ', updatedReservoir);
     updatedReservoir;
@@ -86,8 +83,11 @@ export class ReservoirRepo {
   }
 
   async updateManyPlain(
-    existingReservoirs: Pick<Reservoir, PlainKeysAllowedToModify>[],
-  ): Promise<Pick<Reservoir, PrimaryKeys | PlainKeysAllowedToModify>[]> {
+    existingReservoirs: Pick<
+      Reservoir,
+      PrimaryKeys | PlainKeysAllowedToModify
+    >[],
+  ): Promise<UpdatedPlainReservoir[]> {
     const updatedReservoirs = await this.repo.save(existingReservoirs);
     console.log('updatedReservoirs: ', updatedReservoirs);
     updatedReservoirs;
@@ -100,3 +100,13 @@ type PrimaryKeys = 'id';
 type PlainKeysGeneratedAfterInsert = PrimaryKeys | 'createdAt' | 'updatedAt';
 
 type PlainKeysAllowedToModify = 'name';
+
+export type CreatedPlainReservoir = Pick<
+  Reservoir,
+  PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
+>;
+
+export type UpdatedPlainReservoir = Pick<
+  Reservoir,
+  PrimaryKeys | PlainKeysAllowedToModify
+>;

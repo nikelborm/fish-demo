@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { assertMockScriptNameIsCorrect } from 'src/config';
 import { repo, UserUseCase } from 'src/modules';
-import { CreatedPlainEntity } from 'src/tools';
 import {
   AccessScopeType,
   SensorParameterValueTypenameEnum,
@@ -56,15 +55,15 @@ export class MockDataUseCase {
       userId: user.id,
     });
 
-    const reservoir = await this.reservoirRepo.createOne({
+    const reservoir = await this.reservoirRepo.createOnePlain({
       name: 'Бассейн №1',
     });
 
-    const sensorInstance = await this.sensorInstanceRepo.createOne({
+    const sensorInstance = await this.sensorInstanceRepo.createOnePlain({
       reservoirId: reservoir.id,
     });
 
-    const sensors = (await this.sensorParameterRepo.createManyPlain([
+    const sensors = await this.sensorParameterRepo.createManyPlain([
       {
         name: 'Температура',
         shortName: 'T',
@@ -83,13 +82,13 @@ export class MockDataUseCase {
         valueTypeName: SensorParameterValueTypenameEnum.NUMBER,
         unit: '',
       },
-    ])) as unknown as [
-      CreatedPlainEntity<ISensorParameter, 'id'>,
-      CreatedPlainEntity<ISensorParameter, 'id'>,
-      CreatedPlainEntity<ISensorParameter, 'id'>,
-    ];
+    ]);
     const [tempSensorParameter, oxygenSensorParameter, pHSensorParameter] =
-      sensors;
+      sensors as [
+        repo.CreatedOnePlainSensorParameter,
+        repo.CreatedOnePlainSensorParameter,
+        repo.CreatedOnePlainSensorParameter,
+      ];
 
     const abstractSensor = await this.abstractSensorRepo.createOnePlain({
       modelName: 'CHR 3000',

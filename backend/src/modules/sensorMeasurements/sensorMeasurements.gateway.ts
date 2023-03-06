@@ -1,20 +1,19 @@
+import { BadRequestException } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
-  OnGatewayConnection,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { groupBy, UseWSMessageValidationPipe } from 'src/tools';
-import { repo } from '../infrastructure';
 import { Server, Socket } from 'socket.io';
+import { messages } from 'src/config';
+import { groupBy, UseWSMessageValidationPipe } from 'src/tools';
 import {
   FlatSensorMeasurement,
   GetSensorMeasurementsByReservoirIdDTO,
 } from 'src/types';
-import { BadRequestException } from '@nestjs/common';
-import { messages } from 'src/config';
+import { repo } from '../infrastructure';
 
 @WebSocketGateway({ namespace: '/sensorMeasurement' })
 export class SensorMeasurementWSGateway /*  implements OnGatewayConnection */ {

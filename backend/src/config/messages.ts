@@ -27,7 +27,10 @@ const rawMessages = {
   },
   user: {
     exists: 'User with this email already exists',
+    cantGetNotFoundByEmail: (email: string): string =>
+      `User with email={${email}} was not found`,
   },
+
   accessScope: {
     notSingleAdminScope: `${messagesRepeating.moreThanOne} Admin access scope in the database`,
     notSingleSuperAdminScope: `${messagesRepeating.moreThanOne} Super Admin access scope in the database`,
@@ -165,7 +168,7 @@ function buildProxy<
   }) as unknown as ReturnType;
 }
 
-export const messages = buildProxy(rawMessages, new Set(['asd'] as const));
+export const messages = buildProxy(rawMessages, new Set(['user'] as const));
 
 type MessagesDotRepoType<
   T extends typeof rawMessages,

@@ -144,7 +144,7 @@ export class UserRepo {
       .getOne();
     if (!user)
       throw new BadRequestException(
-        messages.repo.user.cantGetNotFoundBy(email),
+        messages.user.cantGetNotFoundByEmail(email),
       );
     return user;
   }
