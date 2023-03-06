@@ -14,19 +14,25 @@ export class AbstractSensorToSensorParameterRepo {
     return await this.repo.find();
   }
 
-  async createOne(newAbstractSensorToSensorParameter: {
-    abstractSensorId: number;
-    sensorParameterId: number;
-  }): Promise<void> {
+  async createOne(
+    newAbstractSensorToSensorParameter: Pick<
+      AbstractSensorToSensorParameter,
+      PlainKeysAllowedToModify
+    >,
+  ): Promise<void> {
     await this.repo.insert(newAbstractSensorToSensorParameter);
   }
 
   async createMany(
-    newAbstractSensorToSensorParameters: {
-      abstractSensorId: number;
-      sensorParameterId: number;
-    }[],
+    newAbstractSensorToSensorParameters: Pick<
+      AbstractSensorToSensorParameter,
+      PlainKeysAllowedToModify
+    >[],
   ): Promise<void> {
     await this.repo.insert(newAbstractSensorToSensorParameters);
   }
 }
+
+type PlainKeysGeneratedAfterInsert = never;
+
+type PlainKeysAllowedToModify = 'abstractSensorId' | 'sensorParameterId';

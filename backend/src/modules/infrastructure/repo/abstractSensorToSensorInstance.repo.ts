@@ -14,10 +14,16 @@ export class AbstractSensorToSensorInstanceRepo {
     return await this.repo.find();
   }
 
-  async createOne(newAbstractSensorToSensorInstance: {
-    abstractSensorId: number;
-    sensorInstanceId: number;
-  }): Promise<void> {
+  async createOne(
+    newAbstractSensorToSensorInstance: Pick<
+      AbstractSensorToSensorInstance,
+      PlainKeysAllowedToModify
+    >,
+  ): Promise<void> {
     await this.repo.insert(newAbstractSensorToSensorInstance);
   }
 }
+
+type PlainKeysGeneratedAfterInsert = never;
+
+type PlainKeysAllowedToModify = 'abstractSensorId' | 'sensorInstanceId';

@@ -15,9 +15,12 @@ export class SensorInstanceRepo {
   }
 
   async createOnePlain(
-    newSensorInstance: Pick<SensorInstance, 'reservoirId'>,
+    newSensorInstance: Pick<SensorInstance, PlainKeysAllowedToModify>,
   ): Promise<
-    Pick<SensorInstance, 'reservoirId' | 'id' | 'createdAt' | 'updatedAt'>
+    Pick<
+      SensorInstance,
+      PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
+    >
   > {
     const createdSensorInstance = await this.repo.insert(newSensorInstance);
     console.log('createdSensorInstance: ', createdSensorInstance);
@@ -26,9 +29,12 @@ export class SensorInstanceRepo {
   }
 
   async createManyPlain(
-    newSensorInstances: Pick<SensorInstance, 'reservoirId'>[],
+    newSensorInstances: Pick<SensorInstance, PlainKeysAllowedToModify>[],
   ): Promise<
-    Pick<SensorInstance, 'reservoirId' | 'id' | 'createdAt' | 'updatedAt'>[]
+    Pick<
+      SensorInstance,
+      PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
+    >[]
   > {
     const createdSensorInstances = await this.repo.insert(newSensorInstances);
     console.log('createdSensorInstances: ', createdSensorInstances);
@@ -36,3 +42,7 @@ export class SensorInstanceRepo {
     return {} as any;
   }
 }
+
+type PlainKeysGeneratedAfterInsert = 'id' | 'createdAt' | 'updatedAt';
+
+type PlainKeysAllowedToModify = 'reservoirId';

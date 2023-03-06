@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import {
   CreateSensorMeasurementDTO,
   FindSensorMeasurementsDTO,
+  FlatSensorMeasurement,
   ISensorMeasurement,
 } from 'src/types';
-import { repo } from '../infrastructure';
+import { model, repo } from '../infrastructure';
 import { SensorMeasurementWSGateway } from './sensorMeasurements.gateway';
 
 @Injectable()
@@ -16,25 +17,25 @@ export class SensorMeasurementUseCase {
 
   async findManyWith(
     searchOptions: FindSensorMeasurementsDTO,
-  ): Promise<ISensorMeasurement[]> {
+  ): Promise<FlatSensorMeasurement[]> {
     return await this.sensorMeasurementRepo.findManyWith(searchOptions);
   }
 
   async createManySensorMeasurements(
     sensorMeasurements: CreateSensorMeasurementDTO[],
-  ): Promise<ISensorMeasurement[]> {
+  ): Promise<FlatSensorMeasurement[]> {
     const insertedSensorMeasurements =
-      await this.sensorMeasurementRepo.createMany(sensorMeasurements);
+      await this.sensorMeasurementRepo.createManyPlain(sensorMeasurements);
     this.wsGateway.broadcastManyNew(insertedSensorMeasurements);
     return insertedSensorMeasurements;
   }
 
   async createSensorMeasurement(
     sensorMeasurement: CreateSensorMeasurementDTO,
-  ): Promise<ISensorMeasurement> {
+  ): Promise<FlatSensorMeasurement> {
     const insertedSensorMeasurement =
-      await this.sensorMeasurementRepo.createOne(sensorMeasurement);
-    this.wsGateway.broadcastOneNew(insertedSensorMeasurement);
+      await this.sensorMeasurementRepo.createOnePlain(sensorMeasurement);
+    this.wsGateway.broadcastManyNew([insertedSensorMeasurement]);
     return insertedSensorMeasurement;
   }
 }

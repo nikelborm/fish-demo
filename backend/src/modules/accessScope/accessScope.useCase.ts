@@ -6,10 +6,8 @@ import { model, repo } from '../infrastructure';
 export class AccessScopeUseCase implements OnModuleDestroy, OnModuleInit {
   constructor(private readonly accessScopeRepo: repo.AccessScopeRepo) {}
 
-  async updateOne(
-    accessScope: UpdateAccessScopeDTO,
-  ): Promise<model.AccessScope> {
-    return await this.accessScopeRepo.updateOneWithRelations(accessScope);
+  async updateOne(accessScope: UpdateAccessScopeDTO): Promise<void> {
+    await this.accessScopeRepo.updateOneWithRelations(accessScope);
   }
 
   onModuleDestroy(): void {

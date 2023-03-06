@@ -15,9 +15,12 @@ export class AbstractSensorRepo {
   }
 
   async createOnePlain(
-    newAbstractSensor: Pick<AbstractSensor, 'modelName'>,
+    newAbstractSensor: Pick<AbstractSensor, PlainKeysAllowedToModify>,
   ): Promise<
-    Pick<AbstractSensor, 'modelName' | 'id' | 'createdAt' | 'updatedAt'>
+    Pick<
+      AbstractSensor,
+      PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
+    >
   > {
     const createdAbstractSensor = await this.repo.insert(newAbstractSensor);
     console.log('createdAbstractSensor: ', createdAbstractSensor);
@@ -26,9 +29,12 @@ export class AbstractSensorRepo {
   }
 
   async createManyPlain(
-    newAbstractSensors: Pick<AbstractSensor, 'modelName'>[],
+    newAbstractSensors: Pick<AbstractSensor, PlainKeysAllowedToModify>[],
   ): Promise<
-    Pick<AbstractSensor, 'modelName' | 'id' | 'createdAt' | 'updatedAt'>[]
+    Pick<
+      AbstractSensor,
+      PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
+    >[]
   > {
     const createdAbstractSensor = await this.repo.insert(newAbstractSensors);
     console.log('createdAbstractSensor: ', createdAbstractSensor);
@@ -36,3 +42,7 @@ export class AbstractSensorRepo {
     return {} as any;
   }
 }
+
+type PlainKeysGeneratedAfterInsert = 'id' | 'createdAt' | 'updatedAt';
+
+type PlainKeysAllowedToModify = 'modelName';

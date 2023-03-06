@@ -1,7 +1,6 @@
-import { Post, Request } from '@nestjs/common';
-import { AllowedFor, ApiController, ValidatedBody } from 'src/tools';
+import { Post } from '@nestjs/common';
+import { ApiController, ValidatedBody } from 'src/tools';
 import {
-  AuthedRequest,
   CreateManySensorMeasurementsResponseDTO,
   CreateOneSensorMeasurementResponse,
   CreateSensorMeasurementDTO,

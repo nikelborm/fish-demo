@@ -11,45 +11,37 @@ export class SensorMeasurementRepo {
     private readonly repo: Repository<SensorMeasurement>,
   ) {}
 
-  async getAll(): Promise<SensorMeasurement[]> {
-    return await this.repo.find({ order: { recordedAt: 'desc' } });
+  async getAll(): Promise<Pick<SensorMeasurement, UsuallyReturnedPlainKeys>[]> {
+    return await this.repo.find({
+      order: { recordedAt: 'desc' },
+    });
   }
 
-  async getAllPossibleSensors(): Promise<string[]> {
-    return (
-      await this.repo
-        .createQueryBuilder('sensorMeasurement')
-        .select('sensorMeasurement.sensorCodeName', 'sensor')
-        .distinct(true)
-        .getRawMany()
-    ).map(({ sensor }) => sensor);
-  }
-
-  async getLatestForEachSensorInstanceIn(
+  async getLatestMeasurementsWhereSensorInstanceHas(
     reservoirId: number,
-  ): Promise<SensorMeasurement[]> {
+  ): Promise<Pick<SensorMeasurement, UsuallyReturnedPlainKeys>[]> {
     return await this.repo
       .createQueryBuilder('sensorMeasurement')
+      .select([
+        'sensorMeasurement.id',
+        'sensorMeasurement.sensorParameterInstanceId',
+        'sensorMeasurement.recordedAt',
+        'sensorMeasurement.value',
+      ])
+      .distinctOn(['sensorMeasurement.sensorParameterInstanceId'])
       .innerJoin(
         'sensorMeasurement.sensorParameterInstance',
         'sensorParameterInstance',
       )
-      .select([
-        'sensorMeasurement.id',
-        'sensorMeasurement.sensorCodeName',
-        'sensorMeasurement.date',
-        'sensorMeasurement.value',
-      ])
-      .distinctOn(['sensorMeasurement.sensorCodeName'])
-      .orderBy('sensorMeasurement.sensorCodeName', 'DESC')
-      .addOrderBy('sensorMeasurement.date', 'DESC')
+      .innerJoin('sensorParameterInstance.sensorInstance', 'sensorInstance')
+      .where('sensorInstance.reservoirId = :reservoirId')
+      .orderBy('sensorMeasurement.sensorParameterInstanceId', 'DESC')
+      .addOrderBy('sensorMeasurement.recordedAt', 'DESC')
       .addOrderBy('sensorMeasurement.id', 'DESC')
+      .setParameters({
+        reservoirId,
+      })
       .getMany();
-
-    // SELECT DISTINCT ON (sensor_code_name)
-    //        sensor_measurement_id, sensor_code_name, date,  value
-    // FROM   sensor_measurement
-    // ORDER  BY sensor_code_name, date DESC, sensor_measurement_id DESC;
   }
 
   async findManyWith({
@@ -86,11 +78,13 @@ export class SensorMeasurementRepo {
   }
 
   async createOnePlain(
-    newSensorMeasurement: Omit<
+    newSensorMeasurement: Pick<SensorMeasurement, PlainKeysAllowedToModify>,
+  ): Promise<
+    Pick<
       SensorMeasurement,
-      'sensorParameterInstance' | 'id'
-    >,
-  ): Promise<Omit<SensorMeasurement, 'sensorParameterInstance'>> {
+      PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
+    >
+  > {
     const createdSensorMeasurement = await this.repo.insert(
       newSensorMeasurement,
     );
@@ -100,11 +94,13 @@ export class SensorMeasurementRepo {
   }
 
   async createManyPlain(
-    newSensorMeasurements: Omit<
+    newSensorMeasurements: Pick<SensorMeasurement, PlainKeysAllowedToModify>[],
+  ): Promise<
+    Pick<
       SensorMeasurement,
-      'sensorParameterInstance' | 'id'
-    >[],
-  ): Promise<Omit<SensorMeasurement, 'sensorParameterInstance'>[]> {
+      PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
+    >[]
+  > {
     const createdSensorMeasurements = await this.repo.insert(
       newSensorMeasurements,
     );
@@ -113,3 +109,17 @@ export class SensorMeasurementRepo {
     return {} as any;
   }
 }
+
+type PrimaryKeys = 'id';
+type PlainKeysGeneratedAfterInsert = PrimaryKeys;
+
+type UsuallyReturnedPlainKeys =
+  | PrimaryKeys
+  | 'recordedAt'
+  | 'value'
+  | 'sensorParameterInstanceId';
+
+type PlainKeysAllowedToModify =
+  | 'recordedAt'
+  | 'value'
+  | 'sensorParameterInstanceId';

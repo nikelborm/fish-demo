@@ -24,9 +24,12 @@ export class PredictWSGateway implements OnGatewayConnection {
   server!: Server;
 
   broadcastManyNew(predicts: CreatePredictDTO[]): void {
-    Object.entries(
-      groupBy<'predictCodeName', CreatePredictDTO>(predicts, 'predictCodeName'),
-    ).forEach(([predictCodeName, predicts]) => {
+    [
+      ...groupBy<'predictCodeName', CreatePredictDTO>(
+        predicts,
+        'predictCodeName',
+      ).entries(),
+    ].forEach(([predictCodeName, predicts]) => {
       this.server
         .to(`newPrediction/${predictCodeName}`)
         .emit('one', predicts[0]);

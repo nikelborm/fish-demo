@@ -16,13 +16,16 @@ export class UserRepo {
     return await this.repo.find();
   }
 
-  async findMany(search?: string): Promise<User[]> {
+  async findMany(
+    partOfNameOrEmail?: string,
+  ): Promise<Pick<User, UsuallyReturnedUserPlainKeys>[]> {
     return await this.repo.find({
-      where: search
+      where: partOfNameOrEmail
         ? [
-            { firstName: ILike(`%${search}%`) },
-            { lastName: ILike(`%${search}%`) },
-            { email: ILike(`%${search}%`) },
+            { firstName: ILike(`%${partOfNameOrEmail}%`) },
+            { lastName: ILike(`%${partOfNameOrEmail}%`) },
+            { email: ILike(`%${partOfNameOrEmail}%`) },
+            { nickname: ILike(`%${partOfNameOrEmail}%`) },
           ]
         : void 0,
     });
@@ -57,7 +60,9 @@ export class UserRepo {
     return user;
   }
 
-  async getOneById(id: number): Promise<User> {
+  async getOneById(
+    id: number,
+  ): Promise<Pick<User, UsuallyReturnedUserPlainKeys>> {
     const user = await this.repo.findOne({
       where: { id },
     });
@@ -68,39 +73,49 @@ export class UserRepo {
     return user;
   }
 
-  async getOneByEmail(userEmail: string): Promise<User | null> {
+  async findOneByExactEmail(
+    userEmail: string,
+  ): Promise<Pick<User, UsuallyReturnedUserPlainKeys> | null> {
     return await this.repo.findOne({ where: { email: userEmail } });
   }
 
-  async findOneByName(
+  async findOneByExactName(
     firstName: string,
     lastName: string,
-  ): Promise<User | null> {
+  ): Promise<Pick<User, UsuallyReturnedUserPlainKeys> | null> {
     return await this.repo.findOne({ where: { firstName, lastName } });
   }
 
-  async updateOneWithRelations(
-    updatedUser: UpdateEntity<User, 'id'>,
-  ): Promise<User> {
-    return await updateOneWithRelations<User, 'id'>(this.repo, updatedUser);
+  async createOnePlain(
+    newUser: Pick<User, PlainKeysAllowedToModify>,
+  ): Promise<
+    Pick<User, PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert>
+  > {
+    const createdUser = await this.repo.insert(newUser);
+    console.log('createdUser: ', createdUser);
+    createdUser;
+    return {} as any;
   }
 
-  async createOneWithRelations(
-    newUser: NewEntity<User, 'id'>,
-  ): Promise<CreatedEntity<User, 'id'>> {
-    return await createOneWithRelations(this.repo, newUser);
+  async updateOnePlain({
+    id,
+    ...existingUser
+  }: Pick<User, PrimaryKeys | PlainKeysAllowedToModify>): Promise<
+    Pick<User, PrimaryKeys | PlainKeysAllowedToModify>
+  > {
+    const updatedUser = await this.repo.update(id, existingUser);
+    console.log('updatedUser: ', updatedUser);
+    updatedUser;
+    return {} as any;
   }
 
-  async createManyWithRelations(
-    newUsers: NewEntity<User, 'id'>[],
-  ): Promise<CreatedEntity<User, 'id'>[]> {
-    return await createManyWithRelations(this.repo, newUsers);
-  }
-
-  async updateOnePlain(
-    updatedUser: UpdatePlainEntity<User, 'id'>,
-  ): Promise<void> {
-    return await updateOnePlain<User, 'id'>(this.repo, updatedUser);
+  async updateManyPlain(
+    existingUsers: Pick<User, PlainKeysAllowedToModify>[],
+  ): Promise<Pick<User, PrimaryKeys | PlainKeysAllowedToModify>[]> {
+    const updatedUsers = await this.repo.save(existingUsers);
+    console.log('updatedUsers: ', updatedUsers);
+    updatedUsers;
+    return {} as any;
   }
 
   async findOneByEmailWithAccessScopesAndPasswordHash(
@@ -138,3 +153,22 @@ export class UserRepo {
     await this.repo.delete(id);
   }
 }
+
+type PrimaryKeys = 'id';
+type PlainKeysGeneratedAfterInsert = PrimaryKeys | 'createdAt' | 'updatedAt';
+
+type PlainKeysAllowedToModify = RegularPlainKeys | 'salt' | 'passwordHash';
+
+export type UsuallyReturnedUserPlainKeys =
+  | PlainKeysGeneratedAfterInsert
+  | RegularPlainKeys;
+
+type RegularPlainKeys =
+  | 'firstName'
+  | 'lastName'
+  | 'nickname'
+  | 'email'
+  | 'avatarURL'
+  | 'patronymic'
+  | 'gender'
+  | 'phone';

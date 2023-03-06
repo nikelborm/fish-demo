@@ -1,6 +1,6 @@
 import { IsNumber } from 'class-validator';
 
-export class SubscribeToReservoirLiveSensorsDTO {
+export class GetSensorMeasurementsByReservoirIdDTO {
   @IsNumber()
   reservoirId!: number;
 }

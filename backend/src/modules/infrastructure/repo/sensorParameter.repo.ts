@@ -15,19 +15,11 @@ export class SensorParameterRepo {
   }
 
   async createOnePlain(
-    newSensorParameter: Pick<
-      SensorParameter,
-      'name' | 'unit' | 'shortName' | 'valueTypeName'
-    >,
+    newSensorParameter: Pick<SensorParameter, PlainKeysAllowedToModify>,
   ): Promise<
     Pick<
       SensorParameter,
-      | 'name'
-      | 'unit'
-      | 'shortName'
-      | 'valueTypeName'
-      | 'createdAt'
-      | 'updatedAt'
+      PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
     >
   > {
     const createdSensorParameter = await this.repo.insert(newSensorParameter);
@@ -37,19 +29,11 @@ export class SensorParameterRepo {
   }
 
   async createManyPlain(
-    newSensorParameters: Pick<
-      SensorParameter,
-      'name' | 'unit' | 'shortName' | 'valueTypeName'
-    >[],
+    newSensorParameters: Pick<SensorParameter, PlainKeysAllowedToModify>[],
   ): Promise<
     Pick<
       SensorParameter,
-      | 'name'
-      | 'unit'
-      | 'shortName'
-      | 'valueTypeName'
-      | 'createdAt'
-      | 'updatedAt'
+      PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
     >[]
   > {
     const createdSensorParameters = await this.repo.insert(newSensorParameters);
@@ -58,3 +42,7 @@ export class SensorParameterRepo {
     return {} as any;
   }
 }
+
+type PlainKeysGeneratedAfterInsert = 'id' | 'createdAt' | 'updatedAt';
+
+type PlainKeysAllowedToModify = 'name' | 'unit' | 'shortName' | 'valueTypeName';

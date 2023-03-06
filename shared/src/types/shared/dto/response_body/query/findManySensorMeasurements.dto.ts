@@ -36,7 +36,7 @@ import { NestedArrayDTO, NestedDTO } from '../../../../../tools';
 //   sensorParameter!: SimpleSensorParameter;
 // }
 
-class FlatSensorMeasurement {
+export class FlatSensorMeasurement {
   @IsNumber()
   id!: number;
 

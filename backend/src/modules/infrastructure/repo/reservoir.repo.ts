@@ -52,8 +52,10 @@ export class ReservoirRepo {
   }
 
   async createOnePlain(
-    newReservoir: Pick<Reservoir, 'name'>,
-  ): Promise<Pick<Reservoir, 'id' | 'name' | 'createdAt' | 'updatedAt'>> {
+    newReservoir: Pick<Reservoir, PlainKeysAllowedToModify>,
+  ): Promise<
+    Pick<Reservoir, PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert>
+  > {
     const createdReservoir = await this.repo.insert(newReservoir);
     console.log('createdReservoir: ', createdReservoir);
     createdReservoir;
@@ -61,11 +63,40 @@ export class ReservoirRepo {
   }
 
   async createManyPlain(
-    newReservoirs: Pick<Reservoir, 'name'>[],
-  ): Promise<Pick<Reservoir, 'id' | 'name' | 'createdAt' | 'updatedAt'>[]> {
+    newReservoirs: Pick<Reservoir, PlainKeysAllowedToModify>[],
+  ): Promise<
+    Pick<Reservoir, PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert>[]
+  > {
     const createdReservoirs = await this.repo.insert(newReservoirs);
     console.log('createdReservoirs: ', createdReservoirs);
     createdReservoirs;
     return {} as any;
   }
+
+  async updateOnePlain({
+    id,
+    ...existingReservoir
+  }: Pick<Reservoir, PrimaryKeys | PlainKeysAllowedToModify>): Promise<
+    Pick<Reservoir, PrimaryKeys | PlainKeysAllowedToModify>
+  > {
+    const updatedReservoir = await this.repo.update(id, existingReservoir);
+    console.log('updatedReservoir: ', updatedReservoir);
+    updatedReservoir;
+    return {} as any;
+  }
+
+  async updateManyPlain(
+    existingReservoirs: Pick<Reservoir, PlainKeysAllowedToModify>[],
+  ): Promise<Pick<Reservoir, PrimaryKeys | PlainKeysAllowedToModify>[]> {
+    const updatedReservoirs = await this.repo.save(existingReservoirs);
+    console.log('updatedReservoirs: ', updatedReservoirs);
+    updatedReservoirs;
+    return {} as any;
+  }
 }
+
+type PrimaryKeys = 'id';
+
+type PlainKeysGeneratedAfterInsert = PrimaryKeys | 'createdAt' | 'updatedAt';
+
+type PlainKeysAllowedToModify = 'name';
