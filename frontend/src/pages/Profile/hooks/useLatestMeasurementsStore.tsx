@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { ISensorMeasurement } from 'types';
+import { FlatSensorMeasurement } from 'types';
 
 export function useLatestMeasurementsStore() {
   const [latestMeasurements, setLatestMeasurementsState] = useState<
-    Map<number, ISensorMeasurement>
+    Map<number, FlatSensorMeasurement>
   >(new Map());
 
   return {
     getLatestMeasurementsFor(sensorParameterInstanceId: number) {
       return latestMeasurements.get(sensorParameterInstanceId);
     },
-    setNewLatestMeasurements(candidates: ISensorMeasurement[]) {
+    setNewLatestMeasurements(candidates: FlatSensorMeasurement[]) {
       let hasChanged = false;
       candidates.forEach((v) => {
         const currentLatestDate = latestMeasurements.get(

@@ -1,4 +1,4 @@
-import { Manager } from 'socket.io-client';
+import { Manager, Socket } from 'socket.io-client';
 import { useEffect } from 'react';
 
 const socketManager = new Manager({
@@ -10,8 +10,8 @@ const socketManager = new Manager({
 export function useSocket(config: {
   namespace: string;
   handlers: Record<string, (message?: any) => void>;
-  onConnect?: () => void;
-  onDisconnect?: () => void;
+  onConnect?: (socket: Socket) => void;
+  onDisconnect?: (socket: Socket) => void;
 }) {
   const socket = socketManager.socket(config.namespace, {
     auth: {
@@ -21,9 +21,13 @@ export function useSocket(config: {
   });
 
   useEffect(() => {
-    socket.on('connect', () => {});
+    socket.on('connect', () => {
+      config.onConnect?.(socket);
+    });
 
-    socket.on('disconnect', () => {});
+    socket.on('disconnect', () => {
+      config.onDisconnect?.(socket);
+    });
 
     for (const [event, handler] of Object.entries(config.handlers)) {
       socket.on(event, handler);
@@ -46,4 +50,10 @@ export function useSocket(config: {
       socket.off('exception');
     };
   }, []);
+
+  return {
+    send: (event: string, data: any) => {
+      socket.emit(event, data);
+    },
+  };
 }

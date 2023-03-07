@@ -1,4 +1,4 @@
-import { useSensorsMeasurementsData } from 'hooks';
+import { useReservoirInfo, useSensorsMeasurementsData } from 'hooks';
 import { useParams } from 'react-router';
 import { useFishRecognitionVideoStream } from './hooks';
 import {
@@ -12,9 +12,13 @@ import {
 export function Profile() {
   const asd = useParams();
   console.log('asd: ', asd);
+  const reservoirId = 1;
   const { isSuccess, sensorMeasurements } = useSensorsMeasurementsData({
-    reservoirId: 1,
+    reservoirId,
   });
+  const asd2 = useReservoirInfo(reservoirId);
+  console.log('asd2: ', asd2);
+  console.log('sensorMeasurements: ', sensorMeasurements);
   const { refOfVideoElement } = useFishRecognitionVideoStream();
 
   // eslint-disable-next-line no-console

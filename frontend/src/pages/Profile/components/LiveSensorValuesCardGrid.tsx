@@ -9,25 +9,30 @@ import {
   RealTimeSensorValue,
 } from './styled';
 
-export function LiveSensorValuesCardGrid() {
+export function LiveSensorValuesCardGrid({
+  reservoirId,
+}: {
+  reservoirId: number;
+}) {
   const { getLatestMeasurementsFor, setNewLatestMeasurements } =
     useLatestMeasurementsStore();
 
   useSocket({
     namespace: '/sensorMeasurement',
+    onConnect(socket) {
+      socket.emit('latest/byReservoir', { reservoirId });
+    },
     handlers: {
       many: (messages) =>
         setNewLatestMeasurements(messages.map(validateAndTransformMeasurement)),
       latest: (messages) =>
         setNewLatestMeasurements(messages.map(validateAndTransformMeasurement)),
-      one: (message) =>
-        setNewLatestMeasurements([validateAndTransformMeasurement(message)]),
     },
   });
 
   return (
     <RealTimeSensorGrid>
-      <RealTimeSensorInfo invert>
+      {/* <RealTimeSensorInfo invert>
         <RealTimeSensorName>t, °C</RealTimeSensorName>
         <RealTimeSensorValue>
           {parseFloat(
@@ -54,7 +59,7 @@ export function LiveSensorValuesCardGrid() {
       </RealTimeSensorInfo>
       <BehavioralInfo>
         Тип поведения: {getLatestMeasurementsFor('behavior')?.value || 'Норма'}
-      </BehavioralInfo>
+      </BehavioralInfo> */}
     </RealTimeSensorGrid>
   );
 }

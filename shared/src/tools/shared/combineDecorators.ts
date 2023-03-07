@@ -11,7 +11,7 @@
  *
  * @publicApi
  */
-function combineDecorators(
+export function combineDecorators(
   ...decorators: Array<ClassDecorator | MethodDecorator | PropertyDecorator>
 ) {
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -35,5 +35,3 @@ function combineDecorators(
     }
   };
 }
-
-export {combineDecorators};
