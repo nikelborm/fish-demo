@@ -15,9 +15,11 @@ export class ReservoirRepo {
   async getReservoirFullInfo(
     reservoirId: number,
   ): Promise<ReservoirInfoDTO | null> {
-    const results = await this.repo // сука даже регулярные выражения блять легче сука написать, чем разобраться со всеми багами этого куска говна
+    const rawResults = await this.repo // сука даже регулярные выражения блять легче сука написать, чем разобраться со всеми багами этого куска говна
       .createQueryBuilder('reservoir') // Как же меня заебала typeorm
       .select([
+        // сука ебаный тайпорм не может сука кавычки блять нормально поставить и зарезолвить блять ебаный внешний ключ
+        // FFFFFFFFFFFFUUUUUUUUUUUUCCCCCCCKKKKKKK
         'reservoir.id',
         'reservoir.name', // Как же меня заебала typeorm
         'sensorInstances.id',
@@ -67,13 +69,13 @@ export class ReservoirRepo {
         reservoirId,
       })
       .getRawMany();
-
-    if (results.length !== 1) return null;
-    return (
+    const results =
       this.#iHateTypeormAndWasForcedWithNoOtherChoiceToWriteThisFuckingCursedRemap(
-        results,
-      )[0] ?? null
-    );
+        rawResults,
+      ) as [ReservoirInfoDTO];
+    console.log('results: ', results);
+    if (results.length !== 1) return null;
+    return results[0] ?? null;
   }
 
   async createOnePlain(
@@ -120,8 +122,8 @@ export class ReservoirRepo {
   }
 
   #iHateTypeormAndWasForcedWithNoOtherChoiceToWriteThisFuckingCursedRemap(
-    asd2,
-  ): any {
+    asd2: any[],
+  ): any[] {
     const ddd = [...groupByKey(asd2, 'reservoir_reservoir_id').entries()].map(
       ([reservoirId, recordsWithThatReservoirId]) => ({
         id: reservoirId,
@@ -168,7 +170,8 @@ export class ReservoirRepo {
         })),
       }),
     );
-    console.log('ddd: ', JSON.stringify(ddd, null, 4));
+    return ddd;
+    console.log('ddd: ', ddd);
   }
 }
 

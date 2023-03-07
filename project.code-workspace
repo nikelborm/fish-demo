@@ -131,7 +131,7 @@
       },
       {
         "label": "shallow clone apache superset ",
-        "type": "shell", // https://superset.apache.org/docs/installation/installing-superset-using-docker-compose/
+        "type": "shell",
         "command": "git clone --depth 1 -b master https://github.com/apache/superset.git; cd superset;",
         "problemMatcher": [],
         "promptOnClose": true,
@@ -498,9 +498,25 @@
         }
       },
       {
+        "label": "Apply user mock to database",
+        "type": "shell",
+        "command": "curl http://localhost/api/mock/execute?mockScriptName=mockUserAndAdminAccessScope; echo",
+        "promptOnClose": false,
+        "problemMatcher": [],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": true,
+          "panel": "shared",
+          "close": false,
+          "showReuseMessage": true,
+          "clear": true
+        }
+      },
+      {
         "label": "Apply sensors mock to database",
         "type": "shell",
-        "command": "curl http://localhost/api/mock/execute?mockScriptName=fillSensorMeasurements; echo",
+        "command": "curl http://localhost/api/mock/execute?mockScriptName=mockSensorMeasurements; echo",
         "promptOnClose": false,
         "problemMatcher": [],
         "presentation": {

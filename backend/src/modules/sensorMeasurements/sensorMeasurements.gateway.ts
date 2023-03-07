@@ -49,6 +49,7 @@ export class SensorMeasurementWSGateway /*  implements OnGatewayConnection */ {
       await this.sensorMeasurementRepo.getLatestMeasurementsWhereSensorInstanceHas(
         reservoirId,
       );
+    console.log('latestMeasurements: ', latestMeasurements);
     client.emit('latest', latestMeasurements);
   }
 
@@ -74,6 +75,12 @@ export class SensorMeasurementWSGateway /*  implements OnGatewayConnection */ {
       )
       .map(({ id }) => id);
 
+    console.log(
+      'sensorParameterInstanceIdsToFollow.map',
+      sensorParameterInstanceIdsToFollow.map(
+        (id) => `newSensorMeasurement/sensorParameterInstanceId=${id}`,
+      ),
+    );
     await client.join(
       sensorParameterInstanceIdsToFollow.map(
         (id) => `newSensorMeasurement/sensorParameterInstanceId=${id}`,
