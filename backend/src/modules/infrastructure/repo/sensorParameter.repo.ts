@@ -11,7 +11,9 @@ export class SensorParameterRepo {
     private readonly repo: Repository<SensorParameter>,
   ) {}
 
-  async getAll(): Promise<SensorParameter[]> {
+  async getAll(): Promise<
+    Pick<SensorParameter, KeysOfUsuallyReturnedSensorParameter>[]
+  > {
     return await this.repo.find();
   }
 
@@ -42,3 +44,7 @@ export type CreatedOnePlainSensorParameter = Pick<
   SensorParameter,
   PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
 >;
+
+export type KeysOfUsuallyReturnedSensorParameter =
+  | PlainKeysGeneratedAfterInsert
+  | PlainKeysAllowedToModify;

@@ -67,20 +67,10 @@ export class ReservoirRepo {
         reservoirId,
       })
       .getRawMany();
-    console.log(
-      'results: ',
-      JSON.stringify(
-        this.#iHateTypeormAndWasForcedWithNoOtherChoiceToWriteThisFuckingRemap(
-          results,
-        ),
-        null,
-        4,
-      ),
-    );
 
     if (results.length !== 1) return null;
     return (
-      this.#iHateTypeormAndWasForcedWithNoOtherChoiceToWriteThisFuckingRemap(
+      this.#iHateTypeormAndWasForcedWithNoOtherChoiceToWriteThisFuckingCursedRemap(
         results,
       )[0] ?? null
     );
@@ -129,7 +119,9 @@ export class ReservoirRepo {
     return {} as any;
   }
 
-  #iHateTypeormAndWasForcedWithNoOtherChoiceToWriteThisFuckingRemap(asd2): any {
+  #iHateTypeormAndWasForcedWithNoOtherChoiceToWriteThisFuckingCursedRemap(
+    asd2,
+  ): any {
     const ddd = [...groupByKey(asd2, 'reservoir_reservoir_id').entries()].map(
       ([reservoirId, recordsWithThatReservoirId]) => ({
         id: reservoirId,

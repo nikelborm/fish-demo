@@ -30,9 +30,32 @@ export class MockDataUseCase {
     console.log('\nDATABASE FILLED SUCCESSFULLY\n\n\n');
   }
 
-  async fillDBScript(): Promise<void> {
-    console.log('fillDBScript called');
+  async mockReservoirAndAllInternals(): Promise<void> {
+    console.log('mockReservoirAndAllInternals called');
 
+    let sensorParameters = await this.sensorParameterRepo.getAll();
+
+    if (!sensorParameters.length)
+      sensorParameters = (await this.#mockSensorParameters()).sensorParameters;
+
+    const reservoir = await this.reservoirRepo.createOnePlain({
+      name: `Бассейн №${Math.random()}`,
+    });
+    console.log('reservoir: ', reservoir);
+    const { abstractSensor: abstractSensor1 } = await this.#mockAbstractSensor(
+      sensorParameters,
+    );
+    const { abstractSensor: abstractSensor2 } = await this.#mockAbstractSensor(
+      sensorParameters,
+    );
+
+    await this.#mockManySensorInstances(reservoir, [
+      abstractSensor1,
+      abstractSensor2,
+    ]);
+  }
+
+  async mockUserAndAdminAccessScope(): Promise<void> {
     const systemAdminScope = await this.accessScopeRepo.createOneWithRelations({
       type: AccessScopeType.SYSTEM_ADMIN,
     });
@@ -55,32 +78,9 @@ export class MockDataUseCase {
       userId: user.id,
     });
     console.log('userToAccessScope: ', userToAccessScope);
-
-    const reservoir = await this.reservoirRepo.createOnePlain({
-      name: 'Бассейн №1',
-    });
-    console.log('reservoir: ', reservoir);
-    const { sensorParameters } = await this.#mockSensorParameters();
-    const { abstractSensor: abstractSensor1 } = await this.#mockAbstractSensor(
-      sensorParameters,
-    );
-    const { abstractSensor: abstractSensor2 } = await this.#mockAbstractSensor(
-      sensorParameters,
-    );
-    const sensorParameterInstanceIds = (
-      await Promise.all([
-        this.#mockSensorInstance(reservoir, abstractSensor1),
-        this.#mockSensorInstance(reservoir, abstractSensor1),
-        this.#mockSensorInstance(reservoir, abstractSensor2),
-        this.#mockSensorInstance(reservoir, abstractSensor2),
-      ])
-    )
-      .flatMap(({ sensorParameterInstances }) => sensorParameterInstances)
-      .map(({ id }) => id);
-    console.log('sensorParameterInstanceIds: ', sensorParameterInstanceIds);
   }
 
-  async fillSensorMeasurements(): Promise<void> {
+  async mockSensorMeasurements(): Promise<void> {
     await this.sensorMeasurementRepo.createManyPlain(
       this.#getFakeMeasurements(2, 0.5, 2),
     );
@@ -93,6 +93,30 @@ export class MockDataUseCase {
       this.#getFakeMeasurements(3, 5, 8),
     );
     console.log();
+  }
+
+  async #mockManySensorInstances(
+    reservoir,
+    abstractSensors: any[],
+  ): Promise<number[]> {
+    const generateMockSensorInstances = (): Promise<{
+      sensorInstance: repo.CreatedOnePlainSensorInstance;
+      sensorParameterInstances: repo.CreatedOnePlainSensorParameterInstance[];
+    }>[] =>
+      abstractSensors.map((abstractSensor) =>
+        this.#mockSensorInstance(reservoir, abstractSensor),
+      );
+
+    const sensorParameterInstanceIds = (
+      await Promise.all([
+        ...generateMockSensorInstances(),
+        ...generateMockSensorInstances(),
+      ])
+    )
+      .flatMap(({ sensorParameterInstances }) => sensorParameterInstances)
+      .map(({ id }) => id);
+    console.log('sensorParameterInstanceIds: ', sensorParameterInstanceIds);
+    return sensorParameterInstanceIds;
   }
 
   async #mockSensorParameters(): Promise<{

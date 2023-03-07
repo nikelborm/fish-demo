@@ -2,8 +2,9 @@ import type { IAppConfigMap } from './types';
 import { ConfigKeys } from './types';
 
 const allowedMethods: IAppConfigMap[ConfigKeys.MOCK_SCRIPT_NAME][] = [
-  'fillDBScript',
-  'fillSensorMeasurements',
+  'mockReservoirAndAllInternals',
+  'mockUserAndAdminAccessScope',
+  'mockSensorMeasurements',
 ];
 
 export const mockUseCaseMethodsAllowedToBeExecuted: Set<string> = new Set(

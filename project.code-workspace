@@ -484,7 +484,7 @@
       {
         "label": "Apply default mock to database",
         "type": "shell",
-        "command": "curl http://localhost/api/mock/execute?mockScriptName=fillDBScript; echo",
+        "command": "curl http://localhost/api/mock/execute?mockScriptName=mockReservoirAndAllInternals; echo",
         "promptOnClose": false,
         "problemMatcher": [],
         "presentation": {
