@@ -168,7 +168,10 @@ function buildProxy<
   }) as unknown as ReturnType;
 }
 
-export const messages = buildProxy(rawMessages, new Set(['user'] as const));
+export const messages = buildProxy(
+  rawMessages,
+  new Set(['user', 'reservoir'] as const),
+);
 
 type MessagesDotRepoType<
   T extends typeof rawMessages,

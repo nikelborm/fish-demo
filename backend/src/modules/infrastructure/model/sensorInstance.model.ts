@@ -37,8 +37,11 @@ export class SensorInstance implements ISensorInstance {
   )
   @JoinTable({
     name: 'sensor_parameter_instance',
-    joinColumn: { name: 'sensor_instance_id' },
-    inverseJoinColumn: { name: 'sensor_parameter_id' },
+    joinColumn: { name: 'sensor_instance_id', referencedColumnName: 'id' },
+    inverseJoinColumn: {
+      name: 'sensor_parameter_id',
+      referencedColumnName: 'id',
+    },
     // synchronize is important flag! Without it your migrations will have two conflicting declarations for question_to_category table
     // from https://github.com/typeorm/typeorm/blob/master/docs/decorator-reference.md#jointable
     synchronize: false,

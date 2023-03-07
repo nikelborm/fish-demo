@@ -7,7 +7,7 @@ import { ReservoirUseCase } from './reservoir.useCase';
 export class ReservoirController {
   constructor(private readonly reservoirUseCase: ReservoirUseCase) {}
 
-  @Get(':reservoirId')
+  @Get('/:reservoirId')
   @AuthorizedOnly()
   async findOneReservoirById(
     @Param('reservoirId', ParseIntPipe) reservoirId: number,

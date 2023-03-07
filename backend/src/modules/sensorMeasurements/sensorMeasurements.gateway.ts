@@ -8,7 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { messages } from 'src/config';
-import { groupBy, UseWSMessageValidationPipe } from 'src/tools';
+import { groupByKey, UseWSMessageValidationPipe } from 'src/tools';
 import {
   FlatSensorMeasurement,
   GetSensorMeasurementsByReservoirIdDTO,
@@ -27,7 +27,7 @@ export class SensorMeasurementWSGateway /*  implements OnGatewayConnection */ {
 
   broadcastManyNew(sensorMeasurements: FlatSensorMeasurement[]): void {
     [
-      ...groupBy(sensorMeasurements, 'sensorParameterInstanceId').entries(),
+      ...groupByKey(sensorMeasurements, 'sensorParameterInstanceId').entries(),
     ].forEach(([sensorParameterInstanceId, filteredSensorMeasurements]) => {
       this.server
         .to(

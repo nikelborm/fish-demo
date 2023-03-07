@@ -60,12 +60,49 @@ export class MockDataUseCase {
       name: 'Бассейн №1',
     });
     console.log('reservoir: ', reservoir);
+    const { sensorParameters } = await this.#mockSensorParameters();
+    const { abstractSensor: abstractSensor1 } = await this.#mockAbstractSensor(
+      sensorParameters,
+    );
+    const { abstractSensor: abstractSensor2 } = await this.#mockAbstractSensor(
+      sensorParameters,
+    );
+    const sensorParameterInstanceIds = (
+      await Promise.all([
+        this.#mockSensorInstance(reservoir, abstractSensor1),
+        this.#mockSensorInstance(reservoir, abstractSensor1),
+        this.#mockSensorInstance(reservoir, abstractSensor2),
+        this.#mockSensorInstance(reservoir, abstractSensor2),
+      ])
+    )
+      .flatMap(({ sensorParameterInstances }) => sensorParameterInstances)
+      .map(({ id }) => id);
+    console.log('sensorParameterInstanceIds: ', sensorParameterInstanceIds);
+  }
 
-    const sensorInstance = await this.sensorInstanceRepo.createOnePlain({
-      reservoirId: reservoir.id,
-    });
-    console.log('sensorInstance: ', sensorInstance);
+  async fillSensorMeasurements(): Promise<void> {
+    await this.sensorMeasurementRepo.createManyPlain(
+      this.#getFakeMeasurements(2, 0.5, 2),
+    );
 
+    await this.sensorMeasurementRepo.createManyPlain(
+      this.#getFakeMeasurements(1, 20, 40),
+    );
+
+    await this.sensorMeasurementRepo.createManyPlain(
+      this.#getFakeMeasurements(3, 5, 8),
+    );
+    console.log();
+  }
+
+  async #mockSensorParameters(): Promise<{
+    sensorParameters: [
+      //[tempSensorParameter, oxygenSensorParameter, pHSensorParameter]
+      repo.CreatedOnePlainSensorParameter,
+      repo.CreatedOnePlainSensorParameter,
+      repo.CreatedOnePlainSensorParameter,
+    ];
+  }> {
     const sensorParameters = await this.sensorParameterRepo.createManyPlain([
       {
         name: 'Температура',
@@ -87,15 +124,24 @@ export class MockDataUseCase {
       },
     ]);
     console.log('sensorParameters: ', sensorParameters);
-    const [tempSensorParameter, oxygenSensorParameter, pHSensorParameter] =
-      sensorParameters as [
+    return {
+      sensorParameters: sensorParameters as [
         repo.CreatedOnePlainSensorParameter,
         repo.CreatedOnePlainSensorParameter,
         repo.CreatedOnePlainSensorParameter,
-      ];
+      ],
+    };
+  }
 
+  async #mockAbstractSensor(
+    sensorParameters: repo.CreatedOnePlainSensorParameter[],
+  ): Promise<{
+    abstractSensor: repo.CreatedOnePlainAbstractSensor & {
+      sensorParameters: repo.CreatedOnePlainSensorParameter[];
+    };
+  }> {
     const abstractSensor = await this.abstractSensorRepo.createOnePlain({
-      modelName: 'CHR 3000',
+      modelName: `CHR 3000${Math.random()}`,
     });
     console.log('abstractSensor: ', abstractSensor);
 
@@ -110,10 +156,26 @@ export class MockDataUseCase {
       'abstractSensorToSensorParameter: ',
       abstractSensorToSensorParameter,
     );
+    return {
+      abstractSensor: { ...abstractSensor, sensorParameters },
+    };
+  }
+
+  async #mockSensorInstance(
+    reservoir,
+    abstractSensorWithJoinedParameters,
+  ): Promise<{
+    sensorInstance: repo.CreatedOnePlainSensorInstance;
+    sensorParameterInstances: repo.CreatedOnePlainSensorParameterInstance[];
+  }> {
+    const sensorInstance = await this.sensorInstanceRepo.createOnePlain({
+      reservoirId: reservoir.id,
+    });
+    console.log('sensorInstance: ', sensorInstance);
 
     const abstractSensorToSensorInstance =
       await this.abstractSensorToSensorInstanceRepo.createOne({
-        abstractSensorId: abstractSensor.id,
+        abstractSensorId: abstractSensorWithJoinedParameters.id,
         sensorInstanceId: sensorInstance.id,
       });
 
@@ -121,30 +183,16 @@ export class MockDataUseCase {
       'abstractSensorToSensorInstance: ',
       abstractSensorToSensorInstance,
     );
-    const sensorParameterInstance =
+    const sensorParameterInstances =
       await this.sensorParameterInstanceRepo.createManyPlain(
-        sensorParameters.map(({ id }) => ({
+        abstractSensorWithJoinedParameters.sensorParameters.map(({ id }) => ({
           sensorParameterId: id,
-          abstractSensorId: abstractSensor.id,
+          abstractSensorId: abstractSensorWithJoinedParameters.id,
           sensorInstanceId: sensorInstance.id,
         })),
       );
-    console.log('sensorParameterInstance: ', sensorParameterInstance);
-  }
-
-  async fillSensorMeasurements(): Promise<void> {
-    await this.sensorMeasurementRepo.createManyPlain(
-      this.#getFakeMeasurements(2, 0.5, 2),
-    );
-
-    await this.sensorMeasurementRepo.createManyPlain(
-      this.#getFakeMeasurements(1, 20, 40),
-    );
-
-    await this.sensorMeasurementRepo.createManyPlain(
-      this.#getFakeMeasurements(3, 5, 8),
-    );
-    console.log();
+    console.log('sensorParameterInstances: ', sensorParameterInstances);
+    return { sensorInstance, sensorParameterInstances };
   }
 
   #getFakeMeasurements(

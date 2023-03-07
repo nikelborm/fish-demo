@@ -3,7 +3,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { groupBy } from 'src/tools';
+import { groupByKey } from 'src/tools';
 import { Server, Socket } from 'socket.io';
 import { CreatePredictDTO } from 'src/types';
 
@@ -24,16 +24,13 @@ export class PredictWSGateway implements OnGatewayConnection {
   server!: Server;
 
   broadcastManyNew(predicts: CreatePredictDTO[]): void {
-    [
-      ...groupBy<'predictCodeName', CreatePredictDTO>(
-        predicts,
-        'predictCodeName',
-      ).entries(),
-    ].forEach(([predictCodeName, predicts]) => {
-      this.server
-        .to(`newPrediction/${predictCodeName}`)
-        .emit('one', predicts[0]);
-    });
+    [...groupByKey(predicts, 'predictCodeName').entries()].forEach(
+      ([predictCodeName, predicts]) => {
+        this.server
+          .to(`newPrediction/${predictCodeName}`)
+          .emit('one', predicts[0]);
+      },
+    );
 
     let hasChanged = false; // move to util function
     predicts.forEach((predict) => {

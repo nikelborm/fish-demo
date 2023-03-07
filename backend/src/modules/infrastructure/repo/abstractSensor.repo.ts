@@ -38,7 +38,7 @@ type PlainKeysGeneratedAfterInsert = 'id' | 'createdAt' | 'updatedAt';
 
 type PlainKeysAllowedToModify = 'modelName';
 
-type CreatedOnePlainAbstractSensor = Pick<
+export type CreatedOnePlainAbstractSensor = Pick<
   AbstractSensor,
   PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
 >;

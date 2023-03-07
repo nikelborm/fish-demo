@@ -13,6 +13,7 @@ import {
   UserModule,
   VideoLogModule,
 } from './modules';
+import { ReservoirModule } from './modules/reservoir';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import {
     UserModule,
     SensorMeasurementModule,
     PredictModule,
+    ReservoirModule,
     VideoLogModule,
   ],
   controllers: [MockDataController],

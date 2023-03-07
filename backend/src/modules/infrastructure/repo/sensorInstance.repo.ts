@@ -37,7 +37,7 @@ type PlainKeysGeneratedAfterInsert = 'id' | 'createdAt' | 'updatedAt';
 
 type PlainKeysAllowedToModify = 'reservoirId';
 
-type CreatedOnePlainSensorInstance = Pick<
+export type CreatedOnePlainSensorInstance = Pick<
   SensorInstance,
   PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
 >;

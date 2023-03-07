@@ -34,8 +34,11 @@ export class AbstractSensor implements IAbstractSensor {
   )
   @JoinTable({
     name: 'abstract_sensor_to_sensor_parameter',
-    joinColumn: { name: 'abstract_sensor_id' },
-    inverseJoinColumn: { name: 'sensor_parameter_id' },
+    joinColumn: { name: 'abstract_sensor_id', referencedColumnName: 'id' },
+    inverseJoinColumn: {
+      name: 'sensor_parameter_id',
+      referencedColumnName: 'id',
+    },
     // synchronize is important flag! Without it your migrations will have two conflicting declarations for question_to_category table
     // from https://github.com/typeorm/typeorm/blob/master/docs/decorator-reference.md#jointable
     synchronize: false,

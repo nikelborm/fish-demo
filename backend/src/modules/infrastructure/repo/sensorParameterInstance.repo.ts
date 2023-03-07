@@ -47,7 +47,7 @@ type PlainKeysAllowedToModify =
   | 'abstractSensorId'
   | 'sensorInstanceId';
 
-type CreatedOnePlainSensorParameterInstance = Pick<
+export type CreatedOnePlainSensorParameterInstance = Pick<
   SensorParameterInstance,
   PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
 >;
