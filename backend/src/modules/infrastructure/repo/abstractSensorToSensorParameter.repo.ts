@@ -15,24 +15,25 @@ export class AbstractSensorToSensorParameterRepo {
   }
 
   async createOne(
-    newAbstractSensorToSensorParameter: Pick<
-      AbstractSensorToSensorParameter,
-      PlainKeysAllowedToModify
-    >,
-  ): Promise<void> {
+    newAbstractSensorToSensorParameter: CreatedOnePlainAbstractSensorToSensorParameter,
+  ): Promise<CreatedOnePlainAbstractSensorToSensorParameter> {
     await this.repo.insert(newAbstractSensorToSensorParameter);
+    return newAbstractSensorToSensorParameter;
   }
 
   async createMany(
-    newAbstractSensorToSensorParameters: Pick<
-      AbstractSensorToSensorParameter,
-      PlainKeysAllowedToModify
-    >[],
-  ): Promise<void> {
+    newAbstractSensorToSensorParameters: CreatedOnePlainAbstractSensorToSensorParameter[],
+  ): Promise<CreatedOnePlainAbstractSensorToSensorParameter[]> {
     await this.repo.insert(newAbstractSensorToSensorParameters);
+    return newAbstractSensorToSensorParameters;
   }
 }
 
 type PlainKeysGeneratedAfterInsert = never;
 
 type PlainKeysAllowedToModify = 'abstractSensorId' | 'sensorParameterId';
+
+type CreatedOnePlainAbstractSensorToSensorParameter = Pick<
+  AbstractSensorToSensorParameter,
+  PlainKeysAllowedToModify
+>;

@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { messages } from 'src/config';
+import { insertManyPlain, insertOnePlain } from 'src/tools';
 import { UserAuthInfo, UserForLoginAttemptValidation } from 'src/types';
 import { ILike, Repository } from 'typeorm';
 import { User } from '../model';
@@ -88,13 +89,8 @@ export class UserRepo {
 
   async createOnePlain(
     newUser: Pick<User, PlainKeysAllowedToModify>,
-  ): Promise<
-    Pick<User, PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert>
-  > {
-    const createdUser = await this.repo.insert(newUser);
-    console.log('createdUser: ', createdUser);
-    createdUser;
-    return {} as any;
+  ): Promise<CreatedOnePlainUser> {
+    return await insertOnePlain<CreatedOnePlainUser>(this.repo, newUser);
   }
 
   async updateOnePlain({
@@ -172,3 +168,8 @@ type RegularPlainKeys =
   | 'patronymic'
   | 'gender'
   | 'phone';
+
+type CreatedOnePlainUser = Pick<
+  User,
+  PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
+>;

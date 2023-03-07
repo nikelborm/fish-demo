@@ -1,9 +1,5 @@
 import { Type } from 'class-transformer';
-import {
-  IsDate,
-  IsDefined,
-  IsNumber,
-} from 'class-validator';
+import { IsDate, IsDefined, IsNumber } from 'class-validator';
 import { NestedArrayDTO } from '../../../../../tools/shared';
 
 export class CreateOneSensorMeasurementResponse {

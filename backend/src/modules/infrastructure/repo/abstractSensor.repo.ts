@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { insertManyPlain, insertOnePlain } from 'src/tools';
 import { Repository } from 'typeorm';
 import { AbstractSensor } from '../model';
 
@@ -16,33 +17,28 @@ export class AbstractSensorRepo {
 
   async createOnePlain(
     newAbstractSensor: Pick<AbstractSensor, PlainKeysAllowedToModify>,
-  ): Promise<
-    Pick<
-      AbstractSensor,
-      PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
-    >
-  > {
-    const createdAbstractSensor = await this.repo.insert(newAbstractSensor);
-    console.log('createdAbstractSensor: ', createdAbstractSensor);
-    createdAbstractSensor;
-    return {} as any;
+  ): Promise<CreatedOnePlainAbstractSensor> {
+    return await insertOnePlain<CreatedOnePlainAbstractSensor>(
+      this.repo,
+      newAbstractSensor,
+    );
   }
 
   async createManyPlain(
     newAbstractSensors: Pick<AbstractSensor, PlainKeysAllowedToModify>[],
-  ): Promise<
-    Pick<
-      AbstractSensor,
-      PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
-    >[]
-  > {
-    const createdAbstractSensor = await this.repo.insert(newAbstractSensors);
-    console.log('createdAbstractSensor: ', createdAbstractSensor);
-    createdAbstractSensor;
-    return {} as any;
+  ): Promise<CreatedOnePlainAbstractSensor[]> {
+    return await insertManyPlain<CreatedOnePlainAbstractSensor>(
+      this.repo,
+      newAbstractSensors,
+    );
   }
 }
 
 type PlainKeysGeneratedAfterInsert = 'id' | 'createdAt' | 'updatedAt';
 
 type PlainKeysAllowedToModify = 'modelName';
+
+type CreatedOnePlainAbstractSensor = Pick<
+  AbstractSensor,
+  PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
+>;

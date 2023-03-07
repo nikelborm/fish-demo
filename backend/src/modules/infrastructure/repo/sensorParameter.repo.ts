@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { insertManyPlain, insertOnePlain } from 'src/tools';
 import { Repository } from 'typeorm';
 import { SensorParameter } from '../model';
 
@@ -17,19 +18,19 @@ export class SensorParameterRepo {
   async createOnePlain(
     newSensorParameter: Pick<SensorParameter, PlainKeysAllowedToModify>,
   ): Promise<CreatedOnePlainSensorParameter> {
-    const createdSensorParameter = await this.repo.insert(newSensorParameter);
-    console.log('createdSensorParameter: ', createdSensorParameter);
-    createdSensorParameter;
-    return {} as any;
+    return await insertOnePlain<CreatedOnePlainSensorParameter>(
+      this.repo,
+      newSensorParameter,
+    );
   }
 
   async createManyPlain(
     newSensorParameters: Pick<SensorParameter, PlainKeysAllowedToModify>[],
   ): Promise<CreatedOnePlainSensorParameter[]> {
-    const createdSensorParameters = await this.repo.insert(newSensorParameters);
-    console.log('createdSensorParameters: ', createdSensorParameters);
-    createdSensorParameters;
-    return {} as any;
+    return await insertManyPlain<CreatedOnePlainSensorParameter>(
+      this.repo,
+      newSensorParameters,
+    );
   }
 }
 

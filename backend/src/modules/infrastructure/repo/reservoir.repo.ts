@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { insertManyPlain, insertOnePlain } from 'src/tools';
 import { ReservoirInfoDTO } from 'src/types';
 import { Repository } from 'typeorm';
 import { Reservoir } from '../model';
@@ -53,20 +54,20 @@ export class ReservoirRepo {
 
   async createOnePlain(
     newReservoir: Pick<Reservoir, PlainKeysAllowedToModify>,
-  ): Promise<CreatedPlainReservoir> {
-    const createdReservoir = await this.repo.insert(newReservoir);
-    console.log('createdReservoir: ', createdReservoir);
-    createdReservoir;
-    return {} as any;
+  ): Promise<CreatedOnePlainReservoir> {
+    return await insertOnePlain<CreatedOnePlainReservoir>(
+      this.repo,
+      newReservoir,
+    );
   }
 
   async createManyPlain(
     newReservoirs: Pick<Reservoir, PlainKeysAllowedToModify>[],
-  ): Promise<CreatedPlainReservoir[]> {
-    const createdReservoirs = await this.repo.insert(newReservoirs);
-    console.log('createdReservoirs: ', createdReservoirs);
-    createdReservoirs;
-    return {} as any;
+  ): Promise<CreatedOnePlainReservoir[]> {
+    return await insertManyPlain<CreatedOnePlainReservoir>(
+      this.repo,
+      newReservoirs,
+    );
   }
 
   async updateOnePlain({
@@ -101,7 +102,7 @@ type PlainKeysGeneratedAfterInsert = PrimaryKeys | 'createdAt' | 'updatedAt';
 
 type PlainKeysAllowedToModify = 'name';
 
-export type CreatedPlainReservoir = Pick<
+export type CreatedOnePlainReservoir = Pick<
   Reservoir,
   PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
 >;

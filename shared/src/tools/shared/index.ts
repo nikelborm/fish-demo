@@ -4,7 +4,6 @@ export * from './combineDecorators';
 export * from './countValid';
 export * from './decorators';
 export * from './difference';
-export * from './enumWithUUIDsValidator';
 export * from './getRedundantAndMissingValues';
 export * from './groupBy';
 export * from './intersectionOfArrays';

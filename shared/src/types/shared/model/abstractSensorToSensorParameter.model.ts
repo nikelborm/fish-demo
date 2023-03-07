@@ -1,4 +1,8 @@
-import type { IAbstractSensor, ISensorParameter, ISensorParameterInstance } from '.';
+import type {
+  IAbstractSensor,
+  ISensorParameter,
+  ISensorParameterInstance,
+} from '.';
 
 export class IAbstractSensorToSensorParameter {
   abstractSensor!: IAbstractSensor;

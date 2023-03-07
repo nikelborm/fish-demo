@@ -21,7 +21,7 @@ export class ReservoirUseCase {
 
   async createManyReservoirs(
     reservoirs: CreateReservoirDTO[],
-  ): Promise<repo.CreatedPlainReservoir[]> {
+  ): Promise<repo.CreatedOnePlainReservoir[]> {
     const insertedReservoirs = await this.reservoirRepo.createManyPlain(
       reservoirs,
     );
@@ -30,7 +30,7 @@ export class ReservoirUseCase {
 
   async createReservoir(
     reservoir: CreateReservoirDTO,
-  ): Promise<repo.CreatedPlainReservoir> {
+  ): Promise<repo.CreatedOnePlainReservoir> {
     const insertedReservoir = await this.reservoirRepo.createOnePlain(
       reservoir,
     );

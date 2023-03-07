@@ -5,23 +5,17 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended",
     "airbnb",
     "airbnb-typescript",
-    "plugin:prettier/recommended",
-    "react-app",
-    "react-app/jest"
+    "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
     "ecmaVersion": 12,
     "project": "./tsconfig.json",
     "sourceType": "module"
   },
-  "plugins": ["react", "prettier", "react-hooks"],
+  "plugins": ["prettier"],
   "ignorePatterns": ["/config", "/scripts"],
   "rules": {
     "indent": "off", // off because it does not work with decorators in backend types. Anyway prettier is implementing the same linting
@@ -40,7 +34,6 @@
     "@typescript-eslint/lines-between-class-members": "warn",
     "no-restricted-syntax": "off",
     "max-classes-per-file": "off",
-    "react/require-default-props": "off",
     "camelcase": "warn",
     "no-sequences": "off",
     "no-void": "off",
@@ -52,15 +45,6 @@
     "no-unused-vars": "off", // WHY: unused variables should be commented out
     "@typescript-eslint/no-unused-vars": "warn", // WHY: unused variables should be commented out
     "@typescript-eslint/ban-ts-comment": ["error", { "ts-ignore": true }], // WHY: ts-expect-error should be used instead
-    "react/jsx-filename-extension": [
-      "error",
-      {
-        "extensions": [".jsx", ".tsx"]
-      }
-    ], // this requires extension to be react-ish for JSX to work
-    "react/jsx-props-no-spreading": "off", // this allows spread syntax in React
-    "react/prop-types": "off", // WHY: prop types are only needed for React Class Components
-    "react/react-in-jsx-scope": "off", // WHY: in modern react, there's no need for React in scope
     "@typescript-eslint/member-delimiter-style": [
       "error",
       {
@@ -90,7 +74,6 @@
     "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/no-misused-promises": "error",
     "@typescript-eslint/no-use-before-define": "off",
-    "react-hooks/rules-of-hooks": "warn",
     "arrow-body-style": [1, "as-needed"] // WHY: VSC can quickly add/remove braces for arrow functions. This rule just makes code more transparent.
   }
 }

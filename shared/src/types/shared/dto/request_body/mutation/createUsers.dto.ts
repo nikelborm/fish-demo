@@ -1,12 +1,4 @@
-import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsDefined,
-  IsString,
-  MaxLength,
-  MinLength,
-  ValidateNested,
-} from 'class-validator';
+import { IsString, MaxLength, MinLength } from 'class-validator';
 import { NestedArrayDTO } from '../../../../../tools/shared';
 
 import { BasicUserInfoDTO } from '../../other/basicUserInfo.dto';

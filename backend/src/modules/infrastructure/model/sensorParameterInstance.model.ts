@@ -68,6 +68,7 @@ export class SensorParameterInstance implements ISensorParameterInstance {
   @ManyToOne(
     () => AbstractSensor,
     (abstractSensor) => abstractSensor.sensorParameterInstances,
+    { createForeignKeyConstraints: false },
   )
   @JoinColumn({ name: 'abstract_sensor_id' })
   abstractSensor!: AbstractSensor;

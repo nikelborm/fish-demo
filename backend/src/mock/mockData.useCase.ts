@@ -1,25 +1,23 @@
 import { Injectable } from '@nestjs/common';
+import { sub } from 'date-fns';
 import { assertMockScriptNameIsCorrect } from 'src/config';
 import { repo, UserUseCase } from 'src/modules';
-import {
-  AccessScopeType,
-  SensorParameterValueTypenameEnum,
-  ISensorParameter,
-} from 'src/types';
+import { AccessScopeType, SensorParameterValueTypenameEnum } from 'src/types';
 
 @Injectable()
 export class MockDataUseCase {
   constructor(
-    private readonly userUseCase: UserUseCase,
-    private readonly userToAccessScopeRepo: repo.UserToAccessScopeRepo,
-    private readonly accessScopeRepo: repo.AccessScopeRepo,
-    private readonly sensorMeasurementRepo: repo.SensorMeasurementRepo,
-    private readonly reservoirRepo: repo.ReservoirRepo,
-    private readonly sensorParameterRepo: repo.SensorParameterRepo,
     private readonly abstractSensorRepo: repo.AbstractSensorRepo,
-    private readonly abstractSensorToSensorInstanceRepoRepo: repo.AbstractSensorToSensorInstanceRepo,
-    private readonly abstractSensorToSensorParameterRepoRepo: repo.AbstractSensorToSensorParameterRepo,
+    private readonly abstractSensorToSensorInstanceRepo: repo.AbstractSensorToSensorInstanceRepo,
+    private readonly abstractSensorToSensorParameterRepo: repo.AbstractSensorToSensorParameterRepo,
+    private readonly accessScopeRepo: repo.AccessScopeRepo,
+    private readonly reservoirRepo: repo.ReservoirRepo,
     private readonly sensorInstanceRepo: repo.SensorInstanceRepo,
+    private readonly sensorMeasurementRepo: repo.SensorMeasurementRepo,
+    private readonly sensorParameterInstanceRepo: repo.SensorParameterInstanceRepo,
+    private readonly sensorParameterRepo: repo.SensorParameterRepo,
+    private readonly userToAccessScopeRepo: repo.UserToAccessScopeRepo,
+    private readonly userUseCase: UserUseCase,
   ) {}
 
   async executeMock(scriptName?: string): Promise<void> {
@@ -38,6 +36,7 @@ export class MockDataUseCase {
     const systemAdminScope = await this.accessScopeRepo.createOneWithRelations({
       type: AccessScopeType.SYSTEM_ADMIN,
     });
+    console.log('systemAdminScope: ', systemAdminScope);
 
     const { user } = await this.userUseCase.createUser({
       email: 'asd@asd.asd',
@@ -50,20 +49,24 @@ export class MockDataUseCase {
       password: 'asdasdasd',
     });
 
-    await this.userToAccessScopeRepo.createOne({
+    console.log('user: ', user);
+    const userToAccessScope = await this.userToAccessScopeRepo.createOne({
       accessScopeId: systemAdminScope.id,
       userId: user.id,
     });
+    console.log('userToAccessScope: ', userToAccessScope);
 
     const reservoir = await this.reservoirRepo.createOnePlain({
       name: 'Бассейн №1',
     });
+    console.log('reservoir: ', reservoir);
 
     const sensorInstance = await this.sensorInstanceRepo.createOnePlain({
       reservoirId: reservoir.id,
     });
+    console.log('sensorInstance: ', sensorInstance);
 
-    const sensors = await this.sensorParameterRepo.createManyPlain([
+    const sensorParameters = await this.sensorParameterRepo.createManyPlain([
       {
         name: 'Температура',
         shortName: 'T',
@@ -83,8 +86,9 @@ export class MockDataUseCase {
         unit: '',
       },
     ]);
+    console.log('sensorParameters: ', sensorParameters);
     const [tempSensorParameter, oxygenSensorParameter, pHSensorParameter] =
-      sensors as [
+      sensorParameters as [
         repo.CreatedOnePlainSensorParameter,
         repo.CreatedOnePlainSensorParameter,
         repo.CreatedOnePlainSensorParameter,
@@ -93,58 +97,80 @@ export class MockDataUseCase {
     const abstractSensor = await this.abstractSensorRepo.createOnePlain({
       modelName: 'CHR 3000',
     });
+    console.log('abstractSensor: ', abstractSensor);
 
-    await this.abstractSensorToSensorParameterRepoRepo.createMany(
-      sensors.map(({ id: sensorParameterId }) => ({
-        sensorParameterId,
-        abstractSensorId: abstractSensor.id,
-      })),
+    const abstractSensorToSensorParameter =
+      await this.abstractSensorToSensorParameterRepo.createMany(
+        sensorParameters.map(({ id: sensorParameterId }) => ({
+          sensorParameterId,
+          abstractSensorId: abstractSensor.id,
+        })),
+      );
+    console.log(
+      'abstractSensorToSensorParameter: ',
+      abstractSensorToSensorParameter,
     );
 
-    await this.abstractSensorToSensorInstanceRepoRepo.createOne({
-      abstractSensorId: abstractSensor.id,
-      sensorInstanceId: sensorInstance.id,
-    });
+    const abstractSensorToSensorInstance =
+      await this.abstractSensorToSensorInstanceRepo.createOne({
+        abstractSensorId: abstractSensor.id,
+        sensorInstanceId: sensorInstance.id,
+      });
+
+    console.log(
+      'abstractSensorToSensorInstance: ',
+      abstractSensorToSensorInstance,
+    );
+    const sensorParameterInstance =
+      await this.sensorParameterInstanceRepo.createManyPlain(
+        sensorParameters.map(({ id }) => ({
+          sensorParameterId: id,
+          abstractSensorId: abstractSensor.id,
+          sensorInstanceId: sensorInstance.id,
+        })),
+      );
+    console.log('sensorParameterInstance: ', sensorParameterInstance);
   }
 
   async fillSensorMeasurements(): Promise<void> {
-    // await this.sensorMeasurementRepo.createMany(
-    //   this.#getFakeMeasurements('O2', 0.5, 2),
-    // );
+    await this.sensorMeasurementRepo.createManyPlain(
+      this.#getFakeMeasurements(2, 0.5, 2),
+    );
 
-    // await this.sensorMeasurementRepo.createMany(
-    //   this.#getFakeMeasurements('Temp', 20, 40),
-    // );
+    await this.sensorMeasurementRepo.createManyPlain(
+      this.#getFakeMeasurements(1, 20, 40),
+    );
+
+    await this.sensorMeasurementRepo.createManyPlain(
+      this.#getFakeMeasurements(3, 5, 8),
+    );
     console.log();
   }
 
-  // #getFakeMeasurements(
-  //   sensorParameterInstanceId: number,
-  //   minValue: number,
-  //   maxValue: number,
-  // ): Parameters<repo.SensorMeasurementRepo['createMany']>[0] {
-  //   const sinDegrees = (angleDegrees: number): number =>
-  //     Math.sin((angleDegrees * Math.PI) / 180);
-  //   return Array.from({ length: 720 }, (_, i) => i)
-  //     .map(
-  //       (v): CreateSensorMeasurementDTO => ({
-  //         sensorParameterInstanceId,
-  //         recordedAt: sub(new Date(), { seconds: 720 - v + Math.random() * 3 }),
-  //         value: {
-  //           __typename: SensorParameterValueTypenameEnum.NUMBER,
-  //           value:
-  //             minValue +
-  //             0.8 *
-  //               (((sinDegrees(v + Math.random() * 60) + 1) / 2) *
-  //                 (maxValue - minValue) +
-  //                 ((maxValue - minValue) / 5) * Math.random()) -
-  //             1 +
-  //             Math.random(),
-  //         },
-  //       }),
-  //     )
-  //     .sort(
-  //       ({ recordedAt: a }, { recordedAt: b }) => a.getTime() - b.getTime(),
-  //     );
-  // }
+  #getFakeMeasurements(
+    sensorParameterInstanceId: number,
+    minValue: number,
+    maxValue: number,
+  ): repo.PlainSensorMeasurementToInsert[] {
+    const sinDegrees = (angleDegrees: number): number =>
+      Math.sin((angleDegrees * Math.PI) / 180);
+    return Array.from({ length: 720 }, (_, i) => i)
+      .map(
+        (v): repo.PlainSensorMeasurementToInsert => ({
+          sensorParameterInstanceId,
+          recordedAt: sub(new Date(), { seconds: 720 - v + Math.random() * 3 }),
+          value:
+            minValue +
+            0.8 *
+              (((sinDegrees(v + Math.random() * 60) + 1) / 2) *
+                (maxValue - minValue) +
+                ((maxValue - minValue) / 5) * Math.random()) -
+            1 +
+            Math.random(),
+        }),
+      )
+      .sort(
+        ({ recordedAt: a }, { recordedAt: b }) => a.getTime() - b.getTime(),
+      );
+  }
 }

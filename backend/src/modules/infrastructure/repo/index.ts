@@ -6,5 +6,6 @@ export * from './reservoir.repo';
 export * from './sensorInstance.repo';
 export * from './sensorMeasurement.repo';
 export * from './sensorParameter.repo';
+export * from './sensorParameterInstance.repo';
 export * from './user.repo';
 export * from './userToAccessScope.repo';

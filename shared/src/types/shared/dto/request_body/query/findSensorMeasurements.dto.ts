@@ -1,12 +1,5 @@
 import { Type } from 'class-transformer';
-import {
-  IsDate,
-  IsNumber,
-  IsOptional,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsDate, IsNumber, IsOptional } from 'class-validator';
 
 export class FindSensorMeasurementsDTO {
   @IsNumber()

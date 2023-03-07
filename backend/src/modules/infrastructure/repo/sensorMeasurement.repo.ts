@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { insertManyPlain, insertOnePlain } from 'src/tools';
 import { FindSensorMeasurementsDTO } from 'src/types';
 import { Between, Repository, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import { SensorMeasurement } from '../model';
@@ -79,34 +80,20 @@ export class SensorMeasurementRepo {
 
   async createOnePlain(
     newSensorMeasurement: Pick<SensorMeasurement, PlainKeysAllowedToModify>,
-  ): Promise<
-    Pick<
-      SensorMeasurement,
-      PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
-    >
-  > {
-    const createdSensorMeasurement = await this.repo.insert(
+  ): Promise<CreatedOnePlainSensorMeasurement> {
+    return await insertOnePlain<CreatedOnePlainSensorMeasurement>(
+      this.repo,
       newSensorMeasurement,
     );
-    console.log('createdSensorMeasurement: ', createdSensorMeasurement);
-    createdSensorMeasurement;
-    return {} as any;
   }
 
   async createManyPlain(
     newSensorMeasurements: Pick<SensorMeasurement, PlainKeysAllowedToModify>[],
-  ): Promise<
-    Pick<
-      SensorMeasurement,
-      PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
-    >[]
-  > {
-    const createdSensorMeasurements = await this.repo.insert(
+  ): Promise<CreatedOnePlainSensorMeasurement[]> {
+    return await insertManyPlain<CreatedOnePlainSensorMeasurement>(
+      this.repo,
       newSensorMeasurements,
     );
-    console.log('createdSensorMeasurements: ', createdSensorMeasurements);
-    createdSensorMeasurements;
-    return {} as any;
   }
 }
 
@@ -123,3 +110,13 @@ type PlainKeysAllowedToModify =
   | 'recordedAt'
   | 'value'
   | 'sensorParameterInstanceId';
+
+export type PlainSensorMeasurementToInsert = Pick<
+  SensorMeasurement,
+  PlainKeysAllowedToModify
+>;
+
+export type CreatedOnePlainSensorMeasurement = Pick<
+  SensorMeasurement,
+  PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
+>;

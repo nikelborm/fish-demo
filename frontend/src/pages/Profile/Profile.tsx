@@ -12,6 +12,7 @@ import {
 export function Profile() {
   const asd = useParams();
   console.log('asd: ', asd);
+
   const reservoirId = 1;
   const { isSuccess, sensorMeasurements } = useSensorsMeasurementsData({
     reservoirId,
