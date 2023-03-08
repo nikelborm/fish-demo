@@ -81,18 +81,19 @@ export class MockDataUseCase {
   }
 
   async mockSensorMeasurements(): Promise<void> {
-    await this.sensorMeasurementRepo.createManyPlain(
-      this.#getFakeMeasurements(2, 0.5, 2),
+    const sensorParameterInstances =
+      await this.sensorParameterInstanceRepo.getAllWithParameters();
+    await Promise.all(
+      sensorParameterInstances.map(({ id, sensorParameter: { shortName } }) =>
+        this.sensorMeasurementRepo.createManyPlain(
+          this.#getFakeMeasurements(
+            id,
+            shortName === 'o2' ? 0.85 : shortName === 'T' ? 20 : 5,
+            shortName === 'o2' ? 1.2 : shortName === 'T' ? 40 : 8,
+          ),
+        ),
+      ),
     );
-
-    await this.sensorMeasurementRepo.createManyPlain(
-      this.#getFakeMeasurements(1, 20, 40),
-    );
-
-    await this.sensorMeasurementRepo.createManyPlain(
-      this.#getFakeMeasurements(3, 5, 8),
-    );
-    console.log();
   }
 
   async #mockManySensorInstances(

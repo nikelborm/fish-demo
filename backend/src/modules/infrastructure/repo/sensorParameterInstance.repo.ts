@@ -15,6 +15,14 @@ export class SensorParameterInstanceRepo {
     return await this.repo.find();
   }
 
+  async getAllWithParameters(): Promise<SensorParameterInstance[]> {
+    return await this.repo.find({
+      relations: {
+        sensorParameter: true,
+      },
+    });
+  }
+
   async createOnePlain(
     newSensorParameterInstance: Pick<
       SensorParameterInstance,

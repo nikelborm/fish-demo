@@ -1,17 +1,26 @@
 import { Type } from 'class-transformer';
-import { IsDate, IsNumber, IsObject, IsOptional } from 'class-validator';
+import {
+  IsDate,
+  IsDefined,
+  IsNumber,
+  IsNumberString,
+  IsObject,
+  IsOptional,
+} from 'class-validator';
 import { SensorParameterValueType } from '../sensorParameterValueType';
 import type { ISensorParameterInstance } from './sensorParameterInstance.model';
 
 export class ISensorMeasurement {
-  @IsNumber()
-  id!: number;
+  // id!: string because postgres bigint is larger than javascript can handle
+  // https://github.com/typeorm/typeorm/issues/8583#issuecomment-1024907598
+  @IsNumberString()
+  id!: string;
 
   @IsDate()
   @Type(() => Date)
   recordedAt!: Date;
 
-  @IsObject()
+  @IsDefined()
   value!: SensorParameterValueType;
 
   @IsOptional()

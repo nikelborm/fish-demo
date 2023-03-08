@@ -84,7 +84,7 @@ class AuthStore {
           )
             updateTokenPair(null);
           // eslint-disable-next-line no-console
-          console.log('Token pair refreshing was not succesfull', err);
+          console.log('Token pair refreshing was not successful', err);
           return null;
         });
     }

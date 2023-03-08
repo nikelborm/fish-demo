@@ -1,6 +1,8 @@
 import { useReservoirInfo, useSensorsMeasurementsData } from 'hooks';
 import { useParams } from 'react-router';
-import { useFishRecognitionVideoStream } from './hooks';
+import { remapToIndexedObject } from 'tools';
+import { SensorParameterInstanceInReservoir } from 'types';
+// import { useFishRecognitionVideoStream } from './hooks';
 import {
   MainWrapper,
   SensorMeasurementPlot,
@@ -10,17 +12,43 @@ import {
 } from './components';
 
 export function Profile() {
-  const asd = useParams();
-  console.log('asd: ', asd);
+  const reservoirId = parseInt(useParams().reservoirId ?? '0', 10);
 
-  const reservoirId = 1;
   const { isSuccess, sensorMeasurements } = useSensorsMeasurementsData({
     reservoirId,
   });
-  const asd2 = useReservoirInfo(reservoirId);
-  console.log('asd2: ', asd2);
+  const { reservoir } = useReservoirInfo(reservoirId);
+  if (!reservoir) return <div>wait</div>;
+  const abstractSensorsMentionedInReservoir = remapToIndexedObject(
+    reservoir.sensorInstances.map(
+      ({
+        abstractSensorToSensorInstance: {
+          abstractSensor,
+          sensorParameterInstances,
+        },
+      }) => ({
+        ...abstractSensor,
+        sensorParameters: sensorParameterInstances.map(
+          ({ sensorParameter }) => sensorParameter,
+        ),
+      }),
+    ),
+  );
+  console.log(abstractSensorsMentionedInReservoir);
+  const mappedSensorParameterInstanceMap: Record<
+    number,
+    SensorParameterInstanceInReservoir
+  > = remapToIndexedObject(
+    reservoir.sensorInstances.flatMap(
+      ({ abstractSensorToSensorInstance: { sensorParameterInstances } }) =>
+        sensorParameterInstances,
+    ),
+  );
+
+  console.log('reservoir: ', reservoir);
+
   console.log('sensorMeasurements: ', sensorMeasurements);
-  const { refOfVideoElement } = useFishRecognitionVideoStream();
+  // const { refOfVideoElement } = useFishRecognitionVideoStream();
 
   // eslint-disable-next-line no-console
   if (isSuccess) console.log('sensorMeasurements: ', sensorMeasurements);
@@ -31,7 +59,7 @@ export function Profile() {
   );
 
   const o2Measurements = sensorMeasurements
-    .filter(({ sensorParameterInstanceId }) => sensorParameterInstanceId === 1)
+    .filter(({ sensorParameterInstanceId }) => sensorParameterInstanceId === 2)
     .map((measurement) => ({
       ...measurement,
       value: +measurement.value * 100,
@@ -39,8 +67,8 @@ export function Profile() {
 
   return (
     <MainWrapper>
-      {/* <VideoBoxWrapper>
-        <VideoBox autoPlay playsInline ref={refOfVideoElement} />
+      <VideoBoxWrapper>
+        <VideoBox autoPlay playsInline /*  ref={refOfVideoElement} */ />
       </VideoBoxWrapper>
       <SensorMeasurementPlot
         title="Кислород (%)"
@@ -49,14 +77,19 @@ export function Profile() {
         min={80}
         max={120}
       />
-      <LiveSensorValuesCardGrid />
+      <LiveSensorValuesCardGrid
+        reservoirId={reservoirId}
+        abstractSensorsMentionedInReservoir={
+          abstractSensorsMentionedInReservoir
+        }
+      />
       <SensorMeasurementPlot
         title="Температура (°C)"
         color="red"
-        min={18}
-        max={23}
+        min={20}
+        max={40}
         measurementsByOneSensor={tempMeasurements}
-      /> */}
+      />
     </MainWrapper>
   );
 }

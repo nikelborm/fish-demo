@@ -28,7 +28,8 @@ async function bootstrap(): Promise<void> {
   const configService: TypedConfigService<IAppConfigMap> =
     app.get(TypedConfigService);
 
-  configService.logToConsole();
+  if (configService.get(ConfigKeys.IS_DEVELOPMENT))
+    configService.logToConsole();
 
   const mode = configService.get(ConfigKeys.BOOTSTRAP_MODE);
 

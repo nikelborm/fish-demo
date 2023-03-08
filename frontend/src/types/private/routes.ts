@@ -4,7 +4,7 @@ import { ISession } from './localStorageAuth';
 export enum RoutesEnum {
   /* 1 */ LOGIN = 'login',
   /* 2 */ REGISTRATION = 'registration',
-  /* 3 */ PROFILE = 'profile',
+  /* 3 */ PROFILE = 'profile/:reservoirId',
   /* 4 */ USER = 'user/:id',
   /* 5 */ ROOT = '/', // landing
   /* 6 */ ERROR_404 = '404',

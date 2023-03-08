@@ -11,10 +11,10 @@ export class AccessScopeUseCase implements OnModuleDestroy, OnModuleInit {
   }
 
   onModuleDestroy(): void {
-    console.log('AccessScopeUseCase destroy');
+    // console.log('AccessScopeUseCase destroy');
   }
 
   onModuleInit(): void {
-    console.log('AccessScopeUseCase init');
+    // console.log('AccessScopeUseCase init');
   }
 }

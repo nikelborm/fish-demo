@@ -58,6 +58,9 @@ export class SensorMeasurementRepo {
         id: true,
         recordedAt: true,
         value: true,
+        sensorParameterInstance: {
+          id: false,
+        },
         sensorParameterInstanceId: true,
       },
       where: {

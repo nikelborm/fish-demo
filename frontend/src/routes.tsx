@@ -55,7 +55,7 @@ export const routesOnlyForAuthedUsers: RoutesMap<AuthedRouteEntity> = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getAuthedFallbackRoute = (session: ISession) => RoutesEnum.PROFILE;
+export const getAuthedFallbackRoute = (session: ISession) => 'profile/1';
 
 export const notAuthedFallbackRoute = RoutesEnum.LOGIN;
 export const publicFallbackRoute = RoutesEnum.ROOT;

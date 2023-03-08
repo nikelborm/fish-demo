@@ -11,8 +11,6 @@ export class ReservoirUseCase {
     const reservoir = await this.reservoirRepo.getReservoirFullInfo(
       reservoirId,
     );
-    console.log('reservoir: ', reservoir);
-    console.log('reservoir: ', reservoir);
     if (!reservoir)
       throw new NotFoundException(
         messages.repo.common.cantGetNotFoundById(reservoirId, 'reservoir'),

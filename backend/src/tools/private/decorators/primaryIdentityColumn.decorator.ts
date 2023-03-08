@@ -8,6 +8,7 @@ export function PrimaryIdentityColumn(
   return applyDecorators(
     Column({
       name: columnName,
+      type: 'int',
       primary: true,
       generated: 'identity',
       generatedIdentity: 'ALWAYS',

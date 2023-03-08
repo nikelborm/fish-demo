@@ -63,7 +63,8 @@ export async function startDataStream({ pc, refOfVideoElement }) {
       refOfVideoElement.current.style.display = 'block';
     }
   } catch (error) {
-    console.log('error: ', error);
+    // eslint-disable-next-line no-console
+    console.error('error: ', error);
   }
 }
 

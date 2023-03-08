@@ -18,13 +18,16 @@ class SensorParameterInReservoir {
   name!: string;
 
   @IsString()
+  shortName!: string;
+
+  @IsString()
   unit!: string;
 
   @IsEnum(SensorParameterValueTypenameEnum)
   valueTypeName!: SensorParameterValueTypenameEnum;
 }
 
-class SensorParameterInstanceInReservoir {
+export class SensorParameterInstanceInReservoir {
   @IsNumber()
   id!: number;
 

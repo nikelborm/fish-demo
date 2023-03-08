@@ -11,8 +11,10 @@ import {
 
 export function LiveSensorValuesCardGrid({
   reservoirId,
+  abstractSensorsMentionedInReservoir,
 }: {
   reservoirId: number;
+  abstractSensorsMentionedInReservoir: Record<number, any>;
 }) {
   const { getLatestMeasurementsFor, setNewLatestMeasurements } =
     useLatestMeasurementsStore();
@@ -32,34 +34,32 @@ export function LiveSensorValuesCardGrid({
 
   return (
     <RealTimeSensorGrid>
-      {/* <RealTimeSensorInfo invert>
-        <RealTimeSensorName>t, °C</RealTimeSensorName>
-        <RealTimeSensorValue>
-          {parseFloat(
-            (getLatestMeasurementsFor('Temp')?.value || 0).toFixed(2),
-          )}
-        </RealTimeSensorValue>
-      </RealTimeSensorInfo>
-      <RealTimeSensorInfo>
-        <RealTimeSensorName>
-          O<sub>2</sub>
-        </RealTimeSensorName>
-        <RealTimeSensorValue>
-          {parseFloat(
-            ((getLatestMeasurementsFor('O2')?.value || 0) * 100).toFixed(2),
-          )}
-          %
-        </RealTimeSensorValue>
-      </RealTimeSensorInfo>
-      <RealTimeSensorInfo invert>
-        <RealTimeSensorName>pH</RealTimeSensorName>
-        <RealTimeSensorValue>
-          {parseFloat((getLatestMeasurementsFor('pH')?.value || 0).toFixed(3))}
-        </RealTimeSensorValue>
-      </RealTimeSensorInfo>
+      {abstractSensorsMentionedInReservoir[1].sensorParameters.map(
+        ({ id, shortName, unit }) => (
+          <RealTimeSensorInfo
+            title={`sensor model ${abstractSensorsMentionedInReservoir[1].modelName}`}
+            invert={id % 2 === 1}
+            key={id}
+          >
+            <RealTimeSensorName>
+              {shortName}
+              {unit ? `, ${unit}` : ''}
+            </RealTimeSensorName>
+            <RealTimeSensorValue>
+              {parseFloat(
+                /* Here should be id of sensor parameter instance, not id of sensor parameter. It is intentional bug just for demo */
+                ((getLatestMeasurementsFor(id)?.value as number) || 0).toFixed(
+                  2,
+                ),
+              )}
+            </RealTimeSensorValue>
+          </RealTimeSensorInfo>
+        ),
+      )}
+
       <BehavioralInfo>
-        Тип поведения: {getLatestMeasurementsFor('behavior')?.value || 'Норма'}
-      </BehavioralInfo> */}
+        Тип поведения: {getLatestMeasurementsFor(1)?.value || 'Норма'}
+      </BehavioralInfo>
     </RealTimeSensorGrid>
   );
 }

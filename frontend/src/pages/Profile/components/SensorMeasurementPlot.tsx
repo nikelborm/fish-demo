@@ -1,4 +1,5 @@
 import Plot from 'react-plotly.js';
+import { FlatSensorMeasurement } from 'types';
 
 export function SensorMeasurementPlot({
   measurementsByOneSensor,
@@ -7,16 +8,16 @@ export function SensorMeasurementPlot({
   min,
   max,
 }: {
-  measurementsByOneSensor: any;
-  title: any;
-  color: any;
+  measurementsByOneSensor: FlatSensorMeasurement[];
+  title: string;
+  color: string;
   min?: number;
   max?: number;
 }) {
-  const dates = measurementsByOneSensor.map(({ date }) => {
-    const dateModified = new Date(date);
-    dateModified.setHours(date.getHours() + 13);
-    dateModified.setMinutes(date.getMinutes() + 7);
+  const dates = measurementsByOneSensor.map(({ recordedAt }) => {
+    const dateModified = new Date(recordedAt);
+    dateModified.setHours(recordedAt.getHours() + 13);
+    dateModified.setMinutes(recordedAt.getMinutes() + 7);
     // console.log('date.getHours(): ', dateModified.getHours());
     // console.log('dateModified: ', dateModified);
     return dateModified;
@@ -24,7 +25,7 @@ export function SensorMeasurementPlot({
   const datesNumbers = dates.map((e) => e.getTime());
   const maxDate = new Date(Math.max(...datesNumbers));
   const minDate = new Date(Math.min(...datesNumbers));
-  const values = measurementsByOneSensor.map(({ value }) => parseFloat(value));
+  const values = measurementsByOneSensor.map(({ value }) => value as number);
   const maxValue = Math.max(...values);
   const minValue = Math.min(...values);
   return (

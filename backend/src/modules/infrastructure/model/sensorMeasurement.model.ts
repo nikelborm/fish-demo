@@ -6,7 +6,9 @@ import { SensorParameterInstance } from './sensorParameterInstance.model';
 @Entity({ name: 'sensor_measurement' })
 export class SensorMeasurement implements ISensorMeasurement {
   @PrimaryIdentityColumn('sensor_measurement_id', { type: 'bigint' })
-  id!: number;
+  id!: string;
+  // id!: string because postgres bigint is larger than javascript can handle
+  // https://github.com/typeorm/typeorm/issues/8583#issuecomment-1024907598
 
   @Column({
     name: 'recorded_at_date',

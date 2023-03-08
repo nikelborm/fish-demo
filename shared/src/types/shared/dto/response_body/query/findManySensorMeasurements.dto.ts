@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsDate, IsDefined, IsNumber } from 'class-validator';
+import { IsDate, IsDefined, IsNumber, IsNumberString } from 'class-validator';
 import { NestedArrayDTO } from '../../../../../tools/shared';
 import { SensorParameterValueType } from '../../../sensorParameterValueType';
 
@@ -34,8 +34,10 @@ import { SensorParameterValueType } from '../../../sensorParameterValueType';
 // }
 
 export class FlatSensorMeasurement {
-  @IsNumber()
-  id!: number;
+  @IsNumberString()
+  id!: string;
+  // id!: string because postgres bigint is larger than javascript can handle
+  // https://github.com/typeorm/typeorm/issues/8583#issuecomment-1024907598
 
   @IsDate()
   @Type(() => Date)
