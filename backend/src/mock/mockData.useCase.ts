@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { sub } from 'date-fns';
 import { assertMockScriptNameIsCorrect } from 'src/config';
 import { repo, UserUseCase } from 'src/modules';
@@ -12,6 +12,7 @@ export class MockDataUseCase {
     private readonly abstractSensorToSensorParameterRepo: repo.AbstractSensorToSensorParameterRepo,
     private readonly accessScopeRepo: repo.AccessScopeRepo,
     private readonly reservoirRepo: repo.ReservoirRepo,
+    private readonly userRepo: repo.UserRepo,
     private readonly sensorInstanceRepo: repo.SensorInstanceRepo,
     private readonly sensorMeasurementRepo: repo.SensorMeasurementRepo,
     private readonly sensorParameterInstanceRepo: repo.SensorParameterInstanceRepo,
@@ -21,7 +22,13 @@ export class MockDataUseCase {
   ) {}
 
   async executeMock(scriptName?: string): Promise<void> {
-    assertMockScriptNameIsCorrect(scriptName);
+    try {
+      assertMockScriptNameIsCorrect(scriptName);
+    } catch (error) {
+      if (error instanceof Error)
+        throw new BadRequestException(error.message, { cause: error });
+      else throw error;
+    }
 
     console.log(`\n\n\nFILLING STARTED: ${scriptName}\n`);
 
@@ -82,7 +89,21 @@ export class MockDataUseCase {
     ]);
   }
 
-  
+  async updatePlainUserTest(): Promise<void> {
+    const existingUser = await this.userRepo.findOneByExactEmail('asd@asd.asd');
+    if (!existingUser) return await this.mockUserAndAdminAccessScope();
+    console.log('existingUser: ', existingUser);
+
+    const updatedUser = await this.userRepo.updateManyPlain([
+      {
+        id: existingUser?.id,
+        lastName: `lastName ${Math.random()}`,
+      },
+    ]);
+
+    console.log('user: ', updatedUser);
+  }
+
   async mockSensorMeasurements(): Promise<void> {
     const sensorParameterInstances =
       await this.sensorParameterInstanceRepo.getAllWithParameters();

@@ -1,10 +1,10 @@
-import type { IAppConfigMap } from './types';
-import { ConfigKeys } from './types';
+import type { IAppConfigMap, ConfigKeys } from './types';
 
 const allowedMethods: IAppConfigMap[ConfigKeys.MOCK_SCRIPT_NAME][] = [
   'mockReservoirAndAllInternals',
   'mockUserAndAdminAccessScope',
   'mockSensorMeasurements',
+  'updatePlainUserTest',
 ];
 
 export const mockUseCaseMethodsAllowedToBeExecuted: Set<string> = new Set(

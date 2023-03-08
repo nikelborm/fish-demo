@@ -17,14 +17,14 @@ import { ReservoirModule } from './modules/reservoir';
 
 @Module({
   imports: [
-    InfrastructureModule,
-    TypedConfigModule,
     AccessScopeModule,
     AuthModule,
-    UserModule,
-    SensorMeasurementModule,
+    InfrastructureModule,
     PredictModule,
     ReservoirModule,
+    SensorMeasurementModule,
+    TypedConfigModule,
+    UserModule,
     VideoLogModule,
   ],
   controllers: [MockDataController],
