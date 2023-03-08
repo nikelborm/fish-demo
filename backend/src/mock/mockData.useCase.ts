@@ -30,6 +30,33 @@ export class MockDataUseCase {
     console.log('\nDATABASE FILLED SUCCESSFULLY\n\n\n');
   }
 
+  async mockUserAndAdminAccessScope(): Promise<void> {
+    console.log('mockUserAndAdminAccessScope called');
+
+    const systemAdminScope = await this.accessScopeRepo.createOneWithRelations({
+      type: AccessScopeType.SYSTEM_ADMIN,
+    });
+    console.log('systemAdminScope: ', systemAdminScope);
+
+    const { user } = await this.userUseCase.createUser({
+      email: 'asd@asd.asd',
+      lastName: 'Такой-тов',
+      firstName: 'Такой-то',
+      patronymic: 'Такой-тович',
+      nickname: 'asdasdasd',
+      avatarURL: 'http://google.com',
+      gender: 'male',
+      password: 'asdasdasd',
+    });
+
+    console.log('user: ', user);
+    const userToAccessScope = await this.userToAccessScopeRepo.createOne({
+      accessScopeId: systemAdminScope.id,
+      userId: user.id,
+    });
+    console.log('userToAccessScope: ', userToAccessScope);
+  }
+
   async mockReservoirAndAllInternals(): Promise<void> {
     console.log('mockReservoirAndAllInternals called');
 
@@ -55,31 +82,7 @@ export class MockDataUseCase {
     ]);
   }
 
-  async mockUserAndAdminAccessScope(): Promise<void> {
-    const systemAdminScope = await this.accessScopeRepo.createOneWithRelations({
-      type: AccessScopeType.SYSTEM_ADMIN,
-    });
-    console.log('systemAdminScope: ', systemAdminScope);
-
-    const { user } = await this.userUseCase.createUser({
-      email: 'asd@asd.asd',
-      lastName: 'Такой-тов',
-      firstName: 'Такой-то',
-      patronymic: 'Такой-тович',
-      nickname: 'asdasdasd',
-      avatarURL: 'http://google.com',
-      gender: 'male',
-      password: 'asdasdasd',
-    });
-
-    console.log('user: ', user);
-    const userToAccessScope = await this.userToAccessScopeRepo.createOne({
-      accessScopeId: systemAdminScope.id,
-      userId: user.id,
-    });
-    console.log('userToAccessScope: ', userToAccessScope);
-  }
-
+  
   async mockSensorMeasurements(): Promise<void> {
     const sensorParameterInstances =
       await this.sensorParameterInstanceRepo.getAllWithParameters();

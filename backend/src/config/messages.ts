@@ -41,7 +41,7 @@ const rawMessages = {
   },
   repo: {
     common: {
-      // Entity name should always be at the end
+      // Entity name should always be at the end of the function
       cantCreateWithId: (entity: any, entityName?: string): string =>
         `Can\`t create an ${
           entityName || 'entity'
