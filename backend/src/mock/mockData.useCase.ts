@@ -90,21 +90,6 @@ export class MockDataUseCase {
     ]);
   }
 
-  async updatePlainUserTest(): Promise<void> {
-    const existingUser = await this.userRepo.findOneByExactEmail('asd@asd.asd');
-    if (!existingUser) return await this.mockUserAndAdminAccessScope();
-    console.log('existingUser: ', existingUser);
-
-    const updatedUser = await this.userRepo.updateManyPlain([
-      {
-        id: existingUser?.id,
-        lastName: `lastName ${Math.random()}`,
-      },
-    ]);
-
-    console.log('user: ', updatedUser);
-  }
-
   async mockSensorMeasurements(): Promise<void> {
     const sensorParameterInstances =
       await this.sensorParameterInstanceRepo.getAllWithParameters();

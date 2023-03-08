@@ -4,7 +4,6 @@ const allowedMethods: IAppConfigMap[ConfigKeys.MOCK_SCRIPT_NAME][] = [
   'mockReservoirAndAllInternals',
   'mockUserAndAdminAccessScope',
   'mockSensorMeasurements',
-  'updatePlainUserTest',
 ];
 
 export const mockUseCaseMethodsAllowedToBeExecuted: Set<string> = new Set(
