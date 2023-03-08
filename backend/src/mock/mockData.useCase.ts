@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { sub } from 'date-fns';
 import { assertMockScriptNameIsCorrect } from 'src/config';
 import { repo, UserUseCase } from 'src/modules';
+import type { CreatedOnePlainAbstractSensor } from 'src/modules/infrastructure/repo';
 import { AccessScopeType, SensorParameterValueTypenameEnum } from 'src/types';
 
 @Injectable()
@@ -121,8 +122,11 @@ export class MockDataUseCase {
   }
 
   async #mockManySensorInstances(
-    reservoir,
-    abstractSensors: any[],
+    reservoir: repo.CreatedOnePlainReservoir,
+    abstractSensors: (CreatedOnePlainAbstractSensor &
+      {
+        sensorParameters: repo.CreatedOnePlainSensorParameter[];
+      })[],
   ): Promise<number[]> {
     const generateMockSensorInstances = (): Promise<{
       sensorInstance: repo.CreatedOnePlainSensorInstance;
@@ -211,8 +215,10 @@ export class MockDataUseCase {
   }
 
   async #mockSensorInstance(
-    reservoir,
-    abstractSensorWithJoinedParameters,
+    reservoir: repo.CreatedOnePlainReservoir,
+    abstractSensorWithJoinedParameters: CreatedOnePlainAbstractSensor & {
+      sensorParameters: repo.CreatedOnePlainSensorParameter[];
+    },
   ): Promise<{
     sensorInstance: repo.CreatedOnePlainSensorInstance;
     sensorParameterInstances: repo.CreatedOnePlainSensorParameterInstance[];
