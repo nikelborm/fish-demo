@@ -1,3 +1,5 @@
+import { useCallback, useMemo } from 'react';
+import { Socket } from 'socket.io-client';
 import { getWsMessageValidator, useSocket } from 'tools';
 import { ISensorMeasurement } from 'types';
 import { useLatestMeasurementsStore } from '../hooks';
@@ -19,17 +21,30 @@ export function LiveSensorValuesCardGrid({
   const { getLatestMeasurementsFor, setNewLatestMeasurements } =
     useLatestMeasurementsStore();
 
-  useSocket({
-    namespace: '/sensorMeasurement',
-    onConnect(socket) {
+  const onConnect = useCallback(
+    (socket: Socket) => {
       socket.emit('latest/byReservoir', { reservoirId });
+      socket.emit('subscribe/liveSensorMeasurements/byReservoir', {
+        reservoirId,
+      });
     },
-    handlers: {
+    [reservoirId],
+  );
+
+  const handlers = useMemo(
+    () => ({
       many: (messages) =>
         setNewLatestMeasurements(messages.map(validateAndTransformMeasurement)),
       latest: (messages) =>
         setNewLatestMeasurements(messages.map(validateAndTransformMeasurement)),
-    },
+    }),
+    [setNewLatestMeasurements],
+  );
+
+  useSocket({
+    namespace: '/sensorMeasurement',
+    onConnect,
+    handlers,
   });
 
   return (
