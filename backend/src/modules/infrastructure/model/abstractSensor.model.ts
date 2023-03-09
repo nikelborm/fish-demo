@@ -1,5 +1,5 @@
 import { PrimaryIdentityColumn } from 'src/tools';
-import { IAbstractSensor } from 'src/types';
+import type { IAbstractSensor } from 'src/types';
 import {
   Column,
   CreateDateColumn,

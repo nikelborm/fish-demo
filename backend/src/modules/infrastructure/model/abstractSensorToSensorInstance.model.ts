@@ -1,4 +1,4 @@
-import { IAbstractSensorToSensorInstance } from 'src/types';
+import type { IAbstractSensorToSensorInstance } from 'src/types';
 import {
   Column,
   Entity,

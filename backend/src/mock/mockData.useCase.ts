@@ -15,7 +15,6 @@ export class MockDataUseCase {
     private readonly abstractSensorToSensorParameterRepo: repo.AbstractSensorToSensorParameterRepo,
     private readonly accessScopeRepo: repo.AccessScopeRepo,
     private readonly reservoirRepo: repo.ReservoirRepo,
-    private readonly userRepo: repo.UserRepo,
     private readonly sensorInstanceRepo: repo.SensorInstanceRepo,
     private readonly sensorMeasurementRepo: repo.SensorMeasurementRepo,
     private readonly sensorParameterInstanceRepo: repo.SensorParameterInstanceRepo,
@@ -108,10 +107,9 @@ export class MockDataUseCase {
 
   async #mockManySensorInstances(
     reservoir: repo.CreatedOnePlainReservoir,
-    abstractSensors: (CreatedOnePlainAbstractSensor &
-      {
-        sensorParameters: repo.CreatedOnePlainSensorParameter[];
-      })[],
+    abstractSensors: (CreatedOnePlainAbstractSensor & {
+      sensorParameters: repo.CreatedOnePlainSensorParameter[];
+    })[],
   ): Promise<number[]> {
     const generateMockSensorInstances = (): Promise<{
       sensorInstance: repo.CreatedOnePlainSensorInstance;

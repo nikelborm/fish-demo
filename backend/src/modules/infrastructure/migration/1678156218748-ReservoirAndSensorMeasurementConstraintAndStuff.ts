@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import type { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class ReservoirAndSensorMeasurementConstraintAndStuff1678156218748
   implements MigrationInterface

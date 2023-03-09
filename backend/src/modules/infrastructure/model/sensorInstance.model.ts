@@ -1,5 +1,5 @@
 import { PrimaryIdentityColumn } from 'src/tools';
-import { ISensorInstance } from 'src/types';
+import type { ISensorInstance } from 'src/types';
 import {
   Column,
   CreateDateColumn,

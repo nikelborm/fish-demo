@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { groupByKey, insertManyPlain, insertOnePlain } from 'src/tools';
-import { ReservoirInfoDTO } from 'src/types';
+import type { ReservoirInfoDTO } from 'src/types';
 import { Repository } from 'typeorm';
 import { Reservoir } from '../model';
 

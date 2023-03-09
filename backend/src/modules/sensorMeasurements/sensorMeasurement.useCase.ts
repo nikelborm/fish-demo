@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import {
+import type {
   CreateSensorMeasurementDTO,
   FindSensorMeasurementsDTO,
   FlatSensorMeasurement,
-  ISensorMeasurement,
 } from 'src/types';
-import { model, repo } from '../infrastructure';
+import { repo } from '../infrastructure';
 import { SensorMeasurementWSGateway } from './sensorMeasurements.gateway';
 
 @Injectable()

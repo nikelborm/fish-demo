@@ -1,4 +1,4 @@
-import { IAbstractSensorToSensorParameter } from 'src/types';
+import type { IAbstractSensorToSensorParameter } from 'src/types';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { SensorParameter, AbstractSensor, SensorParameterInstance } from '.';
 

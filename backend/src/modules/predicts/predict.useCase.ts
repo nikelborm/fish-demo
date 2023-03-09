@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePredictDTO } from 'src/types';
+import type { CreatePredictDTO } from 'src/types';
 import { PredictWSGateway } from './predict.gateway';
 
 @Injectable()

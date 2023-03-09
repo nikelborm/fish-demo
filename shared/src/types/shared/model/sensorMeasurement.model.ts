@@ -4,10 +4,9 @@ import {
   IsDefined,
   IsNumber,
   IsNumberString,
-  IsObject,
   IsOptional,
 } from 'class-validator';
-import { SensorParameterValueType } from '../sensorParameterValueType';
+import type { SensorParameterValueType } from '../sensorParameterValueType';
 import type { ISensorParameterInstance } from './sensorParameterInstance.model';
 
 export class ISensorMeasurement {

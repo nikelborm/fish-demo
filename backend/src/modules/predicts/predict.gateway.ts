@@ -5,7 +5,7 @@ import {
 } from '@nestjs/websockets';
 import { groupByKey } from 'src/tools';
 import { Server, Socket } from 'socket.io';
-import { CreatePredictDTO } from 'src/types';
+import type { CreatePredictDTO } from 'src/types';
 
 @WebSocketGateway({ namespace: '/predict' })
 export class PredictWSGateway implements OnGatewayConnection {

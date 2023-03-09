@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateReservoirDTO, ReservoirInfoDTO } from 'src/types';
+import type { CreateReservoirDTO, ReservoirInfoDTO } from 'src/types';
 import { messages } from 'src/config';
 import { repo } from '../infrastructure';
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { insertManyPlain, insertOnePlain } from 'src/tools';
-import { FindSensorMeasurementsDTO } from 'src/types';
+import type { FindSensorMeasurementsDTO } from 'src/types';
 import { Between, Repository, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import { SensorMeasurement } from '../model';
 

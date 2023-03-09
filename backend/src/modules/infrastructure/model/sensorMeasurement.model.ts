@@ -1,5 +1,5 @@
 import { PrimaryIdentityColumn } from 'src/tools';
-import { ISensorMeasurement, SensorParameterValueType } from 'src/types';
+import type { ISensorMeasurement, SensorParameterValueType } from 'src/types';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { SensorParameterInstance } from './sensorParameterInstance.model';
 

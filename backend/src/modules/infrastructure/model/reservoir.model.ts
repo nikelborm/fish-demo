@@ -1,5 +1,5 @@
 import { PrimaryIdentityColumn } from 'src/tools';
-import { IReservoir } from 'src/types';
+import type { IReservoir } from 'src/types';
 import {
   Column,
   CreateDateColumn,
