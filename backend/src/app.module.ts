@@ -7,18 +7,20 @@ import { TypedConfigModule } from './config';
 import {
   AccessScopeModule,
   AuthModule,
+  FishKindModule,
   InfrastructureModule,
   PredictModule,
+  ReservoirModule,
   SensorMeasurementModule,
   UserModule,
   VideoLogModule,
 } from './modules';
-import { ReservoirModule } from './modules/reservoir';
 
 @Module({
   imports: [
     AccessScopeModule,
     AuthModule,
+    FishKindModule,
     InfrastructureModule,
     PredictModule,
     ReservoirModule,

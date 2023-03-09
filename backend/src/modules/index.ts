@@ -5,3 +5,5 @@ export * from './user';
 export * from './sensorMeasurements';
 export * from './predicts';
 export * from './videoLogs';
+export * from './reservoir';
+export * from './fishKind';

@@ -76,10 +76,7 @@ export class ReservoirRepo {
   async updateOnePlain({
     id,
     ...existingReservoir
-  }: Pick<
-    Reservoir,
-    PrimaryKeys | PlainKeysAllowedToModify
-  >): Promise<UpdatedPlainReservoir> {
+  }: UpdatedPlainReservoir): Promise<UpdatedPlainReservoir> {
     const updatedReservoir = await this.repo.update(id, existingReservoir);
     console.log('updatedReservoir: ', updatedReservoir);
     updatedReservoir;
@@ -87,10 +84,7 @@ export class ReservoirRepo {
   }
 
   async updateManyPlain(
-    existingReservoirs: Pick<
-      Reservoir,
-      PrimaryKeys | PlainKeysAllowedToModify
-    >[],
+    existingReservoirs: UpdatedPlainReservoir[],
   ): Promise<UpdatedPlainReservoir[]> {
     const updatedReservoirs = await this.repo.save(existingReservoirs);
     console.log('updatedReservoirs: ', updatedReservoirs);
@@ -179,10 +173,8 @@ export type CreatedOnePlainReservoir = Pick<
   PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
 >;
 
-export type UpdatedPlainReservoir = Pick<
-  Reservoir,
-  PrimaryKeys | PlainKeysAllowedToModify
->;
+export type UpdatedPlainReservoir = Pick<Reservoir, PrimaryKeys> &
+  Partial<Pick<Reservoir, PlainKeysAllowedToModify>>;
 // select: {
 //   id: true,
 //   name: true,
@@ -207,3 +199,5 @@ export type UpdatedPlainReservoir = Pick<
 //     },
 //   },
 // },
+type ASd = Pick<Reservoir, PrimaryKeys> &
+  Partial<Pick<Reservoir, PlainKeysAllowedToModify>>;
