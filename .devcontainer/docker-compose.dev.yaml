@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   nginx-dev:
-    image: "${DOCKER_HUB_NICKNAME}/private:${COMPOSE_PROJECT_NAME}-nginx-dev"
+    image: "${DOCKER_HUB_NICKNAME}/${DOCKER_REGISTRY_REPO_NAME}:${COMPOSE_PROJECT_NAME}-nginx-dev"
     restart: unless-stopped
     depends_on:
       - backend-dev
@@ -30,7 +30,7 @@ services:
       # nginx-cv_webrtc_service-net-dev:
 
   frontend-dev:
-    image: "${DOCKER_HUB_NICKNAME}/private:${COMPOSE_PROJECT_NAME}-frontend-dev"
+    image: "${DOCKER_HUB_NICKNAME}/${DOCKER_REGISTRY_REPO_NAME}:${COMPOSE_PROJECT_NAME}-frontend-dev"
     restart: unless-stopped
     build:
       context: ../
@@ -62,7 +62,7 @@ services:
       vscode-front-net-dev:
 
   backend-dev:
-    image: "${DOCKER_HUB_NICKNAME}/private:${COMPOSE_PROJECT_NAME}-backend-dev"
+    image: "${DOCKER_HUB_NICKNAME}/${DOCKER_REGISTRY_REPO_NAME}:${COMPOSE_PROJECT_NAME}-backend-dev"
     restart: unless-stopped
     depends_on:
       - postgres-dev
@@ -145,7 +145,7 @@ services:
       pgadmin-db-net-dev:
       vscode-db-net-dev:
       pgcli-db-net-dev:
-      apache_superset_network:
+      # apache_superset_network:
 
   postgres-admin-dev:
     image: dpage/pgadmin4:latest
@@ -182,8 +182,8 @@ networks:
       config:
         - subnet: 10.5.0.0/16
           gateway: 10.5.0.1
-  apache_superset_network:
-    external: true
+  # apache_superset_network:
+  #   external: true
 
   back-db-net-dev: {}
   pgadmin-db-net-dev: {}

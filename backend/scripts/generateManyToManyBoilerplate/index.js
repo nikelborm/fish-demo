@@ -3,8 +3,9 @@
 import { camelCase, pascalCase, snakeCase } from 'change-case';
 import prompts from 'prompts';
 import { appendFile, writeFile } from 'fs/promises';
+import chalk from 'chalk';
 
-const { first, second, dryRun } = await prompts([
+const { first, second, dryRun, selectedFilesToGenerate } = await prompts([
   {
     type: 'text',
     name: 'first',
@@ -18,10 +19,26 @@ const { first, second, dryRun } = await prompts([
   {
     type: 'toggle',
     name: 'dryRun',
-    message: 'Dry run? (skip real writes to file?)',
+    message:
+      'Dry run? (Should script skip real writes to file?) [Press Tab to switch mode]',
     initial: false,
     active: 'yes',
     inactive: 'no',
+  },
+  {
+    type: 'multiselect',
+    name: 'selectedFilesToGenerate',
+    message: 'Pick files to generate',
+    choices: [
+      {
+        title: 'Model and interfaces',
+        value: 'databaseModelAndInterfaces',
+        selected: true,
+      },
+      { title: 'Repository', value: 'repository', selected: true },
+    ],
+    max: 3,
+    hint: '- Space to select. Enter to submit',
   },
 ]);
 
@@ -36,9 +53,10 @@ const secondCamel = camelCase(second);
 const getIntermediateModel =
   () => `import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { ${secondPascal}, ${firstPascal} } from '.';
+import type { I${firstPascal}To${secondPascal} } from 'src/types';
 
 @Entity({ name: '${firstSnake}_to_${secondSnake}' })
-export class ${firstPascal}To${secondPascal} {
+export class ${firstPascal}To${secondPascal} implements I${firstPascal}To${secondPascal} {
   @ManyToOne(
     () => ${firstPascal},
     (${firstCamel}) => ${firstCamel}.${firstCamel}To${secondPascal}Relations,
@@ -70,7 +88,7 @@ export class ${firstPascal}To${secondPascal} {
 `;
 
 const getIntermediateModelInterface =
-  () => `import { I${secondPascal}, I${firstPascal} } from '.';
+  () => `import type { I${secondPascal}, I${firstPascal} } from '.';
 
 export class I${firstPascal}To${secondPascal} {
   ${firstCamel}!: I${firstPascal};
@@ -81,6 +99,46 @@ export class I${firstPascal}To${secondPascal} {
 
   ${secondCamel}Id!: number;
 }
+`;
+
+const getIntermediateModelRepo =
+  () => `import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ${firstPascal}To${secondPascal} } from '../model';
+
+@Injectable()
+export class ${firstPascal}To${secondPascal}Repo {
+  constructor(
+    @InjectRepository(${firstPascal}To${secondPascal})
+    private readonly repo: Repository<${firstPascal}To${secondPascal}>,
+  ) {}
+
+  async getAll(): Promise<${firstPascal}To${secondPascal}[]> {
+    return await this.repo.find();
+  }
+
+  async createOne(
+    new${firstPascal}To${secondPascal}: CreatedOnePlain${firstPascal}To${secondPascal},
+  ): Promise<CreatedOnePlain${firstPascal}To${secondPascal}> {
+    await this.repo.insert(new${firstPascal}To${secondPascal});
+    return new${firstPascal}To${secondPascal};
+  }
+
+  async createMany(
+    new${firstPascal}To${secondPascal}s: CreatedOnePlain${firstPascal}To${secondPascal}[],
+  ): Promise<CreatedOnePlain${firstPascal}To${secondPascal}[]> {
+    await this.repo.insert(new${firstPascal}To${secondPascal}s);
+    return new${firstPascal}To${secondPascal}s;
+  }
+}
+
+type PlainKeysAllowedToModify = '${firstCamel}Id' | '${secondCamel}Id';
+
+type CreatedOnePlain${firstPascal}To${secondPascal} = Pick<
+  ${firstPascal}To${secondPascal},
+  PlainKeysAllowedToModify
+>;
 `;
 
 const getFirstModelMixin = () => `
@@ -131,42 +189,118 @@ const getSecondModelInterfaceMixin = () => `
   ${firstCamel}To${secondPascal}Relations!: I${firstPascal}To${secondPascal}[];
 `;
 
-console.log(`new ${firstPascal}To${secondPascal} model was generated\n`);
-console.log(getIntermediateModel());
+if (selectedFilesToGenerate.includes('databaseModelAndInterfaces')) {
+  console.log(
+    chalk.cyan(
+      `\n------ new ${firstPascal}To${secondPascal} model was generated\n`,
+    ),
+  );
+  console.log(getIntermediateModel());
 
-if (!dryRun) {
-  await writeFile(
-    `./backend/src/modules/infrastructure/model/${firstCamel}To${secondPascal}.model.ts`,
-    getIntermediateModel(),
+  if (!dryRun) {
+    await writeFile(
+      `./backend/src/modules/infrastructure/model/${firstCamel}To${secondPascal}.model.ts`,
+      getIntermediateModel(),
+    );
+    console.log(
+      chalk.gray(
+        `\n------ new ${firstPascal}To${secondPascal} model was written to disk:\n`,
+      ),
+    );
+    await appendFile(
+      `./backend/src/modules/infrastructure/model/index.ts`,
+      `export * from './${firstCamel}To${secondPascal}.model';\n`,
+    );
+    console.log(
+      chalk.gray(
+        `\n------ index.ts reexport of ${firstPascal}To${secondPascal} model was written to disk:\n`,
+      ),
+    );
+  }
+
+  console.log(
+    chalk.cyan(
+      `\n------ Mixin for ${firstPascal} model (needs to be added manually):\n`,
+    ),
   );
-  await appendFile(
-    `./backend/src/modules/infrastructure/model/index.ts`,
-    `export * from './${firstCamel}To${secondPascal}.model';\n`,
+  console.log(chalk.green(getFirstModelMixin()));
+  console.log(
+    chalk.cyan(
+      `\n------ Mixin for ${secondPascal} model (needs to be added manually):\n`,
+    ),
   );
+  console.log(chalk.green(getSecondModelMixin()));
+
+  console.log(
+    chalk.cyan(
+      `\n------ new I${firstPascal}To${secondPascal} model interface was generated:\n`,
+    ),
+  );
+  console.log(getIntermediateModelInterface());
+
+  if (!dryRun) {
+    await writeFile(
+      `./shared/src/types/shared/model/${firstCamel}To${secondPascal}.model.ts`,
+      getIntermediateModelInterface(),
+    );
+    console.log(
+      chalk.gray(
+        `\n------ new I${firstPascal}To${secondPascal} model interface was written to disk:\n`,
+      ),
+    );
+    await appendFile(
+      `./shared/src/types/shared/model/index.ts`,
+      `export * from './${firstCamel}To${secondPascal}.model';\n`,
+    );
+    console.log(
+      chalk.gray(
+        `\n------ index.ts reexport of I${firstPascal}To${secondPascal} model interface was written to disk:\n`,
+      ),
+    );
+  }
+
+  console.log(
+    chalk.cyan(
+      `\n------ Mixin for I${firstPascal} model interface (needs to be added manually):\n`,
+    ),
+  );
+  console.log(chalk.green(getFirstModelInterfaceMixin()));
+  console.log(
+    chalk.cyan(
+      `\n------ Mixin for I${secondPascal} model interface (needs to be added manually):\n`,
+    ),
+  );
+  console.log(chalk.green(getSecondModelInterfaceMixin()));
 }
 
-console.log(`\n------ Mixin for ${firstPascal} model:\n`);
-console.log(getFirstModelMixin());
-console.log(`\n------ Mixin for ${secondPascal} model:\n`);
-console.log(getSecondModelMixin());
-
-console.log(
-  `\n------ new I${firstPascal}To${secondPascal} model interface was generated:\n`,
-);
-console.log(getIntermediateModelInterface());
-
-if (!dryRun) {
-  await writeFile(
-    `./shared/src/types/shared/model/${firstCamel}To${secondPascal}.model.ts`,
-    getIntermediateModelInterface(),
+if (selectedFilesToGenerate.includes('repository')) {
+  console.log(
+    chalk.cyan(
+      `\n------ new ${firstPascal}To${secondPascal}Repo repo was generated\n`,
+    ),
   );
-  await appendFile(
-    `./shared/src/types/shared/model/index.ts`,
-    `export * from './${firstCamel}To${secondPascal}.model';\n`,
-  );
+  console.log(getIntermediateModelRepo());
+
+  if (!dryRun) {
+    await writeFile(
+      `./backend/src/modules/infrastructure/repo/${firstCamel}To${secondPascal}.repo.ts`,
+      getIntermediateModelRepo(),
+    );
+    console.log(
+      chalk.gray(
+        `\n------ new ${firstPascal}To${secondPascal}Repo repo was written to disk:\n`,
+      ),
+    );
+    await appendFile(
+      `./backend/src/modules/infrastructure/repo/index.ts`,
+      `export * from './${firstCamel}To${secondPascal}.repo';\n`,
+    );
+    console.log(
+      chalk.gray(
+        `\n------ index.ts reexport of ${firstPascal}To${secondPascal}Repo repo was written to disk:\n`,
+      ),
+    );
+  }
 }
 
-console.log(`\n------ Mixin for I${firstPascal} model interface:\n`);
-console.log(getFirstModelInterfaceMixin());
-console.log(`\n------ Mixin for I${secondPascal} model interface:\n`);
-console.log(getSecondModelInterfaceMixin());
+console.log(chalk.cyan(`\n------ executed successfully\n`));

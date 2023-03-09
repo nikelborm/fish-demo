@@ -22,8 +22,6 @@ export class AbstractSensorToSensorInstanceRepo {
   }
 }
 
-type PlainKeysGeneratedAfterInsert = never;
-
 type PlainKeysAllowedToModify = 'abstractSensorId' | 'sensorInstanceId';
 
 type CreatedOnePlainAbstractSensorToSensorInstance = Pick<

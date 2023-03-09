@@ -8,6 +8,8 @@ import { AccessScopeType, SensorParameterValueTypenameEnum } from 'src/types';
 @Injectable()
 export class MockDataUseCase {
   constructor(
+    private readonly userUseCase: UserUseCase,
+    private readonly userToAccessScopeRepo: repo.UserToAccessScopeRepo,
     private readonly abstractSensorRepo: repo.AbstractSensorRepo,
     private readonly abstractSensorToSensorInstanceRepo: repo.AbstractSensorToSensorInstanceRepo,
     private readonly abstractSensorToSensorParameterRepo: repo.AbstractSensorToSensorParameterRepo,
@@ -18,8 +20,6 @@ export class MockDataUseCase {
     private readonly sensorMeasurementRepo: repo.SensorMeasurementRepo,
     private readonly sensorParameterInstanceRepo: repo.SensorParameterInstanceRepo,
     private readonly sensorParameterRepo: repo.SensorParameterRepo,
-    private readonly userToAccessScopeRepo: repo.UserToAccessScopeRepo,
-    private readonly userUseCase: UserUseCase,
   ) {}
 
   async executeMock(scriptName?: string): Promise<void> {
