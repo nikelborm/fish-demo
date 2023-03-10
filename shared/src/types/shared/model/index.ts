@@ -11,3 +11,4 @@ export * from './sensorParameterInstance.model';
 export * from './user.model';
 export * from './userToAccessScope.model';
 export * from './fishKind.model';
+export * from './eventType.model';
