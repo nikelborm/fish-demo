@@ -7,7 +7,6 @@ import { ReservoirUseCase } from './reservoir.useCase';
 export class ReservoirController {
   constructor(private readonly reservoirUseCase: ReservoirUseCase) {}
 
-
   @Post('create')
   @AllowedFor(AccessEnum.SYSTEM_ADMIN)
   async createReservoir(

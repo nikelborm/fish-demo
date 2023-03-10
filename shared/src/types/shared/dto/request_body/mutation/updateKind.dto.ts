@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsDate,
+  IsOptional,
   IsPositive,
   IsString,
   MaxLength,
@@ -17,6 +18,7 @@ export class UpdateFishKindDTO {
   @MaxLength(255)
   description!: string;
 
+  @IsOptional()
   @IsString()
   icon?: string;
 

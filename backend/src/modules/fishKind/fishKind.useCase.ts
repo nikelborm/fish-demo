@@ -46,6 +46,6 @@ export class FishKindUseCase {
   }
 
   async deleteKind(fishKindId: number): Promise<void> {
-    return await this.fishKindRepo.deleteOne(fishKindId);
+    return await this.fishKindRepo.delete(fishKindId);
   }
 }
