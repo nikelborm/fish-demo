@@ -92,6 +92,10 @@ export class ReservoirRepo {
     return {} as any;
   }
 
+  async deleteOne(reservoirId: number): Promise<void> {
+    await this.repo.delete(reservoirId);
+  }
+
   #iHateTypeormAndWasForcedWithNoOtherChoiceToWriteThisFuckingCursedRemap(
     asd2: RawResultsItemType[],
   ): any[] {
