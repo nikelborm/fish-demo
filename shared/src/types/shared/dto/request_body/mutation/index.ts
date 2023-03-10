@@ -10,3 +10,5 @@ export * from './updateAccessScope.dto';
 export * from './useInviteLink.dto';
 export * from './loginUser.dto';
 export * from './updateReservoirs.dto';
+export * from './createKind.dto';
+export * from './updateKind.dto';
