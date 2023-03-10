@@ -39,11 +39,15 @@ export class ReservoirUseCase {
 
   async updateReservoir(
     reservoir: UpdateReservoirDTO,
-  ): Promise<repo.CreatedOnePlainReservoir> {
-    const insertedReservoir = await this.reservoirRepo.createOnePlain(
+  ): Promise<repo.UpdatedPlainReservoir> {
+    const updatedReservoir = await this.reservoirRepo.updateOnePlain(
       reservoir,
     );
-    return insertedReservoir;
+    return updatedReservoir;
+  }
+
+  async deleteReservoir(reservoirId: number): Promise<void> {
+    return await this.reservoirRepo.deleteOne(reservoirId);
   }
 
 

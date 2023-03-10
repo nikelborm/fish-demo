@@ -175,7 +175,7 @@ type PrimaryKeys = 'id';
 
 type PlainKeysGeneratedAfterInsert = PrimaryKeys | 'createdAt' | 'updatedAt';
 
-type PlainKeysAllowedToModify = 'name';
+type PlainKeysAllowedToModify = 'name' | 'fish_count' | 'fish_part_id';
 
 export type CreatedOnePlainReservoir = Pick<
   Reservoir,
