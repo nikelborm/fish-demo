@@ -9,3 +9,4 @@ export * from './setMyPassword.dto';
 export * from './updateAccessScope.dto';
 export * from './useInviteLink.dto';
 export * from './loginUser.dto';
+export * from './updateReservoirs.dto';
