@@ -1,4 +1,3 @@
 export * from './createManySensorMeasurements.dto';
-export * from './createManyUsers.dto';
-export * from './createOneUser.dto';
+export * from './createOneOrManyUsers.dto';
 export * from './registerUser.dto';

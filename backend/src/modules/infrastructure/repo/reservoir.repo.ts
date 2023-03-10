@@ -93,7 +93,7 @@ export class ReservoirRepo {
   }
 
   #iHateTypeormAndWasForcedWithNoOtherChoiceToWriteThisFuckingCursedRemap(
-    asd2: any[],
+    asd2: RawResultsItemType[],
   ): any[] {
     return [...groupByKey(asd2, 'reservoir_id').entries()].map(
       ([reservoirId, recordsWithThatReservoirId]) => {
@@ -137,18 +137,23 @@ export class ReservoirRepo {
                       ]) => ({
                         id: sensorParameterInstanceId,
                         sensorParameter: {
-                          id: recordsWithThatSensorParameterInstanceId[0]!
-                            .sensor_parameter_id,
-                          name: recordsWithThatSensorParameterInstanceId[0]!
-                            .sensor_parameter_name,
+                          id: recordsWithThatSensorParameterInstanceId[0]![
+                            'sensor_parameter_id'
+                          ],
+                          name: recordsWithThatSensorParameterInstanceId[0]![
+                            'sensor_parameter_name'
+                          ],
                           shortName:
-                            recordsWithThatSensorParameterInstanceId[0]!
-                              .short_name,
-                          unit: recordsWithThatSensorParameterInstanceId[0]!
-                            .unit,
+                            recordsWithThatSensorParameterInstanceId[0]![
+                              'short_name'
+                            ],
+                          unit: recordsWithThatSensorParameterInstanceId[0]![
+                            'unit'
+                          ],
                           valueTypeName:
-                            recordsWithThatSensorParameterInstanceId[0]!
-                              .value_type_name,
+                            recordsWithThatSensorParameterInstanceId[0]![
+                              'value_type_name'
+                            ],
                         },
                       }),
                     ),
@@ -199,5 +204,17 @@ export type UpdatedPlainReservoir = Pick<Reservoir, PrimaryKeys> &
 //     },
 //   },
 // },
-type ASd = Pick<Reservoir, PrimaryKeys> &
-  Partial<Pick<Reservoir, PlainKeysAllowedToModify>>;
+
+type RawResultsItemType = {
+  reservoir_id: number;
+  reservoir_name: string;
+  sensor_instance_id: number | null;
+  abstract_sensor_id: number;
+  model_name: string;
+  sensor_parameter_instance_id: number | null;
+  sensor_parameter_id: number;
+  unit: string;
+  sensor_parameter_name: string;
+  short_name: string;
+  value_type_name: string;
+};
