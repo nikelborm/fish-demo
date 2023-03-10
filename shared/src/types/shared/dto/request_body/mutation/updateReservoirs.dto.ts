@@ -1,6 +1,4 @@
 import { IsNumber, IsPositive, IsString, MaxLength, MinLength } from 'class-validator';
-import { NestedArrayDTO } from '../../../../../tools/shared';
-
 export class UpdateReservoirDTO {
   @IsPositive()
   id!: number;
@@ -15,8 +13,4 @@ export class UpdateReservoirDTO {
 
   @IsNumber()
   fish_part_id!: number;
-}
-export class UpdateReservoirsDTO {
-  @NestedArrayDTO(() => UpdateReservoirDTO)
-  reservoirs!: UpdateReservoirDTO[];
 }

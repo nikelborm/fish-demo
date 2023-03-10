@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { CreateOneReservoirResponse, CreateReservoirDTO, ReservoirInfoDTO, UpdateReservoirDTO  } from 'src/types';
+import type { CreateOneReservoirResponse, CreateReservoirDTO, ReservoirInfoDTO, UpdateOneReservoirResponse, UpdateReservoirDTO  } from 'src/types';
 import { messages } from 'src/config';
 import { repo } from '../infrastructure';
 
@@ -39,7 +39,7 @@ export class ReservoirUseCase {
 
   async updateReservoir(
     reservoir: UpdateReservoirDTO,
-  ): Promise<repo.UpdatedPlainReservoir> {
+  ): Promise<UpdateOneReservoirResponse> {
     const updatedReservoir = await this.reservoirRepo.updateOnePlain(
       reservoir,
     );

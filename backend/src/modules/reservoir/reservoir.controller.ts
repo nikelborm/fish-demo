@@ -1,6 +1,6 @@
 import { Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { AccessEnum, AllowedFor, ApiController, AuthorizedOnly, ValidatedBody } from 'src/tools';
-import { CreateOneReservoirResponse, CreateReservoirDTO, FindOneReservoirByIdResponseDTO, } from 'src/types';
+import { CreateOneReservoirResponse, CreateReservoirDTO, FindOneReservoirByIdResponseDTO, UpdateOneReservoirResponse, UpdateReservoirDTO } from 'src/types';
 import { ReservoirUseCase } from './reservoir.useCase';
 
 @ApiController('reservoir')
@@ -28,5 +28,13 @@ export class ReservoirController {
     return {
       reservoir,
     };
+  }
+
+  @Post('updateReservoir')
+  async updateReservoir(
+    @ValidatedBody()
+    reservoir: UpdateReservoirDTO,
+  ): Promise<UpdateOneReservoirResponse> {
+    return await this.reservoirUseCase.updateReservoir(reservoir);
   }
 }
