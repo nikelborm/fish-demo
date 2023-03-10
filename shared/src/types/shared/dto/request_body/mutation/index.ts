@@ -1,3 +1,4 @@
+export * from './createFishKind.dto';
 export * from './createPredict.dto';
 export * from './createReservoirs.dto';
 export * from './createSensorMeasurements.dto';

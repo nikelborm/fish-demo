@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import type { CreateFishKindDTO } from 'src/types';
 import { messages } from 'src/config';
 import { repo } from '../infrastructure';
 
@@ -15,5 +16,9 @@ export class FishKindUseCase {
       );
 
     return fishKind;
+  }
+
+  async createFishKind(fishKind: CreateFishKindDTO): Promise<void> {
+    this.wsGateway.broadcastOneNew(fishKind);
   }
 }
