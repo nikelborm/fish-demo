@@ -1,4 +1,4 @@
-import { IsOptional, IsString, MaxLength } from 'class-validator';
+import {IsString, MaxLength } from 'class-validator';
 
 export class CreateFishKindDTO {
   @IsString()
@@ -8,7 +8,6 @@ export class CreateFishKindDTO {
   @MaxLength(255)
   description!: string;
 
-  @IsOptional()
   @IsString()
-  icon?: string;
+  icon!: string;
 }
