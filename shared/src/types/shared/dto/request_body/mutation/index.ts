@@ -12,3 +12,5 @@ export * from './loginUser.dto';
 export * from './updateReservoirs.dto';
 export * from './createKind.dto';
 export * from './updateKind.dto';
+export * from './updateEventType.dto';
+export * from './createEventType.dto';

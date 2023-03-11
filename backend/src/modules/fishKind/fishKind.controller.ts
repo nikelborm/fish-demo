@@ -1,6 +1,17 @@
 import { Delete, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
-import { AccessEnum, AllowedFor, ApiController, ValidatedBody } from 'src/tools';
-import type { CreateFishKindDTO, CreateOneFishKindResponse, GetOneFishKindByIdResponseDTO, UpdateFishKindDTO, UpdateOneFishKindResponse } from 'src/types';
+import {
+  AccessEnum,
+  AllowedFor,
+  ApiController,
+  ValidatedBody,
+} from 'src/tools';
+import type {
+  CreateFishKindDTO,
+  CreateOneFishKindResponse,
+  GetOneFishKindByIdResponseDTO,
+  UpdateFishKindDTO,
+  UpdateOneFishKindResponse,
+} from 'src/types';
 import { FishKindUseCase } from './fishKind.useCase';
 
 @ApiController('fishKind')
@@ -17,7 +28,7 @@ export class FishKindController {
   }
 
   @Get('/:fishKindId')
-  async findOneReservoirById(
+  async findOneFishKindById(
     @Param('fishKindId', ParseIntPipe) fishKindId: number,
   ): Promise<GetOneFishKindByIdResponseDTO> {
     const fishKind = await this.fishKindUseCase.getOneById(fishKindId);
@@ -34,6 +45,6 @@ export class FishKindController {
 
   @Delete(':FishKindId')
   async deleteFishKind(@Param('FishKindId') FishKindId: number) {
-    return this.fishKindUseCase.deleteKind(FishKindId);
+    return await this.fishKindUseCase.deleteKind(FishKindId);
   }
 }

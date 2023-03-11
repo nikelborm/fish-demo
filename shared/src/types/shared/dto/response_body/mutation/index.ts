@@ -5,3 +5,5 @@ export * from './createOneOrManyReservoir.dto';
 export * from './updateOneReservoir.dto';
 export * from './createOneOrManyFishKind.dto';
 export * from './updateOneFishKind.dto';
+export * from './createOneOrManyEventType.dto';
+export * from './updateOneEventType.dto';

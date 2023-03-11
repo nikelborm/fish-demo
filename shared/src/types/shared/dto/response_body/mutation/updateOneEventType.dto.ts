@@ -1,6 +1,6 @@
 import { IsOptional, IsPositive, IsString, MaxLength } from 'class-validator';
 
-export class UpdateOneFishKindResponse {
+export class UpdateOneEventTypeResponse {
   @IsPositive()
   id!: number;
 

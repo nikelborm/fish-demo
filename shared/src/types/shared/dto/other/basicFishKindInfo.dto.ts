@@ -1,8 +1,6 @@
+import { IsOptional, IsString, MaxLength } from 'class-validator';
 
-import {  IsOptional, IsString, MaxLength } from 'class-validator';
-
-export class  BasicFishKindInfoDTO {
-
+export class BasicFishKindInfoDTO {
   @IsString()
   name!: string;
 
@@ -13,6 +11,4 @@ export class  BasicFishKindInfoDTO {
   @IsOptional()
   @IsString()
   icon?: string;
-
-
 }

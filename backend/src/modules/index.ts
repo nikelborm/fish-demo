@@ -7,3 +7,4 @@ export * from './predicts';
 export * from './videoLogs';
 export * from './reservoir';
 export * from './fishKind';
+export * from './eventType';

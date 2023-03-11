@@ -24,13 +24,19 @@ export class EventTypeRepo {
   async createOnePlain(
     newEventType: Pick<EventType, PlainKeysAllowedToModify>,
   ): Promise<CreatedOnePlainEventType> {
-    return await insertOnePlain<CreatedOnePlainEventType>(this.repo, newEventType);
+    return await insertOnePlain<CreatedOnePlainEventType>(
+      this.repo,
+      newEventType,
+    );
   }
 
   async createManyPlain(
     newEventTypes: Pick<EventType, PlainKeysAllowedToModify>[],
   ): Promise<CreatedOnePlainEventType[]> {
-    return await insertManyPlain<CreatedOnePlainEventType>(this.repo, newEventTypes);
+    return await insertManyPlain<CreatedOnePlainEventType>(
+      this.repo,
+      newEventTypes,
+    );
   }
 
   async updateOnePlain({
@@ -62,7 +68,7 @@ type UsuallyReturnedEventTypePlainKeys =
   | PlainKeysGeneratedAfterInsert
   | RegularPlainKeys;
 
-type RegularPlainKeys = never;
+type RegularPlainKeys = 'name' | 'description' | 'icon';
 
 export type CreatedOnePlainEventType = Pick<
   EventType,
@@ -72,4 +78,7 @@ export type CreatedOnePlainEventType = Pick<
 export type UpdatedOnePlainEventType = Pick<EventType, PrimaryKeys> &
   Partial<Pick<EventType, PlainKeysAllowedToModify>>;
 
-export type SelectedOnePlainEventType = Pick<EventType, UsuallyReturnedEventTypePlainKeys>;
+export type SelectedOnePlainEventType = Pick<
+  EventType,
+  UsuallyReturnedEventTypePlainKeys
+>;

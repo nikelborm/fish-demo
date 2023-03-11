@@ -1,7 +1,6 @@
 import { NestedArrayDTO, NestedDTO } from '../../../../../tools/shared';
 import { BasicFishKindInfoWithIdDTO } from '../../other/basicFishKindInfoWithId.dto';
 
-
 export class CreateOneFishKindResponse {
   @NestedDTO(() => BasicFishKindInfoWithIdDTO)
   fishKind!: BasicFishKindInfoWithIdDTO;
@@ -9,5 +8,5 @@ export class CreateOneFishKindResponse {
 
 export class CreateManyFishKindsResponseDTO {
   @NestedArrayDTO(() => BasicFishKindInfoWithIdDTO)
-  createdUsers!: BasicFishKindInfoWithIdDTO[];
+  createdFishKinds!: BasicFishKindInfoWithIdDTO[];
 }

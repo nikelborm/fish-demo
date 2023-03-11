@@ -1,6 +1,6 @@
 import { IsOptional, IsString, MaxLength } from 'class-validator';
 
-export class CreateFishKindDTO {
+export class BasicEventTypeInfoDTO {
   @IsString()
   name!: string;
 
