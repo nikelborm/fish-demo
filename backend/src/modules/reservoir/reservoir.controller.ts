@@ -1,6 +1,18 @@
 import { Delete, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
-import { AccessEnum, AllowedFor, ApiController, AuthorizedOnly, ValidatedBody } from 'src/tools';
-import { CreateOneReservoirResponse, CreateReservoirDTO, FindOneReservoirByIdResponseDTO, UpdateOneReservoirResponse, UpdateReservoirDTO } from 'src/types';
+import {
+  AccessEnum,
+  AllowedFor,
+  ApiController,
+  AuthorizedOnly,
+  ValidatedBody,
+} from 'src/tools';
+import {
+  CreateOneReservoirResponse,
+  CreateReservoirDTO,
+  FindOneReservoirByIdResponseDTO,
+  UpdateOneReservoirResponse,
+  UpdateReservoirDTO,
+} from 'src/types';
 import { ReservoirUseCase } from './reservoir.useCase';
 
 @ApiController('reservoir')
@@ -38,7 +50,9 @@ export class ReservoirController {
   }
 
   @Delete(':reservoirId')
-  async deleteReservoir(@Param('reservoirId') reservoirId: number) {
-    return this.reservoirUseCase.deleteReservoir(reservoirId);
+  async deleteReservoir(
+    @Param('reservoirId') reservoirId: number,
+  ): Promise<void> {
+    return await this.reservoirUseCase.deleteReservoir(reservoirId);
   }
 }

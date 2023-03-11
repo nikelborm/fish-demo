@@ -77,10 +77,8 @@ export class ReservoirRepo {
     id,
     ...existingReservoir
   }: UpdatedPlainReservoir): Promise<UpdatedPlainReservoir> {
-    const updatedReservoir = await this.repo.update(id, existingReservoir);
-    console.log('updatedReservoir: ', updatedReservoir);
-    updatedReservoir;
-    return {} as any;
+    await this.repo.update(id, existingReservoir);
+    return { id, ...existingReservoir };
   }
 
   async updateManyPlain(

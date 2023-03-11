@@ -1,6 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { messages } from 'src/config';
-import type { CreateFishKindDTO, CreateOneFishKindResponse, UpdateFishKindDTO, UpdateOneFishKindResponse } from 'src/types';
+import type {
+  CreateFishKindDTO,
+  CreateOneFishKindResponse,
+  UpdateFishKindDTO,
+  UpdateOneFishKindResponse,
+} from 'src/types';
 import { repo } from '../infrastructure';
 
 @Injectable()
@@ -30,18 +35,14 @@ export class FishKindUseCase {
   async createKind(
     fishKind: CreateFishKindDTO,
   ): Promise<CreateOneFishKindResponse> {
-    const insertedFishKind = await this.fishKindRepo.createOnePlain(
-      fishKind,
-    );
-    return {fishKind: insertedFishKind};
+    const insertedFishKind = await this.fishKindRepo.createOnePlain(fishKind);
+    return { fishKind: insertedFishKind };
   }
 
   async updateKind(
     fishKind: UpdateFishKindDTO,
   ): Promise<UpdateOneFishKindResponse> {
-    const updatedFishKind = await this.fishKindRepo.updateOnePlain(
-      fishKind,
-    );
+    const updatedFishKind = await this.fishKindRepo.updateOnePlain(fishKind);
     return updatedFishKind;
   }
 
