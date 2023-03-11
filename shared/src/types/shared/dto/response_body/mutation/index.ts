@@ -7,3 +7,5 @@ export * from './createOneOrManyFishKind.dto';
 export * from './updateOneFishKind.dto';
 export * from './createOneOrManyEventType.dto';
 export * from './updateOneEventType.dto';
+export * from './createOneOrManyFishBatch.dto';
+export * from './updateOneFishBatch.dto';

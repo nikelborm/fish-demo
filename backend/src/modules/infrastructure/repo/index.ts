@@ -11,3 +11,4 @@ export * from './user.repo';
 export * from './userToAccessScope.repo';
 export * from './fishKind.repo';
 export * from './eventType.repo';
+export * from './fishBatch.repo';

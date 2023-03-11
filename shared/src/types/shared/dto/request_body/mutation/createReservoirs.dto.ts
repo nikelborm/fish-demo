@@ -1,8 +1,7 @@
-import { IsNumber,  IsString, MaxLength, MinLength } from 'class-validator';
+import { IsNumber, IsString, MaxLength, MinLength } from 'class-validator';
 import { NestedArrayDTO } from '../../../../../tools/shared';
 
 export class CreateReservoirDTO {
-
   @IsString()
   @MinLength(8)
   @MaxLength(128)

@@ -7,21 +7,22 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class UpdateOneReservoirResponse {
+export class UpdateOneFishBatchResponse {
   @IsPositive()
+  @IsNumber()
   id!: number;
 
   @IsOptional()
   @IsString()
-  @MinLength(8)
+  @MinLength(1)
   @MaxLength(128)
   name?: string;
 
   @IsOptional()
   @IsNumber()
-  fish_count?: number;
+  fish_kind_id?: number;
 
   @IsOptional()
   @IsNumber()
-  fish_part_id?: number;
+  age?: number;
 }

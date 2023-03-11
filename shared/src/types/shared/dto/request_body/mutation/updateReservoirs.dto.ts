@@ -1,4 +1,10 @@
-import { IsNumber, IsPositive, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsNumber,
+  IsPositive,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 export class UpdateReservoirDTO {
   @IsPositive()
   id!: number;

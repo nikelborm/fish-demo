@@ -1,3 +1,3 @@
 export * from './fishKind.module';
 export * from './fishKind.useCase';
-export * from './fishKind.controller'
+export * from './fishKind.controller';

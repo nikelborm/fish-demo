@@ -5,3 +5,5 @@ export * from './basicReservoirInfo.dto';
 export * from './basicReservoirInfoWithId.dto';
 export * from './basicEventTypeInfo.dto';
 export * from './basicEventTypeInfoWithId.dto';
+export * from './basisFishBatchInfo.dto';
+export * from './basicFishBatchInfoWithId.dto';

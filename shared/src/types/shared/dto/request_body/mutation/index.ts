@@ -14,3 +14,5 @@ export * from './createKind.dto';
 export * from './updateKind.dto';
 export * from './updateEventType.dto';
 export * from './createEventType.dto';
+export * from './updateFishBatch.dto';
+export * from './createFishBatch.dto';
