@@ -77,10 +77,8 @@ export class ReservoirRepo {
     id,
     ...existingReservoir
   }: UpdatedPlainReservoir): Promise<UpdatedPlainReservoir> {
-    const updatedReservoir = await this.repo.update(id, existingReservoir);
-    console.log('updatedReservoir: ', updatedReservoir);
-    updatedReservoir;
-    return {} as any;
+    await this.repo.update(id, existingReservoir);
+    return { id, ...existingReservoir };
   }
 
   async updateManyPlain(
@@ -90,6 +88,10 @@ export class ReservoirRepo {
     console.log('updatedReservoirs: ', updatedReservoirs);
     updatedReservoirs;
     return {} as any;
+  }
+
+  async deleteOne(reservoirId: number): Promise<void> {
+    await this.repo.delete(reservoirId);
   }
 
   #iHateTypeormAndWasForcedWithNoOtherChoiceToWriteThisFuckingCursedRemap(
@@ -171,7 +173,7 @@ type PrimaryKeys = 'id';
 
 type PlainKeysGeneratedAfterInsert = PrimaryKeys | 'createdAt' | 'updatedAt';
 
-type PlainKeysAllowedToModify = 'name';
+type PlainKeysAllowedToModify = 'name' | 'fish_count' | 'fish_part_id';
 
 export type CreatedOnePlainReservoir = Pick<
   Reservoir,

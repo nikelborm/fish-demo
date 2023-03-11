@@ -7,6 +7,7 @@ import { TypedConfigModule } from './config';
 import {
   AccessScopeModule,
   AuthModule,
+  EventTypeModule,
   FishKindModule,
   InfrastructureModule,
   PredictModule,
@@ -15,6 +16,7 @@ import {
   UserModule,
   VideoLogModule,
 } from './modules';
+import { FishBatchModule } from './modules/fishBatch';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import {
     TypedConfigModule,
     UserModule,
     VideoLogModule,
+    EventTypeModule,
+    FishBatchModule,
   ],
   controllers: [MockDataController],
   providers: [...Object.values(MockServices)],

@@ -20,6 +20,18 @@ export class Reservoir implements IReservoir {
   })
   name!: string;
 
+  @Column({
+    name: 'fish_count',
+    type: 'int',
+  })
+  fish_count!: number;
+
+  @Column({
+    name: 'fish_part_id',
+    type: 'int',
+  })
+  fish_part_id!: number;
+
   @OneToMany(() => SensorInstance, (sensorInstance) => sensorInstance.reservoir)
   sensorInstances!: SensorInstance[];
 

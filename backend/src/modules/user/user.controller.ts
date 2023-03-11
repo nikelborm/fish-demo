@@ -1,4 +1,4 @@
-import { Get, Post, Query, Req } from '@nestjs/common';
+import {  Get, Post, Query, Req } from '@nestjs/common';
 import {
   AccessEnum,
   AllowedFor,
@@ -75,4 +75,6 @@ export class UserController {
     await this.userUseCase.deleteOne(id);
     return {};
   }
+
+
 }

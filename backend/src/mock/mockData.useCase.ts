@@ -18,7 +18,7 @@ export class MockDataUseCase {
     private readonly sensorInstanceRepo: repo.SensorInstanceRepo,
     private readonly sensorMeasurementRepo: repo.SensorMeasurementRepo,
     private readonly sensorParameterInstanceRepo: repo.SensorParameterInstanceRepo,
-    private readonly sensorParameterRepo: repo.SensorParameterRepo,
+    private readonly sensorParameterRepo: repo.SensorParameterRepo, //private readonly fishKindRepo: repo.FishKindRepo,
   ) {}
 
   async executeMock(scriptName?: string): Promise<void> {
@@ -74,6 +74,8 @@ export class MockDataUseCase {
 
     const reservoir = await this.reservoirRepo.createOnePlain({
       name: `Бассейн №${Math.random()}`,
+      fish_count: 2,
+      fish_part_id: 4,
     });
     console.log('reservoir: ', reservoir);
     const { abstractSensor: abstractSensor1 } = await this.#mockAbstractSensor(
