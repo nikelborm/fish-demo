@@ -44,7 +44,7 @@ export class FishKindController {
   }
 
   @Delete(':FishKindId')
-  async deleteFishKind(@Param('FishKindId') FishKindId: number) {
+  async deleteFishKind(@Param('FishKindId') FishKindId: number): Promise<void> {
     return await this.fishKindUseCase.deleteKind(FishKindId);
   }
 }
