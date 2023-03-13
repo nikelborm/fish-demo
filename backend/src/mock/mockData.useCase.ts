@@ -1,8 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { sub } from 'date-fns';
 import { assertMockScriptNameIsCorrect } from 'src/config';
-import { repo, UserUseCase } from 'src/modules';
-import type { CreatedOnePlainAbstractSensor } from 'src/modules/infrastructure/repo';
+import { model, repo, UserUseCase } from 'src/modules';
 import { AccessScopeType, SensorParameterValueTypenameEnum } from 'src/types';
 
 @Injectable()
@@ -40,12 +39,12 @@ export class MockDataUseCase {
   async mockUserAndAdminAccessScope(): Promise<void> {
     console.log('mockUserAndAdminAccessScope called');
 
-    const systemAdminScope = await this.accessScopeRepo.createOneWithRelations({
+    const systemAdminScope = await this.accessScopeRepo.createOnePlain({
       type: AccessScopeType.SYSTEM_ADMIN,
     });
     console.log('systemAdminScope: ', systemAdminScope);
 
-    const { user } = await this.userUseCase.createUser({
+    const user = await this.userUseCase.createUser({
       email: 'asd@asd.asd',
       lastName: 'Такой-тов',
       firstName: 'Такой-то',
@@ -57,7 +56,7 @@ export class MockDataUseCase {
     });
 
     console.log('user: ', user);
-    const userToAccessScope = await this.userToAccessScopeRepo.createOne({
+    const userToAccessScope = await this.userToAccessScopeRepo.createOnePlain({
       accessScopeId: systemAdminScope.id,
       userId: user.id,
     });
@@ -108,14 +107,14 @@ export class MockDataUseCase {
   }
 
   async #mockManySensorInstances(
-    reservoir: repo.CreatedOnePlainReservoir,
+    reservoir: CreatedOnePlainReservoir,
     abstractSensors: (CreatedOnePlainAbstractSensor & {
-      sensorParameters: repo.CreatedOnePlainSensorParameter[];
+      sensorParameters: CreatedOnePlainSensorParameter[];
     })[],
   ): Promise<number[]> {
     const generateMockSensorInstances = (): Promise<{
-      sensorInstance: repo.CreatedOnePlainSensorInstance;
-      sensorParameterInstances: repo.CreatedOnePlainSensorParameterInstance[];
+      sensorInstance: CreatedOnePlainSensorInstance;
+      sensorParameterInstances: CreatedOnePlainSensorParameterInstance[];
     }>[] =>
       abstractSensors.map((abstractSensor) =>
         this.#mockSensorInstance(reservoir, abstractSensor),
@@ -136,9 +135,9 @@ export class MockDataUseCase {
   async #mockSensorParameters(): Promise<{
     sensorParameters: [
       //[tempSensorParameter, oxygenSensorParameter, pHSensorParameter]
-      repo.CreatedOnePlainSensorParameter,
-      repo.CreatedOnePlainSensorParameter,
-      repo.CreatedOnePlainSensorParameter,
+      CreatedOnePlainSensorParameter,
+      CreatedOnePlainSensorParameter,
+      CreatedOnePlainSensorParameter,
     ];
   }> {
     const sensorParameters = await this.sensorParameterRepo.createManyPlain([
@@ -164,18 +163,18 @@ export class MockDataUseCase {
     console.log('sensorParameters: ', sensorParameters);
     return {
       sensorParameters: sensorParameters as [
-        repo.CreatedOnePlainSensorParameter,
-        repo.CreatedOnePlainSensorParameter,
-        repo.CreatedOnePlainSensorParameter,
+        CreatedOnePlainSensorParameter,
+        CreatedOnePlainSensorParameter,
+        CreatedOnePlainSensorParameter,
       ],
     };
   }
 
   async #mockAbstractSensor(
-    sensorParameters: repo.CreatedOnePlainSensorParameter[],
+    sensorParameters: CreatedOnePlainSensorParameter[],
   ): Promise<{
-    abstractSensor: repo.CreatedOnePlainAbstractSensor & {
-      sensorParameters: repo.CreatedOnePlainSensorParameter[];
+    abstractSensor: CreatedOnePlainAbstractSensor & {
+      sensorParameters: CreatedOnePlainSensorParameter[];
     };
   }> {
     const abstractSensor = await this.abstractSensorRepo.createOnePlain({
@@ -184,7 +183,7 @@ export class MockDataUseCase {
     console.log('abstractSensor: ', abstractSensor);
 
     const abstractSensorToSensorParameter =
-      await this.abstractSensorToSensorParameterRepo.createMany(
+      await this.abstractSensorToSensorParameterRepo.createManyPlain(
         sensorParameters.map(({ id: sensorParameterId }) => ({
           sensorParameterId,
           abstractSensorId: abstractSensor.id,
@@ -200,13 +199,13 @@ export class MockDataUseCase {
   }
 
   async #mockSensorInstance(
-    reservoir: repo.CreatedOnePlainReservoir,
+    reservoir: CreatedOnePlainReservoir,
     abstractSensorWithJoinedParameters: CreatedOnePlainAbstractSensor & {
-      sensorParameters: repo.CreatedOnePlainSensorParameter[];
+      sensorParameters: CreatedOnePlainSensorParameter[];
     },
   ): Promise<{
-    sensorInstance: repo.CreatedOnePlainSensorInstance;
-    sensorParameterInstances: repo.CreatedOnePlainSensorParameterInstance[];
+    sensorInstance: CreatedOnePlainSensorInstance;
+    sensorParameterInstances: CreatedOnePlainSensorParameterInstance[];
   }> {
     const sensorInstance = await this.sensorInstanceRepo.createOnePlain({
       reservoirId: reservoir.id,
@@ -214,7 +213,7 @@ export class MockDataUseCase {
     console.log('sensorInstance: ', sensorInstance);
 
     const abstractSensorToSensorInstance =
-      await this.abstractSensorToSensorInstanceRepo.createOne({
+      await this.abstractSensorToSensorInstanceRepo.createOnePlain({
         abstractSensorId: abstractSensorWithJoinedParameters.id,
         sensorInstanceId: sensorInstance.id,
       });
@@ -239,12 +238,12 @@ export class MockDataUseCase {
     sensorParameterInstanceId: number,
     minValue: number,
     maxValue: number,
-  ): repo.PlainSensorMeasurementToInsert[] {
+  ): repo.OnePlainSensorMeasurementToBeCreated[] {
     const sinDegrees = (angleDegrees: number): number =>
       Math.sin((angleDegrees * Math.PI) / 180);
     return Array.from({ length: 720 }, (_, i) => i)
       .map(
-        (v): repo.PlainSensorMeasurementToInsert => ({
+        (v): repo.OnePlainSensorMeasurementToBeCreated => ({
           sensorParameterInstanceId,
           recordedAt: sub(new Date(), { seconds: 720 - v + Math.random() * 3 }),
           value:
@@ -262,3 +261,40 @@ export class MockDataUseCase {
       );
   }
 }
+
+type CreatedOnePlainSensorParameter = Required<
+  {
+    name: string;
+    shortName: string;
+    valueTypeName: SensorParameterValueTypenameEnum;
+    unit: string;
+  } & Pick<model.SensorParameter, 'id' | 'createdAt' | 'updatedAt'>
+>;
+
+type CreatedOnePlainAbstractSensor = Required<
+  {
+    modelName: string;
+  } & Pick<model.AbstractSensor, 'id' | 'createdAt' | 'updatedAt'>
+>;
+
+type CreatedOnePlainSensorInstance = Required<
+  {
+    reservoirId: number;
+  } & Pick<model.SensorInstance, 'id' | 'createdAt' | 'updatedAt'>
+>;
+
+type CreatedOnePlainSensorParameterInstance = Required<
+  {
+    sensorParameterId: number;
+    abstractSensorId: number;
+    sensorInstanceId: number;
+  } & Pick<model.SensorParameterInstance, 'id' | 'createdAt' | 'updatedAt'>
+>;
+
+type CreatedOnePlainReservoir = Required<
+  {
+    name: string;
+    fish_count: number;
+    fish_part_id: number;
+  } & Pick<model.Reservoir, 'id' | 'createdAt' | 'updatedAt'>
+>;

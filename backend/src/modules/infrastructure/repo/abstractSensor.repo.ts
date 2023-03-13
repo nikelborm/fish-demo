@@ -1,6 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { insertManyPlain, insertOnePlain } from 'src/tools';
+import {
+  createManyPlain,
+  createOnePlain,
+  deleteEntityByIdentity,
+  findOnePlainByIdentity,
+  getAllEntities,
+  updateManyPlain,
+  updateManyWithRelations,
+  updateOnePlain,
+  updateOneWithRelations,
+} from 'src/tools';
+import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
 import { AbstractSensor } from '../model';
 
@@ -11,34 +22,41 @@ export class AbstractSensorRepo {
     private readonly repo: Repository<AbstractSensor>,
   ) {}
 
-  async getAll(): Promise<AbstractSensor[]> {
-    return await this.repo.find();
-  }
+  getAll = getAllEntities(this.repo)<Config>();
 
-  async createOnePlain(
-    newAbstractSensor: Pick<AbstractSensor, PlainKeysAllowedToModify>,
-  ): Promise<CreatedOnePlainAbstractSensor> {
-    return await insertOnePlain<CreatedOnePlainAbstractSensor>(
-      this.repo,
-      newAbstractSensor,
-    );
-  }
+  findOneById = async (
+    id: number,
+  ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
+    await findOnePlainByIdentity(this.repo)<Config>()({ id });
 
-  async createManyPlain(
-    newAbstractSensors: Pick<AbstractSensor, PlainKeysAllowedToModify>[],
-  ): Promise<CreatedOnePlainAbstractSensor[]> {
-    return await insertManyPlain<CreatedOnePlainAbstractSensor>(
-      this.repo,
-      newAbstractSensors,
-    );
-  }
+  createOnePlain = createOnePlain(this.repo)<Config>();
+  createManyPlain = createManyPlain(this.repo)<Config>();
+
+  updateManyPlain = updateManyPlain(this.repo)<Config>();
+  updateOnePlain = updateOnePlain(this.repo)<Config>();
+
+  updateManyWithRelations = updateManyWithRelations(this.repo)<Config>();
+  updateOneWithRelations = updateOneWithRelations(this.repo)<Config>();
+
+  deleteOneById = async (id: number): Promise<void> =>
+    await deleteEntityByIdentity(this.repo)<Config>()({ id });
 }
 
-type PlainKeysGeneratedAfterInsert = 'id' | 'createdAt' | 'updatedAt';
-
-type PlainKeysAllowedToModify = 'modelName';
-
-export type CreatedOnePlainAbstractSensor = Pick<
+type RepoTypes = EntityRepoMethodTypes<
   AbstractSensor,
-  PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
+  {
+    EntityName: 'AbstractSensor';
+    RequiredToCreateAndSelectRegularPlainKeys:
+      | 'createdAt'
+      | 'updatedAt'
+      | 'modelName';
+    OptionalToCreateAndSelectRegularPlainKeys: null;
+
+    ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';
+    ForbiddenToUpdatePlainKeys: 'id' | 'createdAt' | 'updatedAt';
+    ForbiddenToUpdateRelationKeys: null;
+    UnselectedByDefaultPlainKeys: null;
+  }
 >;
+
+type Config = RepoTypes['Config'];

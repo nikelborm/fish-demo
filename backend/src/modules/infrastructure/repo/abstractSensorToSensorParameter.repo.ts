@@ -1,5 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import {
+  createManyPlain,
+  createOnePlain,
+  deleteEntityByIdentity,
+  findOnePlainByIdentity,
+  getAllEntities,
+  updateManyPlain,
+  updateManyWithRelations,
+  updateOnePlain,
+  updateOneWithRelations,
+} from 'src/tools';
+import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
 import { AbstractSensorToSensorParameter } from '../model';
 
@@ -10,28 +22,34 @@ export class AbstractSensorToSensorParameterRepo {
     private readonly repo: Repository<AbstractSensorToSensorParameter>,
   ) {}
 
-  async getAll(): Promise<AbstractSensorToSensorParameter[]> {
-    return await this.repo.find();
-  }
+  getAll = getAllEntities(this.repo)<Config>();
 
-  async createOne(
-    newAbstractSensorToSensorParameter: CreatedOnePlainAbstractSensorToSensorParameter,
-  ): Promise<CreatedOnePlainAbstractSensorToSensorParameter> {
-    await this.repo.insert(newAbstractSensorToSensorParameter);
-    return newAbstractSensorToSensorParameter;
-  }
+  findOneByIdentity = findOnePlainByIdentity(this.repo)<Config>();
 
-  async createMany(
-    newAbstractSensorToSensorParameters: CreatedOnePlainAbstractSensorToSensorParameter[],
-  ): Promise<CreatedOnePlainAbstractSensorToSensorParameter[]> {
-    await this.repo.insert(newAbstractSensorToSensorParameters);
-    return newAbstractSensorToSensorParameters;
-  }
+  createOnePlain = createOnePlain(this.repo)<Config>();
+  createManyPlain = createManyPlain(this.repo)<Config>();
+
+  updateManyPlain = updateManyPlain(this.repo)<Config>();
+  updateOnePlain = updateOnePlain(this.repo)<Config>();
+
+  updateManyWithRelations = updateManyWithRelations(this.repo)<Config>();
+  updateOneWithRelations = updateOneWithRelations(this.repo)<Config>();
+
+  deleteOne = deleteEntityByIdentity(this.repo)<Config>();
 }
 
-type PlainKeysAllowedToModify = 'abstractSensorId' | 'sensorParameterId';
-
-type CreatedOnePlainAbstractSensorToSensorParameter = Pick<
+type RepoTypes = EntityRepoMethodTypes<
   AbstractSensorToSensorParameter,
-  PlainKeysAllowedToModify
+  {
+    EntityName: 'AbstractSensorToSensorParameter';
+    RequiredToCreateAndSelectRegularPlainKeys: null;
+    OptionalToCreateAndSelectRegularPlainKeys: null;
+
+    ForbiddenToCreateGeneratedPlainKeys: null;
+    ForbiddenToUpdatePlainKeys: 'abstractSensorId' | 'sensorParameterId';
+    ForbiddenToUpdateRelationKeys: null;
+    UnselectedByDefaultPlainKeys: null;
+  }
 >;
+
+type Config = RepoTypes['Config'];

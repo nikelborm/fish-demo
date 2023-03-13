@@ -1,7 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { groupByKey, insertManyPlain, insertOnePlain } from 'src/tools';
-import type { ReservoirInfoDTO } from 'src/types';
+import {
+  groupByKey,
+  createManyPlain,
+  createOnePlain,
+  getAllEntities,
+  findOnePlainByIdentity,
+  updateManyPlain,
+  updateOnePlain,
+  updateManyWithRelations,
+  updateOneWithRelations,
+  deleteEntityByIdentity,
+} from 'src/tools';
+import type { EntityRepoMethodTypes, ReservoirInfoDTO } from 'src/types';
 import { Repository } from 'typeorm';
 import { Reservoir } from '../model';
 
@@ -55,44 +66,24 @@ export class ReservoirRepo {
     )[0] as ReservoirInfoDTO;
   }
 
-  async createOnePlain(
-    newReservoir: Pick<Reservoir, PlainKeysAllowedToModify>,
-  ): Promise<CreatedOnePlainReservoir> {
-    return await insertOnePlain<CreatedOnePlainReservoir>(
-      this.repo,
-      newReservoir,
-    );
-  }
+  getAll = getAllEntities(this.repo)<Config>();
 
-  async createManyPlain(
-    newReservoirs: Pick<Reservoir, PlainKeysAllowedToModify>[],
-  ): Promise<CreatedOnePlainReservoir[]> {
-    return await insertManyPlain<CreatedOnePlainReservoir>(
-      this.repo,
-      newReservoirs,
-    );
-  }
+  findOneById = async (
+    id: number,
+  ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
+    await findOnePlainByIdentity(this.repo)<Config>()({ id });
 
-  async updateOnePlain({
-    id,
-    ...existingReservoir
-  }: UpdatedPlainReservoir): Promise<UpdatedPlainReservoir> {
-    await this.repo.update(id, existingReservoir);
-    return { id, ...existingReservoir };
-  }
+  createOnePlain = createOnePlain(this.repo)<Config>();
+  createManyPlain = createManyPlain(this.repo)<Config>();
 
-  async updateManyPlain(
-    existingReservoirs: UpdatedPlainReservoir[],
-  ): Promise<UpdatedPlainReservoir[]> {
-    const updatedReservoirs = await this.repo.save(existingReservoirs);
-    console.log('updatedReservoirs: ', updatedReservoirs);
-    updatedReservoirs;
-    return {} as any;
-  }
+  updateManyPlain = updateManyPlain(this.repo)<Config>();
+  updateOnePlain = updateOnePlain(this.repo)<Config>();
 
-  async deleteOne(reservoirId: number): Promise<void> {
-    await this.repo.delete(reservoirId);
-  }
+  updateManyWithRelations = updateManyWithRelations(this.repo)<Config>();
+  updateOneWithRelations = updateOneWithRelations(this.repo)<Config>();
+
+  deleteOneById = async (id: number): Promise<void> =>
+    await deleteEntityByIdentity(this.repo)<Config>()({ id });
 
   #iHateTypeormAndWasForcedWithNoOtherChoiceToWriteThisFuckingCursedRemap(
     asd2: RawResultsItemType[],
@@ -169,19 +160,28 @@ export class ReservoirRepo {
   }
 }
 
-type PrimaryKeys = 'id';
-
-type PlainKeysGeneratedAfterInsert = PrimaryKeys | 'createdAt' | 'updatedAt';
-
-type PlainKeysAllowedToModify = 'name' | 'fish_count' | 'fish_part_id';
-
-export type CreatedOnePlainReservoir = Pick<
+type RepoTypes = EntityRepoMethodTypes<
   Reservoir,
-  PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
+  {
+    EntityName: 'Reservoir';
+    RequiredToCreateAndSelectRegularPlainKeys:
+      | 'createdAt'
+      | 'updatedAt'
+      | 'name'
+      | 'fish_count'
+      | 'fish_part_id'
+      | 'name';
+    OptionalToCreateAndSelectRegularPlainKeys: null;
+
+    ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';
+    ForbiddenToUpdatePlainKeys: 'id' | 'createdAt' | 'updatedAt';
+    ForbiddenToUpdateRelationKeys: null;
+    UnselectedByDefaultPlainKeys: null;
+  }
 >;
 
-export type UpdatedPlainReservoir = Pick<Reservoir, PrimaryKeys> &
-  Partial<Pick<Reservoir, PlainKeysAllowedToModify>>;
+type Config = RepoTypes['Config'];
+
 // select: {
 //   id: true,
 //   name: true,

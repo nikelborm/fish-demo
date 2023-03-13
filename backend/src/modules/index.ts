@@ -7,4 +7,5 @@ export * from './predicts';
 export * from './videoLogs';
 export * from './reservoir';
 export * from './fishKind';
+export * from './fishBatch';
 export * from './eventType';

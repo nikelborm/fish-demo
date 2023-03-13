@@ -6,7 +6,7 @@ import {
   IsNumberString,
   IsOptional,
 } from 'class-validator';
-import type { SensorParameterValueType } from '../sensorParameterValueType';
+import type { SensorParameterValueType } from '../modelHelper';
 import type { ISensorParameterInstance } from './sensorParameterInstance.model';
 
 export class ISensorMeasurement {

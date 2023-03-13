@@ -15,8 +15,8 @@ import {
   SensorMeasurementModule,
   UserModule,
   VideoLogModule,
+  FishBatchModule,
 } from './modules';
-import { FishBatchModule } from './modules/fishBatch';
 
 @Module({
   imports: [

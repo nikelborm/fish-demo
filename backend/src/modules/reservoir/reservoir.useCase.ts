@@ -7,7 +7,7 @@ import type {
   UpdateReservoirDTO,
 } from 'src/types';
 import { messages } from 'src/config';
-import { repo } from '../infrastructure';
+import { model, repo } from '../infrastructure';
 
 @Injectable()
 export class ReservoirUseCase {
@@ -27,7 +27,12 @@ export class ReservoirUseCase {
 
   async createManyReservoirs(
     reservoirs: CreateReservoirDTO[],
-  ): Promise<repo.CreatedOnePlainReservoir[]> {
+  ): Promise<
+    Required<
+      CreateReservoirDTO &
+        Pick<model.Reservoir, 'id' | 'createdAt' | 'updatedAt'>
+    >[]
+  > {
     const insertedReservoirs = await this.reservoirRepo.createManyPlain(
       reservoirs,
     );
@@ -43,14 +48,18 @@ export class ReservoirUseCase {
     return { reservoir: insertedReservoir };
   }
 
-  async updateReservoir(
-    reservoir: UpdateReservoirDTO,
-  ): Promise<UpdateOneReservoirResponse> {
-    const updatedReservoir = await this.reservoirRepo.updateOnePlain(reservoir);
+  async updateReservoir({
+    id,
+    ...rest
+  }: UpdateReservoirDTO): Promise<UpdateOneReservoirResponse> {
+    const updatedReservoir = await this.reservoirRepo.updateOnePlain(
+      { id },
+      rest,
+    );
     return updatedReservoir;
   }
 
   async deleteReservoir(reservoirId: number): Promise<void> {
-    return await this.reservoirRepo.deleteOne(reservoirId);
+    return await this.reservoirRepo.deleteOneById(reservoirId);
   }
 }

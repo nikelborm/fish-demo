@@ -24,7 +24,7 @@ export class EventType implements IEventType {
     name: 'icon',
     nullable: true,
   })
-  icon!: string;
+  icon?: string;
 
   @CreateDateColumn({
     name: 'created_at',
