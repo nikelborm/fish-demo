@@ -1,7 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { insertManyPlain, insertOnePlain } from 'src/tools';
-import type { FindSensorMeasurementsDTO } from 'src/types';
+import {
+  createManyPlain,
+  createOnePlain,
+  deleteEntityByIdentity,
+  updateManyPlain,
+  updateManyWithRelations,
+  updateOnePlain,
+  updateOneWithRelations,
+} from 'src/tools';
+import type {
+  EntityRepoMethodTypes,
+  FindSensorMeasurementsDTO,
+} from 'src/types';
 import { Between, Repository, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import { SensorMeasurement } from '../model';
 
@@ -12,7 +23,7 @@ export class SensorMeasurementRepo {
     private readonly repo: Repository<SensorMeasurement>,
   ) {}
 
-  async getAll(): Promise<Pick<SensorMeasurement, UsuallyReturnedPlainKeys>[]> {
+  async getAll(): Promise<RepoTypes['SelectedOnePlainEntity'][]> {
     return await this.repo.find({
       order: { recordedAt: 'desc' },
     });
@@ -20,7 +31,7 @@ export class SensorMeasurementRepo {
 
   async getLatestMeasurementsWhereSensorInstanceHas(
     reservoirId: number,
-  ): Promise<Pick<SensorMeasurement, UsuallyReturnedPlainKeys>[]> {
+  ): Promise<RepoTypes['SelectedOnePlainEntity'][]> {
     return await this.repo
       .createQueryBuilder('sensorMeasurement')
       .select([
@@ -81,45 +92,37 @@ export class SensorMeasurementRepo {
     });
   }
 
-  async createOnePlain(
-    newSensorMeasurement: Pick<SensorMeasurement, PlainKeysAllowedToModify>,
-  ): Promise<CreatedOnePlainSensorMeasurement> {
-    return await insertOnePlain<CreatedOnePlainSensorMeasurement>(
-      this.repo,
-      newSensorMeasurement,
-    );
-  }
+  createOnePlain = createOnePlain(this.repo)<Config>();
+  createManyPlain = createManyPlain(this.repo)<Config>();
 
-  async createManyPlain(
-    newSensorMeasurements: Pick<SensorMeasurement, PlainKeysAllowedToModify>[],
-  ): Promise<CreatedOnePlainSensorMeasurement[]> {
-    return await insertManyPlain<CreatedOnePlainSensorMeasurement>(
-      this.repo,
-      newSensorMeasurements,
-    );
-  }
+  updateManyPlain = updateManyPlain(this.repo)<Config>();
+  updateOnePlain = updateOnePlain(this.repo)<Config>();
+
+  updateManyWithRelations = updateManyWithRelations(this.repo)<Config>();
+  updateOneWithRelations = updateOneWithRelations(this.repo)<Config>();
+
+  deleteOneById = async (id: string): Promise<void> =>
+    await deleteEntityByIdentity(this.repo)<Config>()({ id });
 }
 
-type PrimaryKeys = 'id';
-type PlainKeysGeneratedAfterInsert = PrimaryKeys;
-
-type UsuallyReturnedPlainKeys =
-  | PrimaryKeys
-  | 'recordedAt'
-  | 'value'
-  | 'sensorParameterInstanceId';
-
-type PlainKeysAllowedToModify =
-  | 'recordedAt'
-  | 'value'
-  | 'sensorParameterInstanceId';
-
-export type PlainSensorMeasurementToInsert = Pick<
+type RepoTypes = EntityRepoMethodTypes<
   SensorMeasurement,
-  PlainKeysAllowedToModify
+  {
+    EntityName: 'SensorMeasurement';
+    RequiredToCreateAndSelectRegularPlainKeys:
+      | 'recordedAt'
+      | 'value'
+      | 'sensorParameterInstanceId';
+    OptionalToCreateAndSelectRegularPlainKeys: null;
+
+    ForbiddenToCreateGeneratedPlainKeys: 'id';
+    ForbiddenToUpdatePlainKeys: 'id';
+    ForbiddenToUpdateRelationKeys: null;
+    UnselectedByDefaultPlainKeys: null;
+  }
 >;
 
-export type CreatedOnePlainSensorMeasurement = Pick<
-  SensorMeasurement,
-  PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
->;
+type Config = RepoTypes['Config'];
+
+export type OnePlainSensorMeasurementToBeCreated =
+  RepoTypes['OnePlainEntityToBeCreated'];

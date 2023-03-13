@@ -1,6 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { insertManyPlain, insertOnePlain } from 'src/tools';
+import {
+  createManyPlain,
+  createOnePlain,
+  deleteEntityByIdentity,
+  findOnePlainByIdentity,
+  getAllEntities,
+  updateManyPlain,
+  updateManyWithRelations,
+  updateOnePlain,
+  updateOneWithRelations,
+} from 'src/tools';
+import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
 import { EventType } from '../model';
 
@@ -11,74 +22,44 @@ export class EventTypeRepo {
     private readonly repo: Repository<EventType>,
   ) {}
 
-  async getAll(): Promise<SelectedOnePlainEventType[]> {
-    return await this.repo.find();
-  }
+  getAll = getAllEntities(this.repo)<Config>();
 
-  async findOneById(id: number): Promise<SelectedOnePlainEventType | null> {
-    return await this.repo.findOne({
-      where: { id },
-    });
-  }
+  findOneById = async (
+    id: number,
+  ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
+    await findOnePlainByIdentity(this.repo)<Config>()({ id });
 
-  async createOnePlain(
-    newEventType: Pick<EventType, PlainKeysAllowedToModify>,
-  ): Promise<CreatedOnePlainEventType> {
-    return await insertOnePlain<CreatedOnePlainEventType>(
-      this.repo,
-      newEventType,
-    );
-  }
+  createOnePlain = createOnePlain(this.repo)<Config>();
+  createManyPlain = createManyPlain(this.repo)<Config>();
 
-  async createManyPlain(
-    newEventTypes: Pick<EventType, PlainKeysAllowedToModify>[],
-  ): Promise<CreatedOnePlainEventType[]> {
-    return await insertManyPlain<CreatedOnePlainEventType>(
-      this.repo,
-      newEventTypes,
-    );
-  }
+  updateManyPlain = updateManyPlain(this.repo)<Config>();
+  updateOnePlain = updateOnePlain(this.repo)<Config>();
 
-  async updateOnePlain({
-    id,
-    ...existingEventType
-  }: UpdatedOnePlainEventType): Promise<UpdatedOnePlainEventType> {
-    await this.repo.update(id, existingEventType);
-    return { id, ...existingEventType };
-  }
+  updateManyWithRelations = updateManyWithRelations(this.repo)<Config>();
+  updateOneWithRelations = updateOneWithRelations(this.repo)<Config>();
 
-  async updateManyPlain(
-    existingEventTypes: UpdatedOnePlainEventType[],
-  ): Promise<UpdatedOnePlainEventType[]> {
-    const updatedEventTypes = await this.repo.save(existingEventTypes);
-    return updatedEventTypes;
-  }
-
-  async delete(id: number): Promise<void> {
-    await this.repo.delete(id);
-  }
+  deleteOneById = async (id: number): Promise<void> =>
+    await deleteEntityByIdentity(this.repo)<Config>()({ id });
 }
 
-type PrimaryKeys = 'id';
-type PlainKeysGeneratedAfterInsert = PrimaryKeys | 'createdAt' | 'updatedAt';
-
-type PlainKeysAllowedToModify = RegularPlainKeys;
-
-type UsuallyReturnedEventTypePlainKeys =
-  | PlainKeysGeneratedAfterInsert
-  | RegularPlainKeys;
-
-type RegularPlainKeys = 'name' | 'description' | 'icon';
-
-export type CreatedOnePlainEventType = Pick<
+type RepoTypes = EntityRepoMethodTypes<
   EventType,
-  PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
+  {
+    EntityName: 'EventType';
+    RequiredToCreateAndSelectRegularPlainKeys:
+      | 'createdAt'
+      | 'updatedAt'
+      | 'name'
+      | 'description';
+    OptionalToCreateAndSelectRegularPlainKeys: 'icon';
+
+    ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';
+    ForbiddenToUpdatePlainKeys: 'id' | 'createdAt' | 'updatedAt';
+    ForbiddenToUpdateRelationKeys: null;
+    UnselectedByDefaultPlainKeys: null;
+  }
 >;
 
-export type UpdatedOnePlainEventType = Pick<EventType, PrimaryKeys> &
-  Partial<Pick<EventType, PlainKeysAllowedToModify>>;
+type Config = RepoTypes['Config'];
 
-export type SelectedOnePlainEventType = Pick<
-  EventType,
-  UsuallyReturnedEventTypePlainKeys
->;
+export type SelectedOnePlainEventType = RepoTypes['SelectedOnePlainEntity'];

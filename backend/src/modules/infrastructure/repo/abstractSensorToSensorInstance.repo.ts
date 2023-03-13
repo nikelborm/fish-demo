@@ -1,5 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import {
+  createManyPlain,
+  createOnePlain,
+  deleteEntityByIdentity,
+  findOnePlainByIdentity,
+  getAllEntities,
+  updateManyPlain,
+  updateManyWithRelations,
+  updateOnePlain,
+  updateOneWithRelations,
+} from 'src/tools';
+import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
 import { AbstractSensorToSensorInstance } from '../model';
 
@@ -10,21 +22,34 @@ export class AbstractSensorToSensorInstanceRepo {
     private readonly repo: Repository<AbstractSensorToSensorInstance>,
   ) {}
 
-  async getAll(): Promise<AbstractSensorToSensorInstance[]> {
-    return await this.repo.find();
-  }
+  getAll = getAllEntities(this.repo)<Config>();
 
-  async createOne(
-    newAbstractSensorToSensorInstance: CreatedOnePlainAbstractSensorToSensorInstance,
-  ): Promise<CreatedOnePlainAbstractSensorToSensorInstance> {
-    await this.repo.insert(newAbstractSensorToSensorInstance);
-    return newAbstractSensorToSensorInstance;
-  }
+  findOneByIdentity = findOnePlainByIdentity(this.repo)<Config>();
+
+  createOnePlain = createOnePlain(this.repo)<Config>();
+  createManyPlain = createManyPlain(this.repo)<Config>();
+
+  updateManyPlain = updateManyPlain(this.repo)<Config>();
+  updateOnePlain = updateOnePlain(this.repo)<Config>();
+
+  updateManyWithRelations = updateManyWithRelations(this.repo)<Config>();
+  updateOneWithRelations = updateOneWithRelations(this.repo)<Config>();
+
+  deleteOne = deleteEntityByIdentity(this.repo)<Config>();
 }
 
-type PlainKeysAllowedToModify = 'abstractSensorId' | 'sensorInstanceId';
-
-type CreatedOnePlainAbstractSensorToSensorInstance = Pick<
+type RepoTypes = EntityRepoMethodTypes<
   AbstractSensorToSensorInstance,
-  PlainKeysAllowedToModify
+  {
+    EntityName: 'AbstractSensorToSensorInstance';
+    RequiredToCreateAndSelectRegularPlainKeys: null;
+    OptionalToCreateAndSelectRegularPlainKeys: null;
+
+    ForbiddenToCreateGeneratedPlainKeys: null;
+    ForbiddenToUpdatePlainKeys: 'abstractSensorId' | 'sensorInstanceId';
+    ForbiddenToUpdateRelationKeys: null;
+    UnselectedByDefaultPlainKeys: null;
+  }
 >;
+
+type Config = RepoTypes['Config'];

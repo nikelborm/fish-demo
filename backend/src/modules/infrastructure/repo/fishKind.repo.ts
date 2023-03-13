@@ -1,6 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { insertManyPlain, insertOnePlain } from 'src/tools';
+import {
+  createManyPlain,
+  createOnePlain,
+  deleteEntityByIdentity,
+  findOnePlainByIdentity,
+  getAllEntities,
+  updateManyPlain,
+  updateManyWithRelations,
+  updateOnePlain,
+  updateOneWithRelations,
+} from 'src/tools';
+import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
 import { FishKind } from '../model';
 
@@ -11,74 +22,45 @@ export class FishKindRepo {
     private readonly repo: Repository<FishKind>,
   ) {}
 
-  async getAll(): Promise<SelectedOnePlainFishKind[]> {
-    return await this.repo.find();
-  }
+  getAll = getAllEntities(this.repo)<Config>();
 
-  async findOneById(id: number): Promise<SelectedOnePlainFishKind | null> {
-    return await this.repo.findOne({
-      where: { id },
-    });
-  }
+  findOneById = async (
+    id: number,
+  ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
+    await findOnePlainByIdentity(this.repo)<Config>()({ id });
 
-  async createOnePlain(
-    newFishKind: Pick<FishKind, PlainKeysAllowedToModify>,
-  ): Promise<CreatedOnePlainFishKind> {
-    return await insertOnePlain<CreatedOnePlainFishKind>(
-      this.repo,
-      newFishKind,
-    );
-  }
+  createOnePlain = createOnePlain(this.repo)<Config>();
+  createManyPlain = createManyPlain(this.repo)<Config>();
 
-  async createManyPlain(
-    newFishKinds: Pick<FishKind, PlainKeysAllowedToModify>[],
-  ): Promise<CreatedOnePlainFishKind[]> {
-    return await insertManyPlain<CreatedOnePlainFishKind>(
-      this.repo,
-      newFishKinds,
-    );
-  }
+  updateManyPlain = updateManyPlain(this.repo)<Config>();
+  updateOnePlain = updateOnePlain(this.repo)<Config>();
 
-  async updateOnePlain({
-    id,
-    ...existingFishKind
-  }: UpdatedOnePlainFishKind): Promise<UpdatedOnePlainFishKind> {
-    await this.repo.update(id, existingFishKind);
-    return { id, ...existingFishKind };
-  }
+  updateManyWithRelations = updateManyWithRelations(this.repo)<Config>();
+  updateOneWithRelations = updateOneWithRelations(this.repo)<Config>();
 
-  async updateManyPlain(
-    existingFishKinds: UpdatedOnePlainFishKind[],
-  ): Promise<UpdatedOnePlainFishKind[]> {
-    const updatedFishKinds = await this.repo.save(existingFishKinds);
-    return updatedFishKinds;
-  }
-
-  async delete(id: number): Promise<void> {
-    await this.repo.delete(id);
-  }
+  deleteOneById = async (id: number): Promise<void> => {
+    await deleteEntityByIdentity(this.repo)<Config>()({ id });
+  };
 }
 
-type PrimaryKeys = 'id';
-type PlainKeysGeneratedAfterInsert = PrimaryKeys | 'createdAt' | 'updatedAt';
-
-type PlainKeysAllowedToModify = RegularPlainKeys;
-
-type UsuallyReturnedFishKindPlainKeys =
-  | PlainKeysGeneratedAfterInsert
-  | RegularPlainKeys;
-
-type RegularPlainKeys = 'name' | 'description' | 'icon';
-
-export type CreatedOnePlainFishKind = Pick<
+type RepoTypes = EntityRepoMethodTypes<
   FishKind,
-  PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
+  {
+    EntityName: 'FishKind';
+    RequiredToCreateAndSelectRegularPlainKeys:
+      | 'createdAt'
+      | 'updatedAt'
+      | 'name'
+      | 'description';
+    OptionalToCreateAndSelectRegularPlainKeys: 'icon';
+
+    ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';
+    ForbiddenToUpdatePlainKeys: 'id' | 'createdAt' | 'updatedAt';
+    ForbiddenToUpdateRelationKeys: null;
+    UnselectedByDefaultPlainKeys: null;
+  }
 >;
 
-export type UpdatedOnePlainFishKind = Pick<FishKind, PrimaryKeys> &
-  Partial<Pick<FishKind, PlainKeysAllowedToModify>>;
+type Config = RepoTypes['Config'];
 
-export type SelectedOnePlainFishKind = Pick<
-  FishKind,
-  UsuallyReturnedFishKindPlainKeys
->;
+export type SelectedOnePlainFishKind = RepoTypes['SelectedOnePlainEntity'];

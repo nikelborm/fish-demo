@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsDate, IsDefined, IsNumber, IsNumberString } from 'class-validator';
 import { NestedArrayDTO } from '../../../../../tools/shared';
-import type { SensorParameterValueType } from '../../../sensorParameterValueType';
+import type { SensorParameterValueType } from '../../..';
 
 // class SimpleAbstractSensor {
 //   @IsNumber()

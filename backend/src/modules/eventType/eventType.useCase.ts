@@ -6,7 +6,7 @@ import type {
   UpdateEventTypeDTO,
   UpdateOneEventTypeResponse,
 } from 'src/types';
-import { repo } from '../infrastructure';
+import { model, repo } from '../infrastructure';
 
 @Injectable()
 export class EventTypeUseCase {
@@ -25,30 +25,39 @@ export class EventTypeUseCase {
 
   async createManyKinds(
     eventTypes: CreateEventTypeDTO[],
-  ): Promise<repo.CreatedOnePlainEventType[]> {
-    const insertedeventTypes = await this.eventTypeRepo.createManyPlain(
+  ): Promise<
+    Required<
+      CreateEventTypeDTO &
+        Pick<model.EventType, 'id' | 'createdAt' | 'updatedAt'>
+    >[]
+  > {
+    const insertedEventTypes = await this.eventTypeRepo.createManyPlain(
       eventTypes,
     );
-    return insertedeventTypes;
+    return insertedEventTypes;
   }
 
   async createKind(
     EventType: CreateEventTypeDTO,
   ): Promise<CreateOneEventTypeResponse> {
-    const insertedeventType = await this.eventTypeRepo.createOnePlain(
+    const insertedEventType = await this.eventTypeRepo.createOnePlain(
       EventType,
     );
-    return { EventType: insertedeventType };
+    return { EventType: insertedEventType };
   }
 
-  async updateKind(
-    EventType: UpdateEventTypeDTO,
-  ): Promise<UpdateOneEventTypeResponse> {
-    const updatedEventType = await this.eventTypeRepo.updateOnePlain(EventType);
+  async updateKind({
+    id,
+    ...rest
+  }: UpdateEventTypeDTO): Promise<UpdateOneEventTypeResponse> {
+    const updatedEventType = await this.eventTypeRepo.updateOnePlain(
+      { id },
+      rest,
+    );
     return updatedEventType;
   }
 
   async deleteKind(eventTypeId: number): Promise<void> {
-    return await this.eventTypeRepo.delete(eventTypeId);
+    return await this.eventTypeRepo.deleteOneById(eventTypeId);
   }
 }

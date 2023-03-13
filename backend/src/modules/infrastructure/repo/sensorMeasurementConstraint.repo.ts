@@ -13,13 +13,13 @@ import {
 } from 'src/tools';
 import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
-import { FishBatch } from '../model';
+import { SensorMeasurementConstraint } from '../model';
 
 @Injectable()
-export class FishBatchRepo {
+export class SensorMeasurementConstraintRepo {
   constructor(
-    @InjectRepository(FishBatch)
-    private readonly repo: Repository<FishBatch>,
+    @InjectRepository(SensorMeasurementConstraint)
+    private readonly repo: Repository<SensorMeasurementConstraint>,
   ) {}
 
   getAll = getAllEntities(this.repo)<Config>();
@@ -43,15 +43,10 @@ export class FishBatchRepo {
 }
 
 type RepoTypes = EntityRepoMethodTypes<
-  FishBatch,
+  SensorMeasurementConstraint,
   {
-    EntityName: 'FishBatch';
-    RequiredToCreateAndSelectRegularPlainKeys:
-      | 'createdAt'
-      | 'updatedAt'
-      | 'name'
-      | 'fish_kind_id'
-      | 'age';
+    EntityName: 'SensorMeasurementConstraint';
+    RequiredToCreateAndSelectRegularPlainKeys: 'createdAt' | 'updatedAt';
     OptionalToCreateAndSelectRegularPlainKeys: null;
 
     ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';
@@ -62,5 +57,3 @@ type RepoTypes = EntityRepoMethodTypes<
 >;
 
 type Config = RepoTypes['Config'];
-
-export type SelectedOnePlainFishBatch = RepoTypes['SelectedOnePlainEntity'];

@@ -1,6 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { insertManyPlain, insertOnePlain } from 'src/tools';
+import {
+  createManyPlain,
+  createOnePlain,
+  deleteEntityByIdentity,
+  findOnePlainByIdentity,
+  getAllEntities,
+  updateManyPlain,
+  updateManyWithRelations,
+  updateOnePlain,
+  updateOneWithRelations,
+} from 'src/tools';
+import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
 import { SensorParameter } from '../model';
 
@@ -11,40 +22,47 @@ export class SensorParameterRepo {
     private readonly repo: Repository<SensorParameter>,
   ) {}
 
-  async getAll(): Promise<
-    Pick<SensorParameter, KeysOfUsuallyReturnedSensorParameter>[]
-  > {
-    return await this.repo.find();
-  }
+  getAll = getAllEntities(this.repo)<Config>();
 
-  async createOnePlain(
-    newSensorParameter: Pick<SensorParameter, PlainKeysAllowedToModify>,
-  ): Promise<CreatedOnePlainSensorParameter> {
-    return await insertOnePlain<CreatedOnePlainSensorParameter>(
-      this.repo,
-      newSensorParameter,
-    );
-  }
+  findOneById = async (
+    id: number,
+  ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
+    await findOnePlainByIdentity(this.repo)<Config>()({ id });
 
-  async createManyPlain(
-    newSensorParameters: Pick<SensorParameter, PlainKeysAllowedToModify>[],
-  ): Promise<CreatedOnePlainSensorParameter[]> {
-    return await insertManyPlain<CreatedOnePlainSensorParameter>(
-      this.repo,
-      newSensorParameters,
-    );
-  }
+  createOnePlain = createOnePlain(this.repo)<Config>();
+  createManyPlain = createManyPlain(this.repo)<Config>();
+
+  updateManyPlain = updateManyPlain(this.repo)<Config>();
+  updateOnePlain = updateOnePlain(this.repo)<Config>();
+
+  updateManyWithRelations = updateManyWithRelations(this.repo)<Config>();
+  updateOneWithRelations = updateOneWithRelations(this.repo)<Config>();
+
+  deleteOneById = async (id: number): Promise<void> =>
+    await deleteEntityByIdentity(this.repo)<Config>()({ id });
 }
 
-type PlainKeysGeneratedAfterInsert = 'id' | 'createdAt' | 'updatedAt';
-
-type PlainKeysAllowedToModify = 'name' | 'unit' | 'shortName' | 'valueTypeName';
-
-export type CreatedOnePlainSensorParameter = Pick<
+type RepoTypes = EntityRepoMethodTypes<
   SensorParameter,
-  PlainKeysAllowedToModify | PlainKeysGeneratedAfterInsert
+  {
+    EntityName: 'SensorParameter';
+    RequiredToCreateAndSelectRegularPlainKeys:
+      | 'unit'
+      | 'name'
+      | 'shortName'
+      | 'valueTypeName'
+      | 'createdAt'
+      | 'updatedAt';
+    OptionalToCreateAndSelectRegularPlainKeys: null;
+
+    ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';
+    ForbiddenToUpdatePlainKeys: 'id' | 'createdAt' | 'updatedAt';
+    ForbiddenToUpdateRelationKeys: null;
+    UnselectedByDefaultPlainKeys: null;
+  }
 >;
 
-export type KeysOfUsuallyReturnedSensorParameter =
-  | PlainKeysGeneratedAfterInsert
-  | PlainKeysAllowedToModify;
+type Config = RepoTypes['Config'];
+
+export type SelectedOnePlainSensorParameter =
+  RepoTypes['SelectedOnePlainEntity'];

@@ -6,7 +6,7 @@ import type {
   UpdateFishBatchDTO,
   UpdateOneFishBatchResponse,
 } from 'src/types';
-import { repo } from '../infrastructure';
+import { model, repo } from '../infrastructure';
 
 @Injectable()
 export class FishBatchUseCase {
@@ -25,7 +25,12 @@ export class FishBatchUseCase {
 
   async createManyBatches(
     fishBatches: CreateFishBatchDTO[],
-  ): Promise<repo.CreatedOnePlainFishBatch[]> {
+  ): Promise<
+    Required<
+      CreateFishBatchDTO &
+        Pick<model.FishBatch, 'id' | 'createdAt' | 'updatedAt'>
+    >[]
+  > {
     const insertedFishBatches = await this.fishBatchRepo.createManyPlain(
       fishBatches,
     );
@@ -41,14 +46,18 @@ export class FishBatchUseCase {
     return { fishBatch: insertedFishBatch };
   }
 
-  async updateBatch(
-    fishBatch: UpdateFishBatchDTO,
-  ): Promise<UpdateOneFishBatchResponse> {
-    const updatedFishBatch = await this.fishBatchRepo.updateOnePlain(fishBatch);
+  async updateBatch({
+    id,
+    ...fishBatch
+  }: UpdateFishBatchDTO): Promise<UpdateOneFishBatchResponse> {
+    const updatedFishBatch = await this.fishBatchRepo.updateOnePlain(
+      { id },
+      fishBatch,
+    );
     return updatedFishBatch;
   }
 
   async deleteBatch(fishBatchId: number): Promise<void> {
-    return await this.fishBatchRepo.delete(fishBatchId);
+    return await this.fishBatchRepo.deleteOneById(fishBatchId);
   }
 }

@@ -1,6 +1,6 @@
 import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { NestedArrayDTO, NestedDTO } from '../../../../../tools/shared';
-import { SensorParameterValueTypenameEnum } from '../../../sensorParameterValueType';
+import { SensorParameterValueTypenameEnum } from '../../../modelHelper';
 
 class AbstractSensorInReservoir {
   @IsNumber()

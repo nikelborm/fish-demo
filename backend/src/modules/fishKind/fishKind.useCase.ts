@@ -6,7 +6,7 @@ import type {
   UpdateFishKindDTO,
   UpdateOneFishKindResponse,
 } from 'src/types';
-import { repo } from '../infrastructure';
+import { model, repo } from '../infrastructure';
 
 @Injectable()
 export class FishKindUseCase {
@@ -25,7 +25,10 @@ export class FishKindUseCase {
 
   async createManyKinds(
     fishKinds: CreateFishKindDTO[],
-  ): Promise<repo.CreatedOnePlainFishKind[]> {
+  ): Promise<
+    (CreateFishKindDTO &
+      Pick<model.FishKind, 'id' | 'createdAt' | 'updatedAt'>)[]
+  > {
     const insertedFishKinds = await this.fishKindRepo.createManyPlain(
       fishKinds,
     );
@@ -39,14 +42,18 @@ export class FishKindUseCase {
     return { fishKind: insertedFishKind };
   }
 
-  async updateKind(
-    fishKind: UpdateFishKindDTO,
-  ): Promise<UpdateOneFishKindResponse> {
-    const updatedFishKind = await this.fishKindRepo.updateOnePlain(fishKind);
+  async updateKind({
+    id,
+    ...rest
+  }: UpdateFishKindDTO): Promise<UpdateOneFishKindResponse> {
+    const updatedFishKind = await this.fishKindRepo.updateOnePlain(
+      { id },
+      rest,
+    );
     return updatedFishKind;
   }
 
   async deleteKind(fishKindId: number): Promise<void> {
-    return await this.fishKindRepo.delete(fishKindId);
+    return await this.fishKindRepo.deleteOneById(fishKindId);
   }
 }
