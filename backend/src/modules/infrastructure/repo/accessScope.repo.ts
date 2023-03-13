@@ -46,12 +46,19 @@ type RepoTypes = EntityRepoMethodTypes<
   AccessScope,
   {
     EntityName: 'AccessScope';
-    RequiredToCreateAndSelectRegularPlainKeys: 'createdAt' | 'updatedAt';
+
+    RequiredToCreateAndSelectRegularPlainKeys:
+      | 'type'
+      | 'createdAt'
+      | 'updatedAt';
+
     OptionalToCreateAndSelectRegularPlainKeys: null;
 
     ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';
     ForbiddenToUpdatePlainKeys: 'id' | 'createdAt' | 'updatedAt';
     ForbiddenToUpdateRelationKeys: null;
+
+
     UnselectedByDefaultPlainKeys: null;
   }
 >;
