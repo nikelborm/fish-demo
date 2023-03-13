@@ -3,7 +3,8 @@
 //! if you change this file manually, do it very carefully
 
 // temporary uncomment type to enable intellisense
-const RelationMapValue /* : RelationMapMaximizedType */ = {
+const RelationMapValue = {
+// const RelationMapValue: RelationMapMaximizedType = {
   AccessScope: {
     identityKeys: ['id'],
     relationToEntityNameMap: {
