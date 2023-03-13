@@ -13,3 +13,4 @@ export * from './userToAccessScope.model';
 export * from './fishKind.model';
 export * from './eventType.model';
 export * from './fishBatch.model';
+export * from './behaviorType.model';
