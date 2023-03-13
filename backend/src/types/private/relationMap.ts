@@ -3,8 +3,10 @@
 //! if you change this file manually, do it very carefully
 
 // temporary uncomment type to enable intellisense
+
 const RelationMapValue = {
 // const RelationMapValue: RelationMapMaximizedType = {
+
   AccessScope: {
     identityKeys: ['id'],
     relationToEntityNameMap: {
@@ -134,6 +136,7 @@ const RelationMapValue = {
       // FishKind relationToEntityNameMap token
     },
   },
+
   // RelationMapValue end token
 } as const;
 

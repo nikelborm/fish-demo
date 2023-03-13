@@ -13,13 +13,13 @@ import {
 } from 'src/tools';
 import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
-import { AccessScope } from '../model';
+import { BehaviorType } from '../model';
 
 @Injectable()
-export class AccessScopeRepo {
+export class BehaviorTypeRepo {
   constructor(
-    @InjectRepository(AccessScope)
-    private readonly repo: Repository<AccessScope>,
+    @InjectRepository(BehaviorType)
+    private readonly repo: Repository<BehaviorType>,
   ) {}
 
   getAll = getAllEntities(this.repo)<Config>();
@@ -43,22 +43,15 @@ export class AccessScopeRepo {
 }
 
 type RepoTypes = EntityRepoMethodTypes<
-  AccessScope,
+  BehaviorType,
   {
-    EntityName: 'AccessScope';
-
-    RequiredToCreateAndSelectRegularPlainKeys:
-      | 'type'
-      | 'createdAt'
-      | 'updatedAt';
-
+    EntityName: 'BehaviorType';
+    RequiredToCreateAndSelectRegularPlainKeys: 'createdAt' | 'updatedAt';
     OptionalToCreateAndSelectRegularPlainKeys: null;
 
     ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';
     ForbiddenToUpdatePlainKeys: 'id' | 'createdAt' | 'updatedAt';
     ForbiddenToUpdateRelationKeys: null;
-
-
     UnselectedByDefaultPlainKeys: null;
   }
 >;
