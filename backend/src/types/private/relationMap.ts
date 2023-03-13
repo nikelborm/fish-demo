@@ -133,6 +133,12 @@ const RelationMapValue /* : RelationMapMaximizedType */ = {
       // FishKind relationToEntityNameMap token
     },
   },
+  BehaviorType: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      // BehaviorType relationToEntityNameMap token
+    },
+  },
   // RelationMapValue end token
 } as const;
 
