@@ -11,14 +11,12 @@ export class BehaviorType implements IBehaviorType {
     name: 'name',
     nullable: false,
     unique: true,
-    type: 'string',
   })
   name!: string;
 
   @Column({
     name: 'description',
     nullable: false,
-    type: 'string',
   })
   description!: string;
 
