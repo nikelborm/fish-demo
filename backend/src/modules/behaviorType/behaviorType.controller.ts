@@ -5,7 +5,7 @@ import {
   ApiController,
   ValidatedBody,
 } from 'src/tools';
-import type {
+import {
   CreateBehaviorTypeDTO,
   CreateOneBehaviorTypeResponse,
   GetOneBehaviorTypeByIdResponseDTO,
