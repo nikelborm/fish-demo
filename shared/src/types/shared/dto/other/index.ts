@@ -7,3 +7,5 @@ export * from './basicEventTypeInfo.dto';
 export * from './basicEventTypeInfoWithId.dto';
 export * from './basisFishBatchInfo.dto';
 export * from './basicFishBatchInfoWithId.dto';
+export * from './basicBehaviorTypeInfo.dto';
+export * from './basicBehaviorTypeInfoWithId.dto';
