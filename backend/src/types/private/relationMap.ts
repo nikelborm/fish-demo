@@ -4,7 +4,7 @@
 
 // temporary uncomment type to enable intellisense
 const RelationMapValue = {
-// const RelationMapValue: RelationMapMaximizedType = {
+  // const RelationMapValue: RelationMapMaximizedType = {
   AccessScope: {
     identityKeys: ['id'],
     relationToEntityNameMap: {
