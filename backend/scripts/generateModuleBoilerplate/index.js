@@ -47,7 +47,7 @@ export * from './${camel}.useCase';
 const getUseCase =
   () => `import { BadRequestException, Injectable } from '@nestjs/common';
 import { messages } from 'src/config';
-import type { CreateOne${pascal}RequestDTO } from 'src/types';
+import { CreateOne${pascal}RequestDTO } from 'src/types';
 import { repo } from '../infrastructure';
 
 @Injectable()

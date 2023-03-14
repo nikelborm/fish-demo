@@ -1,7 +1,7 @@
 import { BadRequestException, Body, Post } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { ApiController } from 'src/tools';
-import type { EmptyResponseDTO } from 'src/types';
+import { EmptyResponseDTO } from 'src/types';
 import { DataSource } from 'typeorm';
 
 @ApiController('videoLog')
