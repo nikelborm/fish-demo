@@ -46,7 +46,12 @@ type RepoTypes = EntityRepoMethodTypes<
   BehaviorType,
   {
     EntityName: 'BehaviorType';
-    RequiredToCreateAndSelectRegularPlainKeys: 'createdAt' | 'updatedAt';
+    RequiredToCreateAndSelectRegularPlainKeys:
+      | 'createdAt'
+      | 'updatedAt'
+      | 'name'
+      | 'description'
+      | 'id';
     OptionalToCreateAndSelectRegularPlainKeys: null;
 
     ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';
@@ -57,3 +62,5 @@ type RepoTypes = EntityRepoMethodTypes<
 >;
 
 type Config = RepoTypes['Config'];
+
+export type SelectedOnePlainBehaviorType = RepoTypes['SelectedOnePlainEntity'];

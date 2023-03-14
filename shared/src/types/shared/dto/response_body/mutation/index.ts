@@ -9,3 +9,5 @@ export * from './createOneOrManyEventType.dto';
 export * from './updateOneEventType.dto';
 export * from './createOneOrManyFishBatch.dto';
 export * from './updateOneFishBatch.dto';
+export * from './createOneOrManyBehaviorType.dto';
+export * from './updateOneBehaviorType.dto';

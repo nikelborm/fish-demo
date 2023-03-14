@@ -9,3 +9,4 @@ export * from './reservoir';
 export * from './fishKind';
 export * from './fishBatch';
 export * from './eventType';
+export * from './behaviorType';

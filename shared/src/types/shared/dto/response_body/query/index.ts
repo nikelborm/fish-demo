@@ -4,3 +4,4 @@ export * from './findOneReservoirByIdResponse.dto';
 export * from './getOneFishKind.dto';
 export * from './getOneEventType.dto';
 export * from './getOneFishBatch.dto';
+export * from './getOneBehaviorType.dto';

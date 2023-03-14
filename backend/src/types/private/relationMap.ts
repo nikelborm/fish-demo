@@ -134,6 +134,7 @@ const RelationMapValue = {
       // FishKind relationToEntityNameMap token
     },
   },
+
   BehaviorType: {
     identityKeys: ['id'],
     relationToEntityNameMap: {
