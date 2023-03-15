@@ -14,3 +14,5 @@ export * from './sensorParameterInstance.repo';
 export * from './user.repo';
 export * from './userToAccessScope.repo';
 export * from './behaviorType.repo';
+
+export * from './event.repo';
