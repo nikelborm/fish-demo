@@ -14,20 +14,20 @@ const RelationMapValue = {
       // AccessScope relationToEntityNameMap token
     },
   },
-  User: {
-    identityKeys: ['id'],
-    relationToEntityNameMap: {
-      userToAccessScopeRelations: ['UserToAccessScope'],
-      accessScopes: ['AccessScope'],
-      // User relationToEntityNameMap token
-    },
-  },
   UserToAccessScope: {
     identityKeys: ['accessScopeId', 'userId'],
     relationToEntityNameMap: {
       accessScope: 'AccessScope',
       user: 'User',
       // UserToAccessScope relationToEntityNameMap token
+    },
+  },
+  User: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      userToAccessScopeRelations: ['UserToAccessScope'],
+      accessScopes: ['AccessScope'],
+      // User relationToEntityNameMap token
     },
   },
   AbstractSensor: {

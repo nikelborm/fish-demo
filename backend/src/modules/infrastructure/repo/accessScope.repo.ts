@@ -58,9 +58,16 @@ type RepoTypes = EntityRepoMethodTypes<
     ForbiddenToUpdatePlainKeys: 'id' | 'createdAt' | 'updatedAt';
     ForbiddenToUpdateRelationKeys: null;
 
-
     UnselectedByDefaultPlainKeys: null;
   }
 >;
 
 type Config = RepoTypes['Config'];
+
+export type OnePlainAccessScopeToBeCreated =
+  RepoTypes['OnePlainEntityToBeCreated'];
+export type OnePlainAccessScopeToBeUpdated =
+  RepoTypes['OnePlainEntityToBeUpdated'];
+export type OneAccessScopeWithRelationsToBeUpdated =
+  RepoTypes['OneEntityWithRelationsToBeUpdated'];
+export type SelectedOnePlainAccessScope = RepoTypes['SelectedOnePlainEntity'];

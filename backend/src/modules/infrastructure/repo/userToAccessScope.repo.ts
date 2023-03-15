@@ -55,3 +55,12 @@ type RepoTypes = EntityRepoMethodTypes<
 >;
 
 type Config = RepoTypes['Config'];
+
+export type OnePlainUserToAccessScopeToBeCreated =
+  RepoTypes['OnePlainEntityToBeCreated'];
+export type OnePlainUserToAccessScopeToBeUpdated =
+  RepoTypes['OnePlainEntityToBeUpdated'];
+export type OneUserToAccessScopeWithRelationsToBeUpdated =
+  RepoTypes['OneEntityWithRelationsToBeUpdated'];
+export type SelectedOnePlainUserToAccessScope =
+  RepoTypes['SelectedOnePlainEntity'];
