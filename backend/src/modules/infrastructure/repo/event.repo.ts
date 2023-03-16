@@ -46,8 +46,13 @@ type RepoTypes = EntityRepoMethodTypes<
   Event,
   {
     EntityName: 'Event';
-    RequiredToCreateAndSelectRegularPlainKeys: 'createdAt' | 'updatedAt';
-    OptionalToCreateAndSelectRegularPlainKeys: null;
+    RequiredToCreateAndSelectRegularPlainKeys:
+      | 'createdAt'
+      | 'updatedAt'
+      | 'eventType_id'
+      | 'completion_time'
+      | 'reservoir_id';
+    OptionalToCreateAndSelectRegularPlainKeys: 'description';
 
     ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';
     ForbiddenToUpdatePlainKeys: 'id' | 'createdAt' | 'updatedAt';

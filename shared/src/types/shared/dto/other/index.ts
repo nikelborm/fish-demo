@@ -1,4 +1,6 @@
 export * from './authTokenPair.dto';
+export * from './basicEventInfo.dto';
+export * from './basicEventInfoWithId.dto';
 export * from './basicUserInfo.dto';
 export * from './basicUserInfoWithId.dto';
 export * from './basicReservoirInfo.dto';

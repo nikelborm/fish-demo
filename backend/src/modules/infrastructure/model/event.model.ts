@@ -1,20 +1,46 @@
 import { PrimaryIdentityColumn } from 'src/tools';
 import type { IEvent } from 'src/types';
-import { CreateDateColumn, Entity, UpdateDateColumn } from 'typeorm';
+import { CreateDateColumn, Entity, UpdateDateColumn, Column } from 'typeorm';
 
 @Entity({ name: 'event' })
 export class Event implements IEvent {
   @PrimaryIdentityColumn('event_id')
-  id!: number;
+  event_id!: number;
+
+  @Column({
+    name: 'eventType_id',
+    nullable: false,
+  })
+  eventType_id!: number;
+
+  @Column({
+    name: 'completion_time',
+  //  type: 'timestamptz',
+    nullable: false,
+  })
+  completion_time!: Date;
+
+  @Column({
+    name: 'description',
+    type: 'varchar',
+    nullable: true,
+  })
+  description?: string;
+
+  @Column({
+    name: 'reservoir_id',
+    nullable: true,
+  })
+  reservoir_id!: number;
 
   @CreateDateColumn({
-    name: 'created_at',
+    name: 'createdAt',
     type: 'timestamptz',
   })
   createdAt!: Date;
 
   @UpdateDateColumn({
-    name: 'updated_at',
+    name: 'updatedAt',
     type: 'timestamptz',
   })
   updatedAt!: Date;

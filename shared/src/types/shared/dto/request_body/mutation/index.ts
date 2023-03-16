@@ -18,3 +18,4 @@ export * from './updateFishBatch.dto';
 export * from './createFishBatch.dto';
 export * from './updateBehaviorType.dto';
 export * from './createBehaviorType.dto';
+export * from './createOneOrManyEvents.dto';
