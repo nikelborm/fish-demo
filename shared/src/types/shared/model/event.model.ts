@@ -1,4 +1,6 @@
-//
+import type {
+  IEventType,
+} from '.';
 
 export class IEvent {
   event_id!: number;
@@ -6,6 +8,8 @@ export class IEvent {
   description?: string;
 
   eventType_id!: number;
+
+  eventType!: IEventType;
 
   reservoir_id!: number;
 

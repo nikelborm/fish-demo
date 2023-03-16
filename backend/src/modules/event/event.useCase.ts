@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { messages } from 'src/config';
-import type { CreateOneEventRequestDTO } from 'src/types';
+import type { CreateOneEventRequestDTO, CreateOneEventResponseDTO } from 'src/types';
 import { repo } from '../infrastructure';
 
 @Injectable()
@@ -22,8 +22,11 @@ export class EventUseCase {
 
   async createEvent(
     event: CreateOneEventRequestDTO,
-  ): Promise<repo.CreateOneEventResponseDTO> {
-    return await this.eventRepo.createOnePlain(event);
+  ): Promise<CreateOneEventResponseDTO> {
+    const insertedEvent = await this.eventRepo.createOnePlain(
+      event,
+    );
+    return { event: insertedEvent };
   }
 
   async deleteOne(id: number): Promise<void> {
