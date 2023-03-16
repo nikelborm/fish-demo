@@ -24,7 +24,7 @@ export class EventUseCase {
     event: CreateOneEventRequestDTO,
   ): Promise<CreateOneEventResponseDTO> {
     const insertedEvent = await this.eventRepo.createOnePlain(
-      Event,
+      event
     );
     return { Event: insertedEvent };
   }

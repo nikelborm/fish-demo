@@ -23,13 +23,13 @@ export class Event implements IEvent {
 
   @Column({
     name: 'description',
-    nullable: true,
+    nullable: false,
   })
-  description?: string;
+  description!: string;
 
   @Column({
     name: 'reservoir_id',
-    nullable: true,
+    nullable: false,
   })
   reservoirId!: number;
 

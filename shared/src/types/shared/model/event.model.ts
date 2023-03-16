@@ -5,7 +5,7 @@ import type {
 export class IEvent {
   id!: number;
 
-  description?: string;
+  description!: string;
 
   eventTypeId!: number;
 
