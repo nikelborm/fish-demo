@@ -3,16 +3,16 @@ import { IsDate, IsString, MaxLength, IsNumber } from 'class-validator';
 
 export class CreateOneEventRequestDTO {
   @IsNumber()
-  eventType_id!: number;
+  eventTypeId!: number;
 
   @Type(() => Date)
   @IsDate()
-  completion_time!: Date;
+  completionTime!: Date;
 
   @IsString()
   @MaxLength(255)
   description!: string;
 
   @IsNumber()
-  reservoir_id!: number;
+  reservoirId!: number;
 }

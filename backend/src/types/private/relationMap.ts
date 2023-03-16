@@ -46,6 +46,7 @@ const RelationMapValue = {
   EventType: {
     identityKeys: ['id'],
     relationToEntityNameMap: {
+      events: ['Event'],
       // EventType relationToEntityNameMap token
     },
   },
@@ -143,6 +144,7 @@ const RelationMapValue = {
   Event: {
     identityKeys: ['id'],
     relationToEntityNameMap: {
+      eventType: 'EventType',
       // Event relationToEntityNameMap token
     },
   },

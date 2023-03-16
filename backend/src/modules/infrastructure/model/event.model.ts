@@ -6,24 +6,23 @@ import { EventType } from '.';
 @Entity({ name: 'event' })
 export class Event implements IEvent {
   @PrimaryIdentityColumn('event_id')
-  event_id!: number;
+  id!: number;
 
  @Column({
-    name: 'eventType_id',
+    name: 'event_type_id',
     nullable: false,
   })
-  eventType_id!: number;
+  eventTypeId!: number;
 
   @Column({
     name: 'completion_time',
-  //  type: 'timestamptz',
+    type: 'timestamptz',
     nullable: false,
   })
-  completion_time!: Date;
+  completionTime!: Date;
 
   @Column({
     name: 'description',
-    type: 'varchar',
     nullable: true,
   })
   description?: string;
@@ -32,23 +31,23 @@ export class Event implements IEvent {
     name: 'reservoir_id',
     nullable: true,
   })
-  reservoir_id!: number;
+  reservoirId!: number;
 
   @CreateDateColumn({
-    name: 'createdAt',
+    name: 'created_at',
     type: 'timestamptz',
   })
   createdAt!: Date;
 
   @UpdateDateColumn({
-    name: 'updatedAt',
+    name: 'updated_at',
     type: 'timestamptz',
   })
   updatedAt!: Date;
 
   @ManyToOne(() => EventType, eventType => eventType.events, {onDelete: 'SET NULL', eager: true})
   @JoinColumn({
-    name: 'eventType_id'
+    name: 'event_type_id'
   })
   eventType!: EventType;
 }

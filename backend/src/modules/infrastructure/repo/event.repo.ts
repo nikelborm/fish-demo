@@ -49,9 +49,9 @@ type RepoTypes = EntityRepoMethodTypes<
     RequiredToCreateAndSelectRegularPlainKeys:
       | 'createdAt'
       | 'updatedAt'
-      | 'eventType_id'
-      | 'completion_time'
-      | 'reservoir_id';
+      | 'eventTypeId'
+      | 'completionTime'
+      | 'reservoirId';
     OptionalToCreateAndSelectRegularPlainKeys: 'description';
 
     ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';
@@ -62,3 +62,4 @@ type RepoTypes = EntityRepoMethodTypes<
 >;
 
 type Config = RepoTypes['Config'];
+export type SelectedOnePlainEvent = RepoTypes['SelectedOnePlainEntity'];

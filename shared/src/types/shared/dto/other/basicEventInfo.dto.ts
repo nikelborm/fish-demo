@@ -3,10 +3,10 @@ import { Type } from 'class-transformer';
 
 export class BasicEventInfoDTO {
   @IsNumber()
-  reservoir_id!: number;
+  reservoirId!: number;
 
   @IsNumber()
-  eventType_id!: number;
+  eventTypeId!: number;
 
   @IsString()
   @MaxLength(255)
@@ -14,5 +14,5 @@ export class BasicEventInfoDTO {
 
   @Type(() => Date)
   @IsDate()
-  completion_time!: Date;
+  completionTime!: Date;
 }

@@ -3,19 +3,19 @@ import { IsDateConverted, NestedArrayDTO } from '../../../../../tools/shared';
 
 export class GetOneEventByIdResponseDTO {
   @IsPositive()
-  event_id!: number;
+  id!: number;
 
   @IsString()
   description!: string;
 
   @IsNumber()
-  eventType_id!: number;
+  eventTypeId!: number;
 
   @IsNumber()
-  reservoir_id!: number;
+  reservoirId!: number;
 
   @IsDateConverted()
-  completion_time!: Date;
+  completionTime!: Date;
 
   @IsDateConverted()
   createdAt!: Date;

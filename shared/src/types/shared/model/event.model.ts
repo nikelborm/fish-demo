@@ -3,17 +3,17 @@ import type {
 } from '.';
 
 export class IEvent {
-  event_id!: number;
+  id!: number;
 
   description?: string;
 
-  eventType_id!: number;
+  eventTypeId!: number;
 
   eventType!: IEventType;
 
-  reservoir_id!: number;
+  reservoirId!: number;
 
-  completion_time!: Date;
+  completionTime!: Date;
 
   createdAt!: Date;
 
