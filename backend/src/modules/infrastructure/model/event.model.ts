@@ -1,13 +1,14 @@
 import { PrimaryIdentityColumn } from 'src/tools';
 import type { IEvent } from 'src/types';
-import { CreateDateColumn, Entity, UpdateDateColumn, Column } from 'typeorm';
+import { CreateDateColumn, Entity, UpdateDateColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { EventType } from '.';
 
 @Entity({ name: 'event' })
 export class Event implements IEvent {
   @PrimaryIdentityColumn('event_id')
   event_id!: number;
 
-  @Column({
+ @Column({
     name: 'eventType_id',
     nullable: false,
   })
@@ -44,4 +45,10 @@ export class Event implements IEvent {
     type: 'timestamptz',
   })
   updatedAt!: Date;
+
+  @ManyToOne(() => EventType, eventType => eventType.events, {onDelete: 'SET NULL', eager: true})
+  @JoinColumn({
+    name: 'eventType_id'
+  })
+  eventType!: EventType;
 }
