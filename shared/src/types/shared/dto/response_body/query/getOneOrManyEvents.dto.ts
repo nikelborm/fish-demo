@@ -1,7 +1,34 @@
 import { IsPositive, IsNumber, IsString } from 'class-validator';
-import { IsDateConverted, NestedArrayDTO } from '../../../../../tools/shared';
+import { IsDateConverted, NestedArrayDTO, NestedDTO } from '../../../../../tools/shared';
+import { GetOneEventTypeByIdResponseDTO } from './getOneEventType.dto';
 
 export class GetOneEventByIdResponseDTO {
+  @IsPositive()
+  id!: number;
+
+  @IsString()
+  description!: string;
+
+  @IsNumber()
+  eventTypeId!: number;
+
+  @NestedDTO(() => GetOneEventTypeByIdResponseDTO)
+  eventType!: GetOneEventTypeByIdResponseDTO;
+
+  @IsNumber()
+  reservoirId!: number;
+
+  @IsDateConverted()
+  completionTime!: Date;
+
+  @IsDateConverted()
+  createdAt!: Date;
+
+  @IsDateConverted()
+  updatedAt!: Date;
+}
+
+export class GetOneEventForManyResponseDTO {
   @IsPositive()
   id!: number;
 
@@ -25,6 +52,6 @@ export class GetOneEventByIdResponseDTO {
 }
 
 export class FindManyEventsResponseDTO {
-  @NestedArrayDTO(() => GetOneEventByIdResponseDTO)
-  events!: GetOneEventByIdResponseDTO[];
+  @NestedArrayDTO(() => (GetOneEventForManyResponseDTO ))
+  events!: GetOneEventForManyResponseDTO[];
 }

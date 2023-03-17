@@ -20,6 +20,21 @@ export class EventUseCase {
     return event;
   }
 
+  async getOneByIdWithEventType(id: number): Promise<
+    repo.SelectedOnePlainEvent & {
+      eventType: repo.SelectedOnePlainEventType;
+    }
+  > {
+    const event = await this.eventRepo.findOneByIdWithEventType(id);
+
+    if (!event)
+      throw new BadRequestException(
+        messages.repo.common.cantGetNotFoundById(id, 'event'),
+      );
+
+    return event;
+  }
+
   async createEvent(
     event: CreateOneEventRequestDTO,
   ): Promise<CreateOneEventResponseDTO> {

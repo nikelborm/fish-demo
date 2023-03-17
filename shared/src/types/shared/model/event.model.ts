@@ -1,7 +1,7 @@
-/*import type {
+ import type {
   IEventType,
 } from '.';
-*/
+
 
 export class IEvent {
   id!: number;
@@ -10,7 +10,7 @@ export class IEvent {
 
   eventTypeId!: number;
 
-//  eventType!: IEventType;
+  eventType!: IEventType;
 
   reservoirId!: number;
 

@@ -13,6 +13,7 @@ import {
   EmptyResponseDTO,
   FindManyEventsResponseDTO,
   GetOneEventByIdResponseDTO,
+  GetOneEventTypeByIdResponseDTO,
 } from 'src/types';
 import { EventUseCase } from './event.useCase';
 
@@ -24,7 +25,7 @@ export class EventController {
   @AuthorizedOnly()
   async findManyEvents(
     @Query('search') search?: string,
-  ): Promise<FindManyEventsResponseDTO> {
+  ): Promise<(FindManyEventsResponseDTO)> {
     const events = await this.eventUseCase.findMany(search);
     return {
       events,
@@ -33,12 +34,15 @@ export class EventController {
 
   @Get('/:eventId')
   @AuthorizedOnly()
-  async getOneEventById(
+  //async getOneEventById(
+  async getOneEventByIdWithEventType(
     @Param('eventId', ParseIntPipe) eventId: number,
-  ): Promise<GetOneEventByIdResponseDTO> {
-    return await this.eventUseCase.getOneById(
-      eventId,
-    );
+  ): Promise<(GetOneEventByIdResponseDTO & {
+    eventType: GetOneEventTypeByIdResponseDTO;
+  })> {
+  //  return await this.eventUseCase.getOneById(
+    const event = await this.eventUseCase.getOneByIdWithEventType(eventId);
+    return event;
   }
 
   @Post('createEvent')

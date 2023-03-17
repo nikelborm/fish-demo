@@ -14,6 +14,7 @@ import {
 import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
 import { Event } from '../model';
+import { SelectedOnePlainEventType } from './eventType.repo';
 
 @Injectable()
 export class EventRepo {
@@ -28,6 +29,20 @@ export class EventRepo {
     id: number,
   ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
     await findOnePlainByIdentity(this.repo)<Config>()({ id });
+
+  findOneByIdWithEventType = async (
+    id: number,
+  ): Promise<
+    | (RepoTypes['SelectedOnePlainEntity'] & {
+        eventType: SelectedOnePlainEventType
+      })
+      | null
+  > =>{
+    return await this.repo.findOne({
+      relations: { eventType: true },
+      where: { id },
+    });
+  };
 
   createOnePlain = createOnePlain(this.repo)<Config>();
   createManyPlain = createManyPlain(this.repo)<Config>();
