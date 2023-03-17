@@ -1,5 +1,5 @@
 import { Delete, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
-import { AccessEnum, AllowedFor, ApiController, ValidatedBody } from 'src/tools';
+import { ApiController, ValidatedBody } from 'src/tools';
 import { GetOneAlertByIdResponceDTO } from 'src/types';
 import { CreateAlertDTO } from 'src/types/shared/dto/request_body/mutation/createAlert.dto';
 import { UpdateAlertDTO } from 'src/types/shared/dto/request_body/mutation/updateAlert.dto';
@@ -12,7 +12,7 @@ export class AlertController {
   constructor(private readonly alertUseCase: AlertUseCase) {}
 
   @Post('createAlert')
-  @AllowedFor(AccessEnum.SYSTEM_ADMIN)
+  //@AllowedFor(AccessEnum.SYSTEM_ADMIN)
   async createAlert(
     @ValidatedBody()
     createAlertDTO: CreateAlertDTO,

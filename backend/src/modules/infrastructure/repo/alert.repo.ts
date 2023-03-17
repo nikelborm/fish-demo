@@ -52,7 +52,6 @@ type RepoTypes = EntityRepoMethodTypes<
     | 'id'
     | 'reservoir_id'
     | 'alert_type_id'
-    | 'time'
     | 'importance';
     OptionalToCreateAndSelectRegularPlainKeys: null;
 

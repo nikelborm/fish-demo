@@ -19,13 +19,6 @@ export class Alert implements IAlert {
   })
   alert_type_id!: number
 
-  @CreateDateColumn({
-    name:'time',
-    nullable: false,
-    type: 'timestamptz'
-  })
-  time!: Date
-
   @Column({
     name:'importance',
     nullable: false,

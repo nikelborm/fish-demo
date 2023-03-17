@@ -9,6 +9,7 @@ import { repo } from '../infrastructure';
 @Injectable()
 export class AlertUseCase {
   constructor(private readonly alertRepo: repo.AlertRepo) {}
+
   async getOneById(id: number): Promise <repo.SelectedOnePlainAlert>{
     const alert = await this.alertRepo.findOneById(id);
     if (!alert) throw new NotFoundException(messages.repo.common.cantGetNotFoundById(id, 'alert'));
