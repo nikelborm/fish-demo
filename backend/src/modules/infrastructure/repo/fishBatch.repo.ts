@@ -65,7 +65,8 @@ type RepoTypes = EntityRepoMethodTypes<
       | 'createdAt'
       | 'updatedAt'
       | 'name'
-      | 'age';
+      | 'age'
+      | 'fishKindId';
     OptionalToCreateAndSelectRegularPlainKeys: null;
 
     ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';
