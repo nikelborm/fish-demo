@@ -8,7 +8,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { FishKind } from './fishKind.model';
+import { FishKind } from '.';
 
 @Entity({ name: 'fish_batch' })
 export class FishBatch implements IFishBatch {

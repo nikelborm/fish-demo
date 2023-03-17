@@ -9,6 +9,7 @@ import {
   CreateFishBatchDTO,
   CreateOneFishBatchResponse,
   GetOneFishBatchByIdResponseDTO,
+  GetOneFishKindByIdResponseDTO,
   UpdateFishBatchDTO,
   UpdateOneFishBatchResponse,
 } from 'src/types';
@@ -30,8 +31,12 @@ export class FishBatchController {
   @Get('/:fishBatchId')
   async getOneByIdWithFishKind(
     @Param('fishBatchId', ParseIntPipe) fishBatchId: number,
-  ): Promise<GetOneFishBatchByIdResponseDTO> {
-    const fishBatch = await this.fishBatchUseCase.getOneByIdWithFishKind(fishBatchId);
+  ): Promise<
+    GetOneFishBatchByIdResponseDTO & { fishKind: GetOneFishKindByIdResponseDTO }
+  > {
+    const fishBatch = await this.fishBatchUseCase.getOneByIdWithFishKind(
+      fishBatchId,
+    );
     return fishBatch;
   }
 
