@@ -21,6 +21,12 @@ export class FishBatch implements IFishBatch {
   })
   name!: string;
 
+  @Column({
+    name: 'fish_kind_id',
+    nullable: false,
+  })
+  fishKindId!: number;
+
   @ManyToOne(() => FishKind, (fishKind) => fishKind.fishBatches)
   @JoinColumn({ name: 'fish_kind_id' })
   fishKind!: FishKind;
