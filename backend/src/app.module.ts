@@ -7,6 +7,7 @@ import { TypedConfigModule } from './config';
 import {
   AccessScopeModule,
   AuthModule,
+  AlertModule,
   EventTypeModule,
   FishKindModule,
   InfrastructureModule,
@@ -23,6 +24,7 @@ import {
   imports: [
     AccessScopeModule,
     AuthModule,
+    AlertModule,
     FishKindModule,
     InfrastructureModule,
     PredictModule,
