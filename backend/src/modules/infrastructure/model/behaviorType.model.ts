@@ -1,6 +1,13 @@
 import { PrimaryIdentityColumn } from 'src/tools';
 import type { IBehaviorType } from 'src/types';
-import { Column, CreateDateColumn, Entity, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Behavior } from '.';
 
 @Entity({ name: 'behavior_type' })
 export class BehaviorType implements IBehaviorType {
@@ -31,4 +38,7 @@ export class BehaviorType implements IBehaviorType {
     type: 'timestamptz',
   })
   updatedAt!: Date;
+
+  @OneToMany(() => Behavior, (behavior) => behavior.behaviorType)
+  behaviors!: Behavior[];
 }

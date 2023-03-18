@@ -19,3 +19,4 @@ export * from './alert.repo';
 export * from './task.repo';
 export * from './taskTime.repo';
 export * from './taskToReservoir.repo';
+export * from './behavior.repo';

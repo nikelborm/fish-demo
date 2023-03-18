@@ -142,6 +142,7 @@ const RelationMapValue = {
   BehaviorType: {
     identityKeys: ['id'],
     relationToEntityNameMap: {
+      behavior: ['Behavior'],
       // BehaviorType relationToEntityNameMap token
     },
   },
@@ -181,6 +182,13 @@ const RelationMapValue = {
       reservoir: 'Reservoir',
       user: 'User',
       // TaskToReservoir relationToEntityNameMap token
+    },
+  },
+  Behavior: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      behaviorType: 'BehaviorType',
+      // Behavior relationToEntityNameMap token
     },
   },
   // RelationMapValue end token

@@ -38,9 +38,7 @@ export class TaskTimeController {
   async getOneTaskTimeById(
     @Param('taskTimeId', ParseIntPipe) taskTimeId: number,
   ): Promise<GetOneTaskTimeByIdResponseDTO> {
-    return await this.taskTimeUseCase.getOneById(
-      taskTimeId,
-    );
+    return await this.taskTimeUseCase.getOneById(taskTimeId);
   }
 
   @Post('create')
@@ -59,7 +57,9 @@ export class TaskTimeController {
     { taskTimes }: CreateManyTaskTimesRequestDTO,
   ): Promise<CreateManyTaskTimesResponseDTO> {
     return {
-      createdTaskTimes: await this.taskTimeUseCase.createManyTaskTimes(taskTimes),
+      createdTaskTimes: await this.taskTimeUseCase.createManyTaskTimes(
+        taskTimes,
+      ),
     };
   }
 

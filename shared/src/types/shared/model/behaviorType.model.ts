@@ -1,4 +1,5 @@
 //
+import type { IBehavior } from '.';
 
 export class IBehaviorType {
   id!: number;
@@ -10,4 +11,6 @@ export class IBehaviorType {
   createdAt!: Date;
 
   updatedAt!: Date;
+
+  behaviors!: IBehavior[];
 }

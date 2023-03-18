@@ -19,3 +19,4 @@ export * from './alert.model';
 export * from './task.model';
 export * from './taskTime.model';
 export * from './taskToReservoir.model';
+export * from './behavior.model';

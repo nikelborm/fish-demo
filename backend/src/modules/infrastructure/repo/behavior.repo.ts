@@ -13,13 +13,13 @@ import {
 } from 'src/tools';
 import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
-import { TaskTime } from '../model';
+import { Behavior } from '../model';
 
 @Injectable()
-export class TaskTimeRepo {
+export class BehaviorRepo {
   constructor(
-    @InjectRepository(TaskTime)
-    private readonly repo: Repository<TaskTime>,
+    @InjectRepository(Behavior)
+    private readonly repo: Repository<Behavior>,
   ) {}
 
   getAll = getAllEntities(this.repo)<Config>();
@@ -43,17 +43,10 @@ export class TaskTimeRepo {
 }
 
 type RepoTypes = EntityRepoMethodTypes<
-  TaskTime,
+  Behavior,
   {
-    EntityName: 'TaskTime';
-    RequiredToCreateAndSelectRegularPlainKeys:
-      | 'daytime'
-      | 'deadlineTime'
-      | 'dayOfWeek'
-      | 'taskId'
-      | 'repeatType'
-      | 'createdAt'
-      | 'updatedAt';
+    EntityName: 'Behavior';
+    RequiredToCreateAndSelectRegularPlainKeys: 'createdAt' | 'updatedAt';
     OptionalToCreateAndSelectRegularPlainKeys: null;
 
     ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';
@@ -65,10 +58,10 @@ type RepoTypes = EntityRepoMethodTypes<
 
 type Config = RepoTypes['Config'];
 
-export type OnePlainTaskTimeToBeCreated =
+export type OnePlainBehaviorToBeCreated =
   RepoTypes['OnePlainEntityToBeCreated'];
-export type OnePlainTaskTimeToBeUpdated =
+export type OnePlainBehaviorToBeUpdated =
   RepoTypes['OnePlainEntityToBeUpdated'];
-export type OneTaskTimeWithRelationsToBeUpdated =
+export type OneBehaviorWithRelationsToBeUpdated =
   RepoTypes['OneEntityWithRelationsToBeUpdated'];
-export type SelectedOnePlainTaskTime = RepoTypes['SelectedOnePlainEntity'];
+export type SelectedOnePlainBehavior = RepoTypes['SelectedOnePlainEntity'];
