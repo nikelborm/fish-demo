@@ -12,3 +12,4 @@ export * from './updateOneFishBatch.dto';
 export * from './createOneOrManyBehaviorType.dto';
 export * from './updateOneBehaviorType.dto';
 export * from './createOneOrManyEvents.dto';
+export * from './createOneOrManyAlerts.dto';

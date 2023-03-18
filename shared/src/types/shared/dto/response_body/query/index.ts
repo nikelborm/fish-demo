@@ -6,4 +6,4 @@ export * from './getOneEventType.dto';
 export * from './getOneFishBatch.dto';
 export * from './getOneBehaviorType.dto';
 export * from './getOneOrManyEvents.dto';
-export * from './getOneAlert.dto';
+export * from './getOneOrManyAlerts.dto';

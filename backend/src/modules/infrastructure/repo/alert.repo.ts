@@ -47,12 +47,12 @@ type RepoTypes = EntityRepoMethodTypes<
   {
     EntityName: 'Alert';
     RequiredToCreateAndSelectRegularPlainKeys:
-    | 'createdAt'
-    | 'updatedAt'
-    | 'id'
-    | 'reservoir_id'
-    | 'alert_type_id'
-    | 'importance';
+      | 'createdAt'
+      | 'updatedAt'
+      | 'id'
+      | 'reservoir_id'
+      | 'alert_type_id'
+      | 'importance';
     OptionalToCreateAndSelectRegularPlainKeys: null;
 
     ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';

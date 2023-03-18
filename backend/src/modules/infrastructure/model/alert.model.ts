@@ -8,23 +8,23 @@ export class Alert implements IAlert {
   id!: number;
 
   @Column({
-    name:'reservoir_id',
+    name: 'reservoir_id',
     nullable: false,
   })
-  reservoir_id!: number
+  reservoir_id!: number;
 
   @Column({
-    name:'alert_type_id',
+    name: 'alert_type_id',
     nullable: false,
   })
-  alert_type_id!: number
+  alert_type_id!: number;
 
   @Column({
-    name:'importance',
+    name: 'importance',
     nullable: false,
-    type: 'real'
+    type: 'real',
   })
-  importance!: number
+  importance!: number;
 
   @CreateDateColumn({
     name: 'created_at',
