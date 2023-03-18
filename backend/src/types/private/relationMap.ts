@@ -155,6 +155,12 @@ const RelationMapValue = {
       // Alert relationToEntityNameMap token
     },
   },
+  Task: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      // Task relationToEntityNameMap token
+    },
+  },
   // RelationMapValue end token
 } as const;
 
