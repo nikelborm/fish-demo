@@ -8,3 +8,4 @@ export * from './getOneBehaviorType.dto';
 export * from './getOneOrManyEvents.dto';
 export * from './getOneOrManyAlerts.dto';
 export * from './getOneOrManyTasks.dto';
+export * from './getOneOrManyTaskTimes.dto';
