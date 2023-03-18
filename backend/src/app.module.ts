@@ -21,6 +21,7 @@ import {
   EventModule,
   TaskModule,
   TaskTimeModule,
+  BehaviorModule,
 } from './modules';
 
 @Module({
@@ -42,6 +43,7 @@ import {
     EventModule,
     TaskModule,
     TaskTimeModule,
+    BehaviorModule,
   ],
   controllers: [MockDataController],
   providers: [...Object.values(MockServices)],

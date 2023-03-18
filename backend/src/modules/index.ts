@@ -14,3 +14,4 @@ export * from './event';
 export * from './alert';
 export * from './task';
 export * from './taskTime';
+export * from './behavior';

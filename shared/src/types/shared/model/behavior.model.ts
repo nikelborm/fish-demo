@@ -11,4 +11,8 @@ export class IBehavior {
   behaviorType!: IBehaviorType;
 
   behaviorTypeId!: number;
+
+  probability!: number;
+
+  time!: Date;
 }

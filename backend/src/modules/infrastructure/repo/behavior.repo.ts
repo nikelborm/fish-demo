@@ -46,7 +46,12 @@ type RepoTypes = EntityRepoMethodTypes<
   Behavior,
   {
     EntityName: 'Behavior';
-    RequiredToCreateAndSelectRegularPlainKeys: 'createdAt' | 'updatedAt';
+    RequiredToCreateAndSelectRegularPlainKeys:
+      | 'probability'
+      | 'time'
+      | 'behaviorTypeId'
+      | 'createdAt'
+      | 'updatedAt';
     OptionalToCreateAndSelectRegularPlainKeys: null;
 
     ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';

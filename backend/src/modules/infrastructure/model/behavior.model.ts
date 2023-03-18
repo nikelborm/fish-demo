@@ -15,6 +15,12 @@ export class Behavior implements IBehavior {
   @PrimaryIdentityColumn('behavior_id')
   id!: number;
 
+  @Column({ name: 'probability', nullable: false })
+  probability!: number;
+
+  @Column({ name: 'time', type: 'timestamptz', nullable: false })
+  time!: Date;
+
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamptz',
