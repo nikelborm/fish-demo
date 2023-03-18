@@ -18,6 +18,7 @@ import {
   VideoLogModule,
   FishBatchModule,
   BehaviorTypeModule,
+  EventModule,
 } from './modules';
 
 @Module({
@@ -36,6 +37,7 @@ import {
     EventTypeModule,
     FishBatchModule,
     BehaviorTypeModule,
+    EventModule,
   ],
   controllers: [MockDataController],
   providers: [...Object.values(MockServices)],

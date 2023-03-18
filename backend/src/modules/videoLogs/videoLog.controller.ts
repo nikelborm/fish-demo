@@ -1,6 +1,6 @@
 import { BadRequestException, Body, Post } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { ApiController } from 'src/tools';
+import { ApiController, AllowedFor, AccessEnum } from 'src/tools';
 import { EmptyResponseDTO } from 'src/types';
 import { DataSource } from 'typeorm';
 
@@ -9,7 +9,7 @@ export class VideoLogController {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
 
   @Post('createNew')
-  // @AllowedFor(AccessEnum.SYSTEM_ADMIN)
+  @AllowedFor(AccessEnum.SYSTEM_ADMIN)
   async createVideoLog(
     @Body()
     body: {
