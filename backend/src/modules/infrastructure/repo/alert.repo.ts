@@ -13,18 +13,21 @@ import {
 } from 'src/tools';
 import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
-import { UserToAccessScope } from '../model';
+import { Alert } from '../model';
 
 @Injectable()
-export class UserToAccessScopeRepo {
+export class AlertRepo {
   constructor(
-    @InjectRepository(UserToAccessScope)
-    private readonly repo: Repository<UserToAccessScope>,
+    @InjectRepository(Alert)
+    private readonly repo: Repository<Alert>,
   ) {}
 
   getAll = getAllEntities(this.repo)<Config>();
 
-  findOneByIdentity = findOnePlainByIdentity(this.repo)<Config>();
+  findOneById = async (
+    id: number,
+  ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
+    await findOnePlainByIdentity(this.repo)<Config>()({ id });
 
   createOnePlain = createOnePlain(this.repo)<Config>();
   createManyPlain = createManyPlain(this.repo)<Config>();
@@ -35,20 +38,25 @@ export class UserToAccessScopeRepo {
   updateManyWithRelations = updateManyWithRelations(this.repo)<Config>();
   updateOneWithRelations = updateOneWithRelations(this.repo)<Config>();
 
-  deleteOne = deleteEntityByIdentity(this.repo)<Config>();
+  deleteOneById = async (id: number): Promise<void> =>
+    await deleteEntityByIdentity(this.repo)<Config>()({ id });
 }
 
 type RepoTypes = EntityRepoMethodTypes<
-  UserToAccessScope,
+  Alert,
   {
-    EntityName: 'UserToAccessScope';
-
-    RequiredToCreateAndSelectRegularPlainKeys: 'userId' | 'accessScopeId';
-
+    EntityName: 'Alert';
+    RequiredToCreateAndSelectRegularPlainKeys:
+    | 'createdAt'
+    | 'updatedAt'
+    | 'id'
+    | 'reservoir_id'
+    | 'alert_type_id'
+    | 'importance';
     OptionalToCreateAndSelectRegularPlainKeys: null;
 
-    ForbiddenToCreateGeneratedPlainKeys: null;
-    ForbiddenToUpdatePlainKeys: 'userId' | 'accessScopeId';
+    ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';
+    ForbiddenToUpdatePlainKeys: 'id' | 'createdAt' | 'updatedAt';
     ForbiddenToUpdateRelationKeys: null;
     UnselectedByDefaultPlainKeys: null;
   }
@@ -56,11 +64,8 @@ type RepoTypes = EntityRepoMethodTypes<
 
 type Config = RepoTypes['Config'];
 
-export type OnePlainUserToAccessScopeToBeCreated =
-  RepoTypes['OnePlainEntityToBeCreated'];
-export type OnePlainUserToAccessScopeToBeUpdated =
-  RepoTypes['OnePlainEntityToBeUpdated'];
-export type OneUserToAccessScopeWithRelationsToBeUpdated =
+export type OnePlainAlertToBeCreated = RepoTypes['OnePlainEntityToBeCreated'];
+export type OnePlainAlertToBeUpdated = RepoTypes['OnePlainEntityToBeUpdated'];
+export type OneAlertWithRelationsToBeUpdated =
   RepoTypes['OneEntityWithRelationsToBeUpdated'];
-export type SelectedOnePlainUserToAccessScope =
-  RepoTypes['SelectedOnePlainEntity'];
+export type SelectedOnePlainAlert = RepoTypes['SelectedOnePlainEntity'];

@@ -1,6 +1,14 @@
 import { PrimaryIdentityColumn } from 'src/tools';
 import type { IFishBatch } from 'src/types';
-import { CreateDateColumn, Entity, UpdateDateColumn, Column } from 'typeorm';
+import {
+  CreateDateColumn,
+  Entity,
+  UpdateDateColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { FishKind } from '.';
 
 @Entity({ name: 'fish_batch' })
 export class FishBatch implements IFishBatch {
@@ -17,7 +25,11 @@ export class FishBatch implements IFishBatch {
     name: 'fish_kind_id',
     nullable: false,
   })
-  fish_kind_id!: number;
+  fishKindId!: number;
+
+  @ManyToOne(() => FishKind, (fishKind) => fishKind.fishBatches)
+  @JoinColumn({ name: 'fish_kind_id' })
+  fishKind!: FishKind;
 
   @Column({
     name: 'age',

@@ -15,3 +15,4 @@ export * from './eventType.model';
 export * from './fishBatch.model';
 export * from './behaviorType.model';
 export * from './event.model';
+export * from './alert.model';

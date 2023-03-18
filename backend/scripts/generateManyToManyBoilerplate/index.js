@@ -172,7 +172,9 @@ type RepoTypes = EntityRepoMethodTypes<
   ${firstPascal}To${secondPascal},
   {
     EntityName: '${firstPascal}To${secondPascal}';
+
     RequiredToCreateAndSelectRegularPlainKeys: '${firstCamel}Id' | '${secondCamel}Id';
+
     OptionalToCreateAndSelectRegularPlainKeys: null;
 
     ForbiddenToCreateGeneratedPlainKeys: null;

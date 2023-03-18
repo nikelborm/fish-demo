@@ -7,7 +7,7 @@ export * from './basicReservoirInfo.dto';
 export * from './basicReservoirInfoWithId.dto';
 export * from './basicEventTypeInfo.dto';
 export * from './basicEventTypeInfoWithId.dto';
-export * from './basisFishBatchInfo.dto';
+export * from './basicFishBatchInfo.dto';
 export * from './basicFishBatchInfoWithId.dto';
 export * from './basicBehaviorTypeInfo.dto';
 export * from './basicBehaviorTypeInfoWithId.dto';

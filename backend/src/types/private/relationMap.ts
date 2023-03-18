@@ -3,6 +3,7 @@
 //! if you change this file manually, do it very carefully
 
 // temporary uncomment type to enable intellisense
+
 const RelationMapValue = {
   // const RelationMapValue: RelationMapMaximizedType = {
   AccessScope: {
@@ -146,6 +147,12 @@ const RelationMapValue = {
     relationToEntityNameMap: {
       eventType: 'EventType',
       // Event relationToEntityNameMap token
+    },
+  },
+  Alert: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      // Alert relationToEntityNameMap token
     },
   },
   // RelationMapValue end token

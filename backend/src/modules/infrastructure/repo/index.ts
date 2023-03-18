@@ -15,3 +15,4 @@ export * from './user.repo';
 export * from './userToAccessScope.repo';
 export * from './behaviorType.repo';
 export * from './event.repo';
+export * from './alert.repo';

@@ -1,24 +1,30 @@
 import { PrimaryIdentityColumn } from 'src/tools';
-import type { IBehaviorType } from 'src/types';
+import type { IAlert } from 'src/types';
 import { Column, CreateDateColumn, Entity, UpdateDateColumn } from 'typeorm';
 
-@Entity({ name: 'behavior_type' })
-export class BehaviorType implements IBehaviorType {
-  @PrimaryIdentityColumn('behavior_type_id')
+@Entity({ name: 'alert' })
+export class Alert implements IAlert {
+  @PrimaryIdentityColumn('alert_id')
   id!: number;
 
   @Column({
-    name: 'name',
+    name:'reservoir_id',
     nullable: false,
-    unique: true,
   })
-  name!: string;
+  reservoir_id!: number
 
   @Column({
-    name: 'description',
+    name:'alert_type_id',
     nullable: false,
   })
-  description!: string;
+  alert_type_id!: number
+
+  @Column({
+    name:'importance',
+    nullable: false,
+    type: 'real'
+  })
+  importance!: number
 
   @CreateDateColumn({
     name: 'created_at',
