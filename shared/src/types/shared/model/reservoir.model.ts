@@ -1,4 +1,4 @@
-import type { ISensorInstance } from '.';
+import type { ISensorInstance, ITask, ITaskToReservoir } from '.';
 
 export class IReservoir {
   id!: number;
@@ -10,4 +10,8 @@ export class IReservoir {
   createdAt!: Date;
 
   updatedAt!: Date;
+
+  tasksWithThatReservoir!: ITask[];
+
+  taskToReservoirRelations!: ITaskToReservoir[];
 }

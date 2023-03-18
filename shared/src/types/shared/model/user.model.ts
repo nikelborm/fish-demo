@@ -1,4 +1,4 @@
-import type { IAccessScope, IUserToAccessScope } from '.';
+import type { IAccessScope, IUserToAccessScope, ITaskToReservoir } from '.';
 
 export class IUser {
   id!: number;
@@ -30,4 +30,6 @@ export class IUser {
   createdAt!: Date;
 
   updatedAt!: Date;
+
+  taskToReservoirs!: ITaskToReservoir[];
 }

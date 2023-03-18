@@ -27,6 +27,7 @@ const RelationMapValue = {
     relationToEntityNameMap: {
       userToAccessScopeRelations: ['UserToAccessScope'],
       accessScopes: ['AccessScope'],
+      taskToReservoir: ['TaskToReservoir'],
       // User relationToEntityNameMap token
     },
   },
@@ -55,6 +56,8 @@ const RelationMapValue = {
     identityKeys: ['id'],
     relationToEntityNameMap: {
       sensorInstances: ['SensorInstance'],
+      tasksWithThatReservoir: ['Task'],
+      taskToReservoirRelations: ['TaskToReservoir'],
       // Reservoir relationToEntityNameMap token
     },
   },
@@ -159,6 +162,8 @@ const RelationMapValue = {
     identityKeys: ['id'],
     relationToEntityNameMap: {
       taskTime: ['TaskTime'],
+      reservoirs: ['Reservoir'],
+      taskToReservoirRelations: ['TaskToReservoir'],
       // Task relationToEntityNameMap token
     },
   },
@@ -167,6 +172,15 @@ const RelationMapValue = {
     relationToEntityNameMap: {
       task: 'Task',
       // TaskTime relationToEntityNameMap token
+    },
+  },
+  TaskToReservoir: {
+    identityKeys: ['taskId', 'reservoirId'],
+    relationToEntityNameMap: {
+      task: 'Task',
+      reservoir: 'Reservoir',
+      user: 'User',
+      // TaskToReservoir relationToEntityNameMap token
     },
   },
   // RelationMapValue end token

@@ -1,5 +1,5 @@
 //
-import type { ITaskTime } from '.';
+import type { IReservoir, ITaskToReservoir, ITaskTime } from '.';
 
 export class ITask {
   id!: number;
@@ -15,4 +15,8 @@ export class ITask {
   updatedAt!: Date;
 
   taskTimes!: ITaskTime[];
+
+  reservoirs!: IReservoir[];
+
+  taskToReservoirRelations!: ITaskToReservoir[];
 }

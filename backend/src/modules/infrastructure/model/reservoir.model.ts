@@ -4,10 +4,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   OneToMany,
   UpdateDateColumn,
 } from 'typeorm';
 import { SensorInstance } from '.';
+import { Task, TaskToReservoir } from '.';
 
 @Entity({ name: 'reservoir' })
 export class Reservoir implements IReservoir {
@@ -46,4 +48,13 @@ export class Reservoir implements IReservoir {
     type: 'timestamptz',
   })
   updatedAt!: Date;
+
+  @ManyToMany(() => Task, (task) => task.reservoirs)
+  tasksWithThatReservoir!: Task[];
+
+  @OneToMany(
+    () => TaskToReservoir,
+    (taskToReservoir) => taskToReservoir.reservoir,
+  )
+  taskToReservoirRelations!: TaskToReservoir[];
 }
