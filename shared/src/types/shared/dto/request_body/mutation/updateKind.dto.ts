@@ -1,11 +1,4 @@
-import { Type } from 'class-transformer';
-import {
-  IsDate,
-  IsOptional,
-  IsPositive,
-  IsString,
-  MaxLength,
-} from 'class-validator';
+import { IsOptional, IsPositive, IsString, MaxLength } from 'class-validator';
 
 export class UpdateFishKindDTO {
   @IsPositive()
@@ -21,12 +14,4 @@ export class UpdateFishKindDTO {
   @IsOptional()
   @IsString()
   icon?: string;
-
-  @Type(() => Date)
-  @IsDate()
-  created_at!: Date;
-
-  @Type(() => Date)
-  @IsDate()
-  updated_at!: Date;
 }
