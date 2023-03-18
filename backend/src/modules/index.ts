@@ -11,4 +11,5 @@ export * from './fishBatch';
 export * from './eventType';
 export * from './behaviorType';
 export * from './event';
-export * from './alert'
+export * from './alert';
+export * from './task';

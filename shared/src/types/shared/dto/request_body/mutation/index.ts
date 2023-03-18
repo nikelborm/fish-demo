@@ -20,3 +20,4 @@ export * from './updateBehaviorType.dto';
 export * from './createBehaviorType.dto';
 export * from './createOneOrManyEvents.dto';
 export * from './createOneOrManyAlerts.dto';
+export * from './createOneOrManyTasks.dto';

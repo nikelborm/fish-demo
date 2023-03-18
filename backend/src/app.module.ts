@@ -19,6 +19,7 @@ import {
   FishBatchModule,
   BehaviorTypeModule,
   EventModule,
+  TaskModule,
 } from './modules';
 
 @Module({
@@ -38,6 +39,7 @@ import {
     FishBatchModule,
     BehaviorTypeModule,
     EventModule,
+    TaskModule,
   ],
   controllers: [MockDataController],
   providers: [...Object.values(MockServices)],
