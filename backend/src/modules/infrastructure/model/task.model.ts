@@ -1,6 +1,13 @@
 import { PrimaryIdentityColumn } from 'src/tools';
 import type { ITask } from 'src/types';
-import { Column, CreateDateColumn, Entity, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  UpdateDateColumn,
+} from 'typeorm';
+import { TaskTime } from '.';
 
 @Entity({ name: 'task' })
 export class Task implements ITask {
@@ -36,4 +43,7 @@ export class Task implements ITask {
     type: 'timestamptz',
   })
   updatedAt!: Date;
+
+  @OneToMany(() => TaskTime, (taskTime) => taskTime.task)
+  taskTimes!: TaskTime[];
 }

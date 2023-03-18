@@ -158,7 +158,15 @@ const RelationMapValue = {
   Task: {
     identityKeys: ['id'],
     relationToEntityNameMap: {
+      taskTime: ['TaskTime'],
       // Task relationToEntityNameMap token
+    },
+  },
+  TaskTime: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      task: 'Task',
+      // TaskTime relationToEntityNameMap token
     },
   },
   // RelationMapValue end token

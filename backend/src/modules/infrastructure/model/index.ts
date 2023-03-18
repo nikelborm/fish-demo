@@ -17,3 +17,4 @@ export * from './behaviorType.model';
 export * from './event.model';
 export * from './alert.model';
 export * from './task.model';
+export * from './taskTime.model';

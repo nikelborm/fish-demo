@@ -1,4 +1,5 @@
 //
+import type { ITaskTime } from '.';
 
 export class ITask {
   id!: number;
@@ -12,4 +13,6 @@ export class ITask {
   createdAt!: Date;
 
   updatedAt!: Date;
+
+  taskTimes!: ITaskTime[];
 }

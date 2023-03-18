@@ -17,3 +17,4 @@ export * from './behaviorType.repo';
 export * from './event.repo';
 export * from './alert.repo';
 export * from './task.repo';
+export * from './taskTime.repo';
