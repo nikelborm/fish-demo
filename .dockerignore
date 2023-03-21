@@ -8,3 +8,11 @@ frontend/src/tools/shared
 **/node_modules
 .git
 npm-debug.log
+env
+.env
+.github
+.devcontainer
+node_modules
+.gitignore
+temp
+cv_webrtc_server
