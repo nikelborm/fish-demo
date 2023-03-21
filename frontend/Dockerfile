@@ -1,18 +1,29 @@
 # please remember that context of this Dockerfile is project root
 # so you need to add ./frontend/ prefix to file names
 
-FROM nikelborm/node as prepare_front
+FROM nikelborm/node as prepare_front_dev_deps
 
-COPY ./frontend/package.json ./frontend/yarn.lock ./frontend/.eslintrc.json ./frontend/.prettierrc ./frontend/tsconfig.json ./
+COPY ./frontend/package.json ./frontend/yarn.lock ./
+# see node.Dockerfile for this RUN details
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=private yarn install --network-timeout 600000 --frozen-lockfile
+COPY ./frontend/.eslintrc.json ./frontend/.prettierrc ./frontend/tsconfig.json ./
+COPY ./frontend/public public/
+COPY ./frontend/config-overrides config-overrides/
+
+
+FROM nikelborm/node as prepare_front_prod_deps
+
+COPY ./frontend/package.json ./frontend/yarn.lock ./
+# see node.Dockerfile for this RUN details
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=private yarn install --network-timeout 600000 --frozen-lockfile --production
+COPY ./frontend/.eslintrc.json ./frontend/.prettierrc ./frontend/tsconfig.json ./
 COPY ./frontend/public public/
 COPY ./frontend/config-overrides config-overrides/
 
 
 
-FROM prepare_front as dev_front
 
-# see node.Dockerfile for this RUN details
-RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=private yarn install --network-timeout 600000 --frozen-lockfile
+FROM prepare_front_dev_deps as dev_front
 
 # src and [types|tools]/shared are both bind-mounted in docker-compose file before running CMD
 # there is no need to copy src before running CMD https://stackoverflow.com/questions/69308389/docker-is-volume-mounted-before-running-cmd
@@ -26,10 +37,7 @@ CMD ["yarn", "start"]
 
 
 
-FROM prepare_front as build
-
-# see node.Dockerfile for this RUN details
-RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=private yarn install --network-timeout 600000 --frozen-lockfile --production
+FROM prepare_front_prod_deps as build
 
 COPY ./frontend/src /app/src/
 
