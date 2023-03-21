@@ -44,6 +44,7 @@ jobs:
           push: true
           pull: true
           # https://github.com/moby/buildkit#github-actions-cache-experimental
+          # https://github.com/docker/bake-action/issues/36
           # *.platform=linux/amd64,linux/arm64/v8
           set: |
             *.platform=linux/amd64
