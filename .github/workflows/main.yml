@@ -44,3 +44,15 @@ jobs:
           set: |
             *.platform=linux/amd64
           files: docker-compose.yaml
+      -
+        name: Pull and up production build
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          script_stop: true
+          host: ${{ secrets.SSH_DEPLOYMENT_SERVER_HOST }}
+          username: ${{ secrets.SSH_DEPLOYMENT_SERVER_USERNAME }}
+          key: ${{ secrets.SSH_DEPLOYMENT_SERVER_PRIVATE_KEY }}
+          port: 22
+          script: |
+            DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose --env-file ./env/prod.env -f ./docker-compose.yaml pull
+            DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose --env-file ./env/prod.env -f ./docker-compose.yaml up --no-build --pull always --remove-orphans --force-recreate -d
