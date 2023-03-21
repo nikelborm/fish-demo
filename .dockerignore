@@ -12,7 +12,12 @@ env
 .env
 .github
 .devcontainer
-node_modules
-.gitignore
-temp
-cv_webrtc_server
+**/.gitignore
+**/temp
+**/cv_webrtc_server
+**/Dockerfile
+**/node.Dockerfile
+**/.htpasswd_example
+**/README.md
+**/.nvmrc
+**/.dockerignore
