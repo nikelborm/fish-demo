@@ -14,6 +14,7 @@ import {
   FindManyEventsResponseDTO,
   GetOneEventByIdResponseDTO,
   GetOneEventTypeByIdResponseDTO,
+  GetOneEventForManyResponseDTO,
 } from 'src/types';
 import { EventUseCase } from './event.useCase';
 
@@ -25,11 +26,20 @@ export class EventController {
   @AuthorizedOnly()
   async findManyEvents(
     @Query('search') search?: string,
-  ): Promise<(FindManyEventsResponseDTO)> {
+  ): Promise<FindManyEventsResponseDTO> {
     const events = await this.eventUseCase.findMany(search);
     return {
       events,
     };
+  }
+
+  @Get('/:createdAt')
+  async findEventsByData(
+    @Param('createdAt')
+    createdAt: Date,
+  ): Promise<GetOneEventForManyResponseDTO[] | null> {
+    const event = await this.eventUseCase.getOneByData(createdAt);
+    return event;
   }
 
   @Get('/:eventId')
@@ -37,10 +47,12 @@ export class EventController {
   //async getOneEventById(
   async getOneEventByIdWithEventType(
     @Param('eventId', ParseIntPipe) eventId: number,
-  ): Promise<(GetOneEventByIdResponseDTO & {
-    eventType: GetOneEventTypeByIdResponseDTO;
-  })> {
-  //  return await this.eventUseCase.getOneById(
+  ): Promise<
+    GetOneEventByIdResponseDTO & {
+      eventType: GetOneEventTypeByIdResponseDTO;
+    }
+  > {
+    //  return await this.eventUseCase.getOneById(
     const event = await this.eventUseCase.getOneByIdWithEventType(eventId);
     return event;
   }
