@@ -7,7 +7,7 @@ export class CreateFishBatchDTO {
   name!: string;
 
   @IsNumber()
-  fish_kind_id!: number;
+  fishKindId!: number;
 
   @IsNumber()
   age!: number;

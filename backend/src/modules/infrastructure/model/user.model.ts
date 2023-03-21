@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { AccessScope, UserToAccessScope } from '.';
+import { TaskToReservoir } from '.';
 
 @Entity({ name: 'user' })
 export class User implements IUser {
@@ -112,4 +113,7 @@ export class User implements IUser {
     type: 'timestamptz',
   })
   updatedAt!: Date;
+
+  @OneToMany(() => TaskToReservoir, (taskToReservoir) => taskToReservoir.user)
+  taskToReservoirs!: TaskToReservoir[];
 }

@@ -23,6 +23,21 @@ export class FishBatchUseCase {
     return fishBatch;
   }
 
+  async getOneByIdWithFishKind(id: number): Promise<
+    repo.SelectedOnePlainFishBatch & {
+      fishKind: repo.SelectedOnePlainFishKind;
+    }
+  > {
+    const fishBatch = await this.fishBatchRepo.findOneByIDWithFishKind(id);
+
+    if (!fishBatch)
+      throw new NotFoundException(
+        messages.repo.common.cantGetNotFoundById(id, 'fishBatch'),
+      );
+
+    return fishBatch;
+  }
+
   async createManyBatches(
     fishBatches: CreateFishBatchDTO[],
   ): Promise<

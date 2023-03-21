@@ -1,4 +1,6 @@
 import { IsNumber, IsString, MinLength, MaxLength } from 'class-validator';
+import { NestedDTO } from '../../../../../tools/shared';
+import { GetOneFishKindByIdResponseDTO } from './getOneFishKind.dto';
 
 export class GetOneFishBatchByIdResponseDTO {
   @IsNumber()
@@ -9,8 +11,8 @@ export class GetOneFishBatchByIdResponseDTO {
   @MaxLength(128)
   name!: string;
 
-  @IsNumber()
-  fish_kind_id!: number;
+  @NestedDTO(() => GetOneFishKindByIdResponseDTO)
+  fishKind!: GetOneFishKindByIdResponseDTO;
 
   @IsNumber()
   age!: number;

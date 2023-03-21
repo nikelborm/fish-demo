@@ -7,6 +7,7 @@ import { TypedConfigModule } from './config';
 import {
   AccessScopeModule,
   AuthModule,
+  AlertModule,
   EventTypeModule,
   FishKindModule,
   InfrastructureModule,
@@ -16,12 +17,18 @@ import {
   UserModule,
   VideoLogModule,
   FishBatchModule,
+  BehaviorTypeModule,
+  EventModule,
+  TaskModule,
+  TaskTimeModule,
+  BehaviorModule,
 } from './modules';
 
 @Module({
   imports: [
     AccessScopeModule,
     AuthModule,
+    AlertModule,
     FishKindModule,
     InfrastructureModule,
     PredictModule,
@@ -32,6 +39,11 @@ import {
     VideoLogModule,
     EventTypeModule,
     FishBatchModule,
+    BehaviorTypeModule,
+    EventModule,
+    TaskModule,
+    TaskTimeModule,
+    BehaviorModule,
   ],
   controllers: [MockDataController],
   providers: [...Object.values(MockServices)],

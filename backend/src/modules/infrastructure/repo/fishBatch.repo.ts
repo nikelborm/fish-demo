@@ -14,6 +14,7 @@ import {
 import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
 import { FishBatch } from '../model';
+import { SelectedOnePlainFishKind } from './fishKind.repo';
 
 @Injectable()
 export class FishBatchRepo {
@@ -28,6 +29,20 @@ export class FishBatchRepo {
     id: number,
   ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
     await findOnePlainByIdentity(this.repo)<Config>()({ id });
+
+  findOneByIDWithFishKind = async (
+    id: number,
+  ): Promise<
+    | (RepoTypes['SelectedOnePlainEntity'] & {
+        fishKind: SelectedOnePlainFishKind;
+      })
+    | null
+  > => {
+    return await this.repo.findOne({
+      relations: { fishKind: true },
+      where: { id },
+    });
+  };
 
   createOnePlain = createOnePlain(this.repo)<Config>();
   createManyPlain = createManyPlain(this.repo)<Config>();
@@ -50,8 +65,8 @@ type RepoTypes = EntityRepoMethodTypes<
       | 'createdAt'
       | 'updatedAt'
       | 'name'
-      | 'fish_kind_id'
-      | 'age';
+      | 'age'
+      | 'fishKindId';
     OptionalToCreateAndSelectRegularPlainKeys: null;
 
     ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';

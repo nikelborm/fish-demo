@@ -1,5 +1,5 @@
 import { IsPositive } from 'class-validator';
-import { BasicFishBatchInfoDTO } from './basisFishBatchInfo.dto';
+import { BasicFishBatchInfoDTO } from './basicFishBatchInfo.dto';
 
 export class BasicFishBatchInfoWithIdDTO extends BasicFishBatchInfoDTO {
   @IsPositive()

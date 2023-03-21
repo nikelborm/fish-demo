@@ -3,7 +3,9 @@
 //! if you change this file manually, do it very carefully
 
 // temporary uncomment type to enable intellisense
-const RelationMapValue /* : RelationMapMaximizedType */ = {
+
+const RelationMapValue = {
+  // const RelationMapValue: RelationMapMaximizedType = {
   AccessScope: {
     identityKeys: ['id'],
     relationToEntityNameMap: {
@@ -12,20 +14,21 @@ const RelationMapValue /* : RelationMapMaximizedType */ = {
       // AccessScope relationToEntityNameMap token
     },
   },
-  User: {
-    identityKeys: ['id'],
-    relationToEntityNameMap: {
-      userToAccessScopeRelations: ['UserToAccessScope'],
-      accessScopes: ['AccessScope'],
-      // User relationToEntityNameMap token
-    },
-  },
   UserToAccessScope: {
     identityKeys: ['accessScopeId', 'userId'],
     relationToEntityNameMap: {
       accessScope: 'AccessScope',
       user: 'User',
       // UserToAccessScope relationToEntityNameMap token
+    },
+  },
+  User: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      userToAccessScopeRelations: ['UserToAccessScope'],
+      accessScopes: ['AccessScope'],
+      taskToReservoir: ['TaskToReservoir'],
+      // User relationToEntityNameMap token
     },
   },
   AbstractSensor: {
@@ -45,6 +48,7 @@ const RelationMapValue /* : RelationMapMaximizedType */ = {
   EventType: {
     identityKeys: ['id'],
     relationToEntityNameMap: {
+      events: ['Event'],
       // EventType relationToEntityNameMap token
     },
   },
@@ -52,6 +56,8 @@ const RelationMapValue /* : RelationMapMaximizedType */ = {
     identityKeys: ['id'],
     relationToEntityNameMap: {
       sensorInstances: ['SensorInstance'],
+      tasksWithThatReservoir: ['Task'],
+      taskToReservoirRelations: ['TaskToReservoir'],
       // Reservoir relationToEntityNameMap token
     },
   },
@@ -131,6 +137,58 @@ const RelationMapValue /* : RelationMapMaximizedType */ = {
     identityKeys: ['id'],
     relationToEntityNameMap: {
       // FishKind relationToEntityNameMap token
+    },
+  },
+  BehaviorType: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      behavior: ['Behavior'],
+      // BehaviorType relationToEntityNameMap token
+    },
+  },
+  Event: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      eventType: 'EventType',
+      // Event relationToEntityNameMap token
+    },
+  },
+  Alert: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      // Alert relationToEntityNameMap token
+    },
+  },
+  Task: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      taskTime: ['TaskTime'],
+      reservoirs: ['Reservoir'],
+      taskToReservoirRelations: ['TaskToReservoir'],
+      // Task relationToEntityNameMap token
+    },
+  },
+  TaskTime: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      task: 'Task',
+      // TaskTime relationToEntityNameMap token
+    },
+  },
+  TaskToReservoir: {
+    identityKeys: ['taskId', 'reservoirId'],
+    relationToEntityNameMap: {
+      task: 'Task',
+      reservoir: 'Reservoir',
+      user: 'User',
+      // TaskToReservoir relationToEntityNameMap token
+    },
+  },
+  Behavior: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      behaviorType: 'BehaviorType',
+      // Behavior relationToEntityNameMap token
     },
   },
   // RelationMapValue end token

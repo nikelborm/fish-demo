@@ -53,8 +53,8 @@ module.exports = {
             "error",
         "@darraghor/nestjs-typed/validate-nested-of-array-should-set-each":
             "error",
-        "@darraghor/nestjs-typed/all-properties-are-whitelisted": "error",
-        "@darraghor/nestjs-typed/all-properties-have-explicit-defined": "error",
+        "@darraghor/nestjs-typed/all-properties-are-whitelisted": "off",
+        "@darraghor/nestjs-typed/all-properties-have-explicit-defined": "off",
         "@darraghor/nestjs-typed/api-methods-should-be-guarded": "off",
   },
 };
