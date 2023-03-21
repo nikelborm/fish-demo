@@ -58,7 +58,10 @@ async function bootstrap(): Promise<void> {
   ) {
     const port = configService.get(ConfigKeys.SERVER_PORT);
 
-    if (configService.get(ConfigKeys.IS_DEVELOPMENT)) {
+    if (
+      configService.get(ConfigKeys.IS_DEVELOPMENT) ||
+      configService.get(ConfigKeys.ENABLE_SWAGGER_IN_PROD)
+    ) {
       const config = new DocumentBuilder()
         .setTitle('Project API')
         .setVersion('1.0')

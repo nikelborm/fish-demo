@@ -1,5 +1,6 @@
 export enum ConfigKeys {
   BOOTSTRAP_MODE = 'bootstrapMode',
+  ENABLE_SWAGGER_IN_PROD = 'enableSwaggerInProd',
   DATABASE_HOST = 'databaseHost',
   DATABASE_NAME = 'databaseName',
   DATABASE_PASSWORD = 'databasePassword',
