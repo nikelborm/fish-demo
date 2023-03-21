@@ -44,6 +44,9 @@ jobs:
           set: |
             *.platform=linux/amd64
           files: docker-compose.yaml
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
       -
         name: Pull and up production build
         uses: appleboy/ssh-action@v0.1.8
