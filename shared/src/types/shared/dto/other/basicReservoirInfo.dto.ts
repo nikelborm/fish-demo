@@ -1,12 +1,6 @@
-import { IsNumber,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
-
+import { IsNumber, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class BasicReservoirInfoDTO {
-
   @IsString()
   @MinLength(8)
   @MaxLength(128)
@@ -17,5 +11,4 @@ export class BasicReservoirInfoDTO {
 
   @IsNumber()
   fish_part_id!: number;
-
 }

@@ -1,7 +1,4 @@
- import type {
-  IEventType,
-} from '.';
-
+import type { IEventType } from '.';
 
 export class IEvent {
   id!: number;

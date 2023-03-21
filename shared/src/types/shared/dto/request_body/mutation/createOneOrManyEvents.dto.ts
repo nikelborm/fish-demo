@@ -1,5 +1,11 @@
 import { Type } from 'class-transformer';
-import { IsDate, IsString, MaxLength, MinLength, IsNumber } from 'class-validator';
+import {
+  IsDate,
+  IsString,
+  MaxLength,
+  MinLength,
+  IsNumber,
+} from 'class-validator';
 
 export class CreateOneEventRequestDTO {
   @IsNumber()

@@ -1,5 +1,9 @@
 import { IsPositive, IsNumber, IsString } from 'class-validator';
-import { IsDateConverted, NestedArrayDTO, NestedDTO } from '../../../../../tools/shared';
+import {
+  IsDateConverted,
+  NestedArrayDTO,
+  NestedDTO,
+} from '../../../../../tools/shared';
 import { GetOneEventTypeByIdResponseDTO } from './getOneEventType.dto';
 
 export class GetOneEventByIdResponseDTO {
@@ -52,6 +56,6 @@ export class GetOneEventForManyResponseDTO {
 }
 
 export class FindManyEventsResponseDTO {
-  @NestedArrayDTO(() => (GetOneEventForManyResponseDTO ))
+  @NestedArrayDTO(() => GetOneEventForManyResponseDTO)
   events!: GetOneEventForManyResponseDTO[];
 }
