@@ -46,6 +46,7 @@ jobs:
           files: docker-compose.yaml
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       -
         name: Pull and up production build
