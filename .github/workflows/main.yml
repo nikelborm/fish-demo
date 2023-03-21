@@ -35,14 +35,20 @@ jobs:
         run: |
           cp -v ./env/prod.template.env ./env/prod.env
       -
+        name: Expose GitHub Runtime
+        uses: crazy-max/ghaction-github-runtime@v2
+      -
         name: Build and push
         uses: docker/bake-action@v2
         with:
           push: true
           pull: true
+          # https://github.com/moby/buildkit#github-actions-cache-experimental
           # *.platform=linux/amd64,linux/arm64/v8
           set: |
             *.platform=linux/amd64
+            *.cache-from=type=gha
+            *.cache-to=type=gha,mode=max
           files: docker-compose.yaml
   deploy:
     runs-on: ubuntu-latest
