@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository, /*getRepositoryToken*/ } from '@nestjs/typeorm';
 import {
   createManyPlain,
-  createOnePlain,
+  //createOnePlain,
   deleteEntityByIdentity,
   findOnePlainByIdentity,
   getAllEntities,
@@ -11,9 +11,9 @@ import {
   updateOnePlain,
   updateOneWithRelations,
 } from 'src/tools';
-import type { EntityRepoMethodTypes } from 'src/types';
+import type { CreateOneEventRequestDTO, EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
-import { Event } from '../model';
+import { Event, EventType } from '../model';
 import { SelectedOnePlainEventType } from './eventType.repo';
 import { SelectedOnePlainReservoir } from './reservoir.repo';
 
@@ -48,7 +48,17 @@ export class EventRepo {
     });
   };
 
-  createOnePlain = createOnePlain(this.repo)<Config>();
+  createOnePlain = async (event: CreateOneEventRequestDTO): Promise<SelectedOnePlainEvent> => {
+    const eventTypeRepo = this.repo.manager.getRepository(EventType); //initialize the repo
+    const eventType = await eventTypeRepo.findOneBy({ id: event.eventTypeId }); // get EventType by id
+    if (!eventType) {
+      throw new Error(`EventType with id ${event.eventTypeId} not found`);
+    } // if the eventType cannot be retrieved by id, it throws the error
+    const newEvent = this.repo.create(event);
+    newEvent.eventType = eventType;
+    return newEvent; 
+  };
+
   createManyPlain = createManyPlain(this.repo)<Config>();
 
   updateManyPlain = updateManyPlain(this.repo)<Config>();
