@@ -5,6 +5,7 @@ import {
   NestedDTO,
 } from '../../../../../tools/shared';
 import { GetOneEventTypeByIdResponseDTO } from './getOneEventType.dto';
+import { GetOneReservoirByIdResponseDTO } from './findOneReservoirByIdResponse.dto';
 
 export class GetOneEventByIdResponseDTO {
   @IsPositive()
@@ -21,6 +22,9 @@ export class GetOneEventByIdResponseDTO {
 
   @IsNumber()
   reservoirId!: number;
+
+  @NestedDTO(() => GetOneReservoirByIdResponseDTO)
+  reservoir!: GetOneReservoirByIdResponseDTO;
 
   @IsDateConverted()
   completionTime!: Date;

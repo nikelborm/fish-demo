@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { SensorInstance } from '.';
 import { Task, TaskToReservoir } from '.';
+import { Event } from '.';
 
 @Entity({ name: 'reservoir' })
 export class Reservoir implements IReservoir {
@@ -57,4 +58,10 @@ export class Reservoir implements IReservoir {
     (taskToReservoir) => taskToReservoir.reservoir,
   )
   taskToReservoirRelations!: TaskToReservoir[];
+
+  @OneToMany(
+    () => Event,
+    (event) => event.reservoir,
+  )
+  events!: Event[];
 }
