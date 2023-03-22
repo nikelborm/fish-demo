@@ -50,13 +50,15 @@ export class EventRepo {
 
   createOnePlain = async (event: CreateOneEventRequestDTO): Promise<SelectedOnePlainEvent> => {
     const eventTypeRepo = this.repo.manager.getRepository(EventType); //initialize the repo
-    const eventType = await eventTypeRepo.findOneBy({ id: event.eventTypeId }); // get EventType by id
+    try{let eventType = await eventTypeRepo.findOneBy({ id: event.eventTypeId });
     if (!eventType) {
-      throw new Error(`EventType with id ${event.eventTypeId} not found`);
-    } // if the eventType cannot be retrieved by id, it throws the error
+      throw new Error (`EventType with id ${event.eventTypeId} not found`)
+    }
     const newEvent = this.repo.create(event);
-    newEvent.eventType = eventType;
-    return newEvent; 
+    return newEvent;}
+    catch (error){
+      throw error;
+    }// think how leave room for other errors here
   };
 
   createManyPlain = createManyPlain(this.repo)<Config>();

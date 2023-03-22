@@ -44,11 +44,7 @@ export class EventUseCase {
       const insertedEvent = await this.eventRepo.createOnePlain(event);
       return { Event: insertedEvent };
     } catch (error) {
-      if (error instanceof Error) {  //I had an error that error is of type unknown so I check its type
-        throw new Error(error.message);
-      } else {
-        throw new Error('An unknown error occurred.');
-      }
+      throw (error)
     }
   }
 
