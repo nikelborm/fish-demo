@@ -10,3 +10,4 @@ export * from './getOneOrManyAlerts.dto';
 export * from './getOneOrManyTasks.dto';
 export * from './getOneOrManyTaskTimes.dto';
 export * from './getOneOrManyBehaviors.dto';
+export * from './getOneAlertType.dto';
