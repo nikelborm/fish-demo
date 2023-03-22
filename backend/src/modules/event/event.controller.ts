@@ -53,7 +53,15 @@ export class EventController {
     @ValidatedBody()
     createEventDTO: CreateOneEventRequestDTO,
   ): Promise<CreateOneEventResponseDTO> {
-    return await this.eventUseCase.createEvent(createEventDTO);
+    try {
+      return await this.eventUseCase.createEvent(createEventDTO);
+    } catch (error) {
+      if (error instanceof Error) {  //I had an error that error is of type unknown so I check its type
+        throw new Error(error.message);
+      } else {
+        throw new Error('An unknown error occurred.');
+      }
+    }
   }
 
   @Delete('deleteById')
