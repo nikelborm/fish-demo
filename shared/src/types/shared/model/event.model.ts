@@ -1,7 +1,4 @@
- import type {
-  IEventType,
-} from '.';
-
+import type { IEventType, IReservoir } from '.';
 
 export class IEvent {
   id!: number;
@@ -13,6 +10,8 @@ export class IEvent {
   eventType!: IEventType;
 
   reservoirId!: number;
+
+  reservoir!: IReservoir;
 
   completionTime!: Date;
 

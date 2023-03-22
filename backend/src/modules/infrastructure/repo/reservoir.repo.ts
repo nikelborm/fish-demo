@@ -220,3 +220,5 @@ type RawResultsItemType = {
   short_name: string;
   value_type_name: string;
 };
+
+export type SelectedOnePlainReservoir = RepoTypes['SelectedOnePlainEntity'];

@@ -12,9 +12,10 @@ import {
   updateOneWithRelations,
 } from 'src/tools';
 import type { EntityRepoMethodTypes } from 'src/types';
-import { Between, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Event } from '../model';
 import { SelectedOnePlainEventType } from './eventType.repo';
+import { SelectedOnePlainReservoir } from './reservoir.repo';
 
 @Injectable()
 export class EventRepo {
@@ -30,29 +31,20 @@ export class EventRepo {
   ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
     await findOnePlainByIdentity(this.repo)<Config>()({ id });
 
-  findOneByIdWithEventType = async (
+  findOneByIdWithTypeAndReservoir = async (
     id: number,
   ): Promise<
     | (RepoTypes['SelectedOnePlainEntity'] & {
-        eventType: SelectedOnePlainEventType;
+        eventType: SelectedOnePlainEventType
+      } & {
+        reservoir: SelectedOnePlainReservoir
       })
-    | null
-  > => {
+      | null
+  > =>{
     return await this.repo.findOne({
-      relations: { eventType: true },
+      relations: { eventType: true,
+                  reservoir: true,},
       where: { id },
-    });
-  };
-
-  findByData = async (
-    createdAt: Date,
-  ): Promise<RepoTypes['SelectedOnePlainEntity'][] | null> => {
-    const startDate = new Date(createdAt);
-    startDate.setHours(0, 0, 0, 0);
-    const endDate = new Date(createdAt);
-    endDate.setHours(23, 59, 59, 999);
-    return await this.repo.find({
-      where: { createdAt: Between(startDate, endDate) },
     });
   };
 

@@ -14,7 +14,7 @@ import {
   FindManyEventsResponseDTO,
   GetOneEventByIdResponseDTO,
   GetOneEventTypeByIdResponseDTO,
-  GetOneEventForManyResponseDTO,
+  GetOneReservoirByIdResponseDTO,
 } from 'src/types';
 import { EventUseCase } from './event.useCase';
 
@@ -26,34 +26,25 @@ export class EventController {
   @AuthorizedOnly()
   async findManyEvents(
     @Query('search') search?: string,
-  ): Promise<FindManyEventsResponseDTO> {
+  ): Promise<(FindManyEventsResponseDTO)> {
     const events = await this.eventUseCase.findMany(search);
     return {
       events,
     };
   }
 
-  @Get('/:createdAt')
-  async findEventsByData(
-    @Param('createdAt')
-    createdAt: Date,
-  ): Promise<GetOneEventForManyResponseDTO[] | null> {
-    const event = await this.eventUseCase.getOneByData(createdAt);
-    return event;
-  }
-
   @Get('/:eventId')
   @AuthorizedOnly()
   //async getOneEventById(
-  async getOneEventByIdWithEventType(
+  async getOneEventByIdWithTypeAndReservoir(
     @Param('eventId', ParseIntPipe) eventId: number,
-  ): Promise<
-    GetOneEventByIdResponseDTO & {
-      eventType: GetOneEventTypeByIdResponseDTO;
-    }
-  > {
-    //  return await this.eventUseCase.getOneById(
-    const event = await this.eventUseCase.getOneByIdWithEventType(eventId);
+  ): Promise<(GetOneEventByIdResponseDTO & {
+    eventType: GetOneEventTypeByIdResponseDTO;
+  } & {
+    reservoir: GetOneReservoirByIdResponseDTO;
+  })> {
+  //  return await this.eventUseCase.getOneById(
+    const event = await this.eventUseCase.getOneByIdWithTypeAndReservoir(eventId);
     return event;
   }
 
