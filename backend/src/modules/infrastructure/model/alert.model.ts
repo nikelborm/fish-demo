@@ -1,6 +1,14 @@
 import { PrimaryIdentityColumn } from 'src/tools';
 import type { IAlert } from 'src/types';
-import { Column, CreateDateColumn, Entity, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  UpdateDateColumn,
+} from 'typeorm';
+import { AlertType } from './alertType.model';
 
 @Entity({ name: 'alert' })
 export class Alert implements IAlert {
@@ -37,4 +45,10 @@ export class Alert implements IAlert {
     type: 'timestamptz',
   })
   updatedAt!: Date;
+
+  @ManyToOne(() => AlertType, (alertType) => alertType.alerts)
+  @JoinColumn({
+    name: 'alert_type_id',
+  })
+  alertType!: AlertType;
 }

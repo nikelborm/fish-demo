@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { messages } from 'src/config';
 import {
   CreateOneAlertRequestDTO,
@@ -18,6 +22,21 @@ export class AlertUseCase {
       throw new NotFoundException(
         messages.repo.common.cantGetNotFoundById(id, 'alert'),
       );
+    return alert;
+  }
+
+  async getOneByIdWithAlertType(id: number): Promise<
+    repo.SelectedOnePlainAlert & {
+      alertType: repo.SelectedOnePlainAlertType;
+    }
+  > {
+    const alert = await this.alertRepo.findOneByIdWithAlertType(id);
+
+    if (!alert)
+      throw new BadRequestException(
+        messages.repo.common.cantGetNotFoundById(id, 'alert'),
+      );
+
     return alert;
   }
 

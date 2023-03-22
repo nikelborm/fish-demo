@@ -1,9 +1,14 @@
+// eslint-disable-next-line import/no-cycle
+import { IAlertType } from '.';
+
 export class IAlert {
   id!: number;
 
   reservoir_id!: number;
 
   alert_type_id!: number;
+
+  alertType!: IAlertType;
 
   importance!: number;
 
