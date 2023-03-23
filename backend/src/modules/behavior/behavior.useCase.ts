@@ -1,8 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { messages } from 'src/config';
-import type {
+import { isQueryFailedError } from 'src/tools';
+import {
   CreateOneBehaviorRequestDTO,
   CreateOneBehaviorResponseDTO,
+  PG_FOREIGN_KEY_CONSTRAINT_VIOLATION
 } from 'src/types';
 import { repo } from '../infrastructure';
 
@@ -26,7 +28,14 @@ export class BehaviorUseCase {
   async createBehavior(
     behavior: CreateOneBehaviorRequestDTO,
   ): Promise<CreateOneBehaviorResponseDTO> {
+    try{
     return await this.behaviorRepo.createOnePlain(behavior);
+    } catch (error: any) {
+      if (isQueryFailedError(error))
+        if (error.code === PG_FOREIGN_KEY_CONSTRAINT_VIOLATION)
+          throw new BadRequestException(messages.repo.common.cantCreateFKDoNotExist(behavior, 'behavior'));
+      throw error;
+    }
   }
 
   async createManyBehaviors(
