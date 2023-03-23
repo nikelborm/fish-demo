@@ -44,7 +44,7 @@ export class EventUseCase {
       const insertedEvent = await this.eventRepo.createOnePlain(event);
       return {Event: insertedEvent};
     } catch (error: any) {
-      throw (error)
+      throw (error) // add evaluating the error type
     }
   }
 

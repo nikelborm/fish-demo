@@ -53,7 +53,7 @@ export class EventRepo {
     const eventTypeRepo = this.repo.manager.getRepository(EventType); //think if I need this step
     const eventType = await eventTypeRepo.findOneBy({ id: event.eventTypeId });
     if (!eventType) {
-      throw new BadRequestException(messages.user.exists); //replace  with another nest error class
+      throw new BadRequestException(messages.repo.common.cantCreateFKDoNotExist(event, 'event')); //replace  with another nest error class
     }
     return this.repo.create(event);
   };
