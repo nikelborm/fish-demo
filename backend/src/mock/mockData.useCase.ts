@@ -73,6 +73,7 @@ export class MockDataUseCase {
     if (!sensorParameters.length)
       sensorParameters = (await this.#mockSensorParameters()).sensorParameters;
 
+    let mockFishBatch = (await (await this.#mockFishBatch()).fishBatch)
       /*
     let fishBatches = await this.fishBatchRepo.getAll();
     let mock_fish_batch_id =
@@ -86,7 +87,7 @@ export class MockDataUseCase {
     const reservoir = await this.reservoirRepo.createOnePlain({
       name: `Бассейн №${Math.random()}`,
       fish_count: 2,
-      fish_part_id: 4,
+      fish_part_id: mockFishBatch.id,
       // fish_part_id: mock_fish_batch_id
     });
     console.log('reservoir: ', reservoir);
@@ -297,6 +298,8 @@ export class MockDataUseCase {
       fishKind: fishKind as CreatedOnePlainFishKind,
     };
   }
+
+  
 }
 
 type CreatedOnePlainSensorParameter = Required<
