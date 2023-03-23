@@ -75,7 +75,7 @@ export class MockDataUseCase {
     if (!sensorParameters.length)
       sensorParameters = (await this.#mockSensorParameters()).sensorParameters;
 
-    let mockFishBatch = (await this.#mockFishBatch()).fishBatch;
+    const mockFishBatch = (await this.#mockFishBatch()).fishBatch;
 
     const reservoir = await this.reservoirRepo.createOnePlain({
       name: `Бассейн №${Math.random()}`,
@@ -270,22 +270,18 @@ export class MockDataUseCase {
   }
 
   async #mockFishBatch(): Promise<{
-    fishBatch: CreatedOnePlainFishBatch,
-    fishKind: CreatedOnePlainFishKind,
+    fishBatch: CreatedOnePlainFishBatch;
+    fishKind: CreatedOnePlainFishKind;
   }> {
-    const fishKind = await this.fishKindRepo.createOnePlain(
-      {
-        name: 'Пробный вид',
-        description: 'Какой-то вид рыбы',
-      }
-    )
-    const fishBatch = await this.fishBatchRepo.createOnePlain(
-      {
-        name: 'Пробная партия',
-        age: 2,
-        fishKindId: fishKind.id,
-      }
-      );
+    const fishKind = await this.fishKindRepo.createOnePlain({
+      name: 'Пробный вид',
+      description: 'Какой-то вид рыбы',
+    });
+    const fishBatch = await this.fishBatchRepo.createOnePlain({
+      name: 'Пробная партия',
+      age: 2,
+      fishKindId: fishKind.id,
+    });
     console.log('fishBatch: ', fishBatch);
     return {
       fishBatch: fishBatch as CreatedOnePlainFishBatch,
@@ -293,33 +289,26 @@ export class MockDataUseCase {
     };
   }
 
-  async #mockEvent(
-    reservoir: CreatedOnePlainReservoir
-    ): Promise<{
-    event: CreatedOnePlainEvent
-    eventType: CreatedOnePlainEventType
+  async #mockEvent(reservoir: CreatedOnePlainReservoir): Promise<{
+    event: CreatedOnePlainEvent;
+    eventType: CreatedOnePlainEventType;
   }> {
-    const eventType = await this.eventTypeRepo.createOnePlain(
-      {
-        name: 'Пробное событие',
-        description: 'Пробное событие для тестирования',
-      }
-    )
-    const event = await this.eventRepo.createOnePlain(
-      {
-        description: 'Был создан пробный бассейн',
-        eventTypeId: eventType.id,
-        reservoirId: reservoir.id,
-        completionTime: sub(new Date(), { seconds: 720 + Math.random() * 3 }),
-      }
-      );
+    const eventType = await this.eventTypeRepo.createOnePlain({
+      name: 'Пробное событие',
+      description: 'Пробное событие для тестирования',
+    });
+    const event = await this.eventRepo.createOnePlain({
+      description: 'Был создан пробный бассейн',
+      eventTypeId: eventType.id,
+      reservoirId: reservoir.id,
+      completionTime: sub(new Date(), { seconds: 720 + Math.random() * 3 }),
+    });
     console.log('event: ', event);
     return {
       event: event as CreatedOnePlainEvent,
       eventType: eventType as CreatedOnePlainEventType,
     };
   }
-
 }
 
 type CreatedOnePlainSensorParameter = Required<
