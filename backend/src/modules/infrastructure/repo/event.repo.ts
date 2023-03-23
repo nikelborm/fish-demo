@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository, /*getRepositoryToken*/ } from '@nestjs/typeorm';
 import {
   createManyPlain,
-  //createOnePlain,
+  createOnePlain,
   deleteEntityByIdentity,
   findOnePlainByIdentity,
   getAllEntities,
@@ -48,17 +48,13 @@ export class EventRepo {
     });
   };
 
-  createOnePlain = async (event: CreateOneEventRequestDTO): Promise<SelectedOnePlainEvent> => {
-    const eventTypeRepo = this.repo.manager.getRepository(EventType); //initialize the repo
-    try{let eventType = await eventTypeRepo.findOneBy({ id: event.eventTypeId });
+  createOnePlain = async (event: CreateOneEventRequestDTO) => {
+    const eventTypeRepo = this.repo.manager.getRepository(EventType); //think if I need this step
+    const eventType = await eventTypeRepo.findOneBy({ id: event.eventTypeId });
     if (!eventType) {
-      throw new Error (`EventType with id ${event.eventTypeId} not found`)
+      throw new Error (`EventType with id ${event.eventTypeId} not found`) //replace  with a nest error class
     }
-    const newEvent = this.repo.create(event);
-    return newEvent;}
-    catch (error){
-      throw error;
-    }// think how leave room for other errors here
+    return createOnePlain(this.repo)<Config>();
   };
 
   createManyPlain = createManyPlain(this.repo)<Config>();
