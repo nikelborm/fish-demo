@@ -1,10 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { messages } from 'src/config';
+import { isQueryFailedError } from 'src/tools';
 import {
   CreateOneAlertRequestDTO,
   // UpdateAlertDTO,
   CreateOneAlertResponseDTO,
   // UpdateOneAlertResponse,
+  PG_FOREIGN_KEY_CONSTRAINT_VIOLATION
 } from 'src/types';
 import { repo } from '../infrastructure';
 
@@ -24,8 +26,15 @@ export class AlertUseCase {
   async createAlert(
     alert: CreateOneAlertRequestDTO,
   ): Promise<CreateOneAlertResponseDTO> {
-    const insertedAlert = await this.alertRepo.createOnePlain(alert);
+    try {
+      const insertedAlert = await this.alertRepo.createOnePlain(alert);
     return insertedAlert;
+    } catch (error: any) {
+      if (isQueryFailedError(error))
+        if (error.code === PG_FOREIGN_KEY_CONSTRAINT_VIOLATION)
+          throw new BadRequestException(messages.repo.common.cantCreateFKDoNotExist(alert, 'alert'));
+      throw error;
+    }
   }
 
   // async updateAlert({
