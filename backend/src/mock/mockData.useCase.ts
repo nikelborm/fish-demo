@@ -20,6 +20,8 @@ export class MockDataUseCase {
     private readonly sensorParameterRepo: repo.SensorParameterRepo,
     private readonly fishBatchRepo: repo.FishBatchRepo,
     private readonly fishKindRepo: repo.FishKindRepo,
+    private readonly eventRepo: repo.EventRepo,
+    private readonly eventTypeRepo: repo.EventTypeRepo,
   ) {}
 
   async executeMock(scriptName?: string): Promise<void> {
@@ -73,22 +75,12 @@ export class MockDataUseCase {
     if (!sensorParameters.length)
       sensorParameters = (await this.#mockSensorParameters()).sensorParameters;
 
-    let mockFishBatch = (await (await this.#mockFishBatch()).fishBatch)
-      /*
-    let fishBatches = await this.fishBatchRepo.getAll();
-    let mock_fish_batch_id =
-
-    if (!fishBatches.length) {
-      mock_fishBatch = (await this.#mockFishBatch()).fishBatch
-      mock_fish_batch_id = mock_fishBatch.id
-    }
-      */
+    let mockFishBatch = (await this.#mockFishBatch()).fishBatch;
 
     const reservoir = await this.reservoirRepo.createOnePlain({
       name: `Бассейн №${Math.random()}`,
       fish_count: 2,
       fish_part_id: mockFishBatch.id,
-      // fish_part_id: mock_fish_batch_id
     });
     console.log('reservoir: ', reservoir);
     const { abstractSensor: abstractSensor1 } = await this.#mockAbstractSensor(
@@ -102,6 +94,8 @@ export class MockDataUseCase {
       abstractSensor1,
       abstractSensor2,
     ]);
+
+    await this.#mockEvent(reservoir);
   }
 
   async mockSensorMeasurements(): Promise<void> {
@@ -281,13 +275,13 @@ export class MockDataUseCase {
   }> {
     const fishKind = await this.fishKindRepo.createOnePlain(
       {
-        name: 'Тестовый вид',
+        name: 'Пробный вид',
         description: 'Какой-то вид рыбы',
       }
     )
     const fishBatch = await this.fishBatchRepo.createOnePlain(
       {
-        name: 'Тестовая партия',
+        name: 'Пробная партия',
         age: 2,
         fishKindId: fishKind.id,
       }
@@ -299,7 +293,33 @@ export class MockDataUseCase {
     };
   }
 
-  
+  async #mockEvent(
+    reservoir: CreatedOnePlainReservoir
+    ): Promise<{
+    event: CreatedOnePlainEvent
+    eventType: CreatedOnePlainEventType
+  }> {
+    const eventType = await this.eventTypeRepo.createOnePlain(
+      {
+        name: 'Пробное событие',
+        description: 'Пробное событие для тестирования',
+      }
+    )
+    const event = await this.eventRepo.createOnePlain(
+      {
+        description: 'Был создан пробный бассейн',
+        eventTypeId: eventType.id,
+        reservoirId: reservoir.id,
+        completionTime: sub(new Date(), { seconds: 720 + Math.random() * 3 }),
+      }
+      );
+    console.log('event: ', event);
+    return {
+      event: event as CreatedOnePlainEvent,
+      eventType: eventType as CreatedOnePlainEventType,
+    };
+  }
+
 }
 
 type CreatedOnePlainSensorParameter = Required<
@@ -344,6 +364,22 @@ type CreatedOnePlainFishKind = Required<
     name: string;
     description: string;
   } & Pick<model.FishKind, 'id' | 'createdAt' | 'updatedAt'>
+>;
+
+type CreatedOnePlainEvent = Required<
+  {
+    description: string;
+    eventTypeId: number;
+    reservoirId: number;
+    completionTime: Date;
+  } & Pick<model.Event, 'id' | 'createdAt' | 'updatedAt'>
+>;
+
+type CreatedOnePlainEventType = Required<
+  {
+    name: string;
+    description: string;
+  } & Pick<model.EventType, 'id' | 'createdAt' | 'updatedAt'>
 >;
 
 type CreatedOnePlainReservoir = Required<
