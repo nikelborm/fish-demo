@@ -73,5 +73,4 @@ export class GetOneReservoirByIdResponseDTO {
 
   @IsString()
   name!: string;
-
 }

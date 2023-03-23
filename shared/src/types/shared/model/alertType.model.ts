@@ -1,4 +1,4 @@
-import { IAlert } from './alert.model';
+import type { IAlert } from './alert.model';
 
 export class IAlertType {
   id!: number;
