@@ -52,18 +52,10 @@ export class EventController {
   async createEvent(
     @ValidatedBody()
     createEventDTO: CreateOneEventRequestDTO,
-  ): Promise<CreateOneEventResponseDTO | EmptyResponseDTO> {
-    try {
-      return await this.eventUseCase.createEvent(createEventDTO);
-    } catch (error) {
-        if (error instanceof Error) { //where should we create a new class?
-          alert(error.message)
-          return (EmptyResponseDTO)  //what should we use instead of alert at this point?
-        } else {
-          alert('An unknown error')
-          return (EmptyResponseDTO)
-        }
-    }
+  ): Promise<CreateOneEventResponseDTO> {
+    return await this.eventUseCase.createEvent(
+      createEventDTO,
+    );
   }
 
   @Delete('deleteById')

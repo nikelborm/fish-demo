@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { messages } from 'src/config';
 import { InjectRepository, /*getRepositoryToken*/ } from '@nestjs/typeorm';
 import {
   createManyPlain,
-  createOnePlain,
+  //createOnePlain,
   deleteEntityByIdentity,
   findOnePlainByIdentity,
   getAllEntities,
@@ -48,13 +49,13 @@ export class EventRepo {
     });
   };
 
-  createOnePlain = async (event: CreateOneEventRequestDTO) => {
+  createOnePlain = async (event: CreateOneEventRequestDTO): Promise<SelectedOnePlainEvent> => {
     const eventTypeRepo = this.repo.manager.getRepository(EventType); //think if I need this step
     const eventType = await eventTypeRepo.findOneBy({ id: event.eventTypeId });
     if (!eventType) {
-      throw new Error (`EventType with id ${event.eventTypeId} not found`) //replace  with a nest error class
+      throw new BadRequestException(messages.user.exists); //replace  with another nest error class
     }
-    return createOnePlain(this.repo)<Config>();
+    return this.repo.create(event);
   };
 
   createManyPlain = createManyPlain(this.repo)<Config>();
