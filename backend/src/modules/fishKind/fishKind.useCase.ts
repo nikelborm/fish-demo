@@ -1,8 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { messages } from 'src/config';
-import type {
+import { isQueryFailedError } from 'src/tools';
+import {
   CreateFishKindDTO,
   CreateOneFishKindResponse,
+  PG_UNIQUE_CONSTRAINT_VIOLATION,
   UpdateFishKindDTO,
   UpdateOneFishKindResponse,
 } from 'src/types';
@@ -38,8 +44,17 @@ export class FishKindUseCase {
   async createKind(
     fishKind: CreateFishKindDTO,
   ): Promise<CreateOneFishKindResponse> {
-    const insertedFishKind = await this.fishKindRepo.createOnePlain(fishKind);
-    return { fishKind: insertedFishKind };
+    try {
+      const insertedFishKind = await this.fishKindRepo.createOnePlain(fishKind);
+      return { fishKind: insertedFishKind };
+    } catch (error) {
+      if (isQueryFailedError(error))
+        if (error.code === PG_UNIQUE_CONSTRAINT_VIOLATION)
+          throw new BadRequestException(
+            messages.repo.common.cantCreateUKDuplicate(fishKind, 'fishKind'),
+          );
+      throw error;
+    }
   }
 
   async updateKind({

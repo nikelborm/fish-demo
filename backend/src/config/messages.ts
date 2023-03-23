@@ -104,6 +104,10 @@ const rawMessages = {
         `Unable to create new ${entityName || 'entity'} JSON: {${JSON.stringify(
           newEntity,
         )}}`,
+      cantCreateUKDuplicate: (newEntity: any, entityName?: string): string =>
+        `Unable to create new ${
+          entityName || 'entity'
+        }, because this name is not unique, please change name.`,
       cantCreateMany: (newEntities: any[], entityName?: string): string =>
         `Unable to insert ${pluralForm(
           entityName || 'entity',

@@ -47,8 +47,13 @@ export class EventUseCase {
   async createEvent(
     event: CreateOneEventRequestDTO,
   ): Promise<CreateOneEventResponseDTO> {
-    const insertedEvent = await this.eventRepo.createOnePlain(event);
-    return { Event: insertedEvent };
+    try {
+      const insertedEvent = await this.eventRepo.createOnePlain(event);
+      return { Event: insertedEvent };
+    } catch (error) {
+      console.error(error);
+      throw new Error('введите тип события');
+    }
   }
 
   async deleteOne(id: number): Promise<void> {
