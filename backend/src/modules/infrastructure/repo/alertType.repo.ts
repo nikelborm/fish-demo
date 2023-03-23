@@ -13,14 +13,13 @@ import {
 } from 'src/tools';
 import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
-import { Alert } from '../model';
-import { SelectedOnePlainAlertType } from './alertType.repo';
+import { AlertType } from '../model';
 
 @Injectable()
-export class AlertRepo {
+export class AlertTypeRepo {
   constructor(
-    @InjectRepository(Alert)
-    private readonly repo: Repository<Alert>,
+    @InjectRepository(AlertType)
+    private readonly repo: Repository<AlertType>,
   ) {}
 
   getAll = getAllEntities(this.repo)<Config>();
@@ -29,20 +28,6 @@ export class AlertRepo {
     id: number,
   ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
     await findOnePlainByIdentity(this.repo)<Config>()({ id });
-
-  findOneByIdWithAlertType = async (
-    id: number,
-  ): Promise<
-    | (RepoTypes['SelectedOnePlainEntity'] & {
-        alertType: SelectedOnePlainAlertType;
-      })
-    | null
-  > => {
-    return await this.repo.findOne({
-      relations: { alertType: true },
-      where: { id },
-    });
-  };
 
   createOnePlain = createOnePlain(this.repo)<Config>();
   createManyPlain = createManyPlain(this.repo)<Config>();
@@ -58,16 +43,13 @@ export class AlertRepo {
 }
 
 type RepoTypes = EntityRepoMethodTypes<
-  Alert,
+  AlertType,
   {
-    EntityName: 'Alert';
+    EntityName: 'AlertType';
     RequiredToCreateAndSelectRegularPlainKeys:
       | 'createdAt'
       | 'updatedAt'
-      | 'id'
-      | 'reservoir_id'
-      | 'alert_type_id'
-      | 'importance';
+      | 'description';
     OptionalToCreateAndSelectRegularPlainKeys: null;
 
     ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';
@@ -79,8 +61,10 @@ type RepoTypes = EntityRepoMethodTypes<
 
 type Config = RepoTypes['Config'];
 
-export type OnePlainAlertToBeCreated = RepoTypes['OnePlainEntityToBeCreated'];
-export type OnePlainAlertToBeUpdated = RepoTypes['OnePlainEntityToBeUpdated'];
-export type OneAlertWithRelationsToBeUpdated =
+export type OnePlainAlertTypeToBeCreated =
+  RepoTypes['OnePlainEntityToBeCreated'];
+export type OnePlainAlertTypeToBeUpdated =
+  RepoTypes['OnePlainEntityToBeUpdated'];
+export type OneAlertTypeWithRelationsToBeUpdated =
   RepoTypes['OneEntityWithRelationsToBeUpdated'];
-export type SelectedOnePlainAlert = RepoTypes['SelectedOnePlainEntity'];
+export type SelectedOnePlainAlertType = RepoTypes['SelectedOnePlainEntity'];

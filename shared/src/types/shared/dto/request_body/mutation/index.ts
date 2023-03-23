@@ -23,3 +23,4 @@ export * from './createOneOrManyAlerts.dto';
 export * from './createOneOrManyTasks.dto';
 export * from './createOneOrManyTaskTimes.dto';
 export * from './createOneOrManyBehaviors.dto';
+export * from './createAlertType.dto';
