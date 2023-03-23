@@ -1,9 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { messages } from 'src/config';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository, /*getRepositoryToken*/ } from '@nestjs/typeorm';
 import {
   createManyPlain,
-  //createOnePlain,
+  createOnePlain,
   deleteEntityByIdentity,
   findOnePlainByIdentity,
   getAllEntities,
@@ -12,9 +11,9 @@ import {
   updateOnePlain,
   updateOneWithRelations,
 } from 'src/tools';
-import type { CreateOneEventRequestDTO, EntityRepoMethodTypes } from 'src/types';
+import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
-import { Event, EventType } from '../model';
+import { Event } from '../model';
 import { SelectedOnePlainEventType } from './eventType.repo';
 import { SelectedOnePlainReservoir } from './reservoir.repo';
 
@@ -49,15 +48,7 @@ export class EventRepo {
     });
   };
 
-  createOnePlain = async (event: CreateOneEventRequestDTO): Promise<SelectedOnePlainEvent> => {
-    const eventTypeRepo = this.repo.manager.getRepository(EventType); //think if I need this step
-    const eventType = await eventTypeRepo.findOneBy({ id: event.eventTypeId });
-    if (!eventType) {
-      throw new BadRequestException(messages.repo.common.cantCreateFKDoNotExist(event, 'event')); //replace  with another nest error class
-    }
-    return this.repo.create(event);
-  };
-
+  createOnePlain = createOnePlain(this.repo)<Config>();
   createManyPlain = createManyPlain(this.repo)<Config>();
 
   updateManyPlain = updateManyPlain(this.repo)<Config>();
