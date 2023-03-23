@@ -17,7 +17,11 @@ export class MockDataUseCase {
     private readonly sensorInstanceRepo: repo.SensorInstanceRepo,
     private readonly sensorMeasurementRepo: repo.SensorMeasurementRepo,
     private readonly sensorParameterInstanceRepo: repo.SensorParameterInstanceRepo,
-    private readonly sensorParameterRepo: repo.SensorParameterRepo, //private readonly fishKindRepo: repo.FishKindRepo,
+    private readonly sensorParameterRepo: repo.SensorParameterRepo,
+    private readonly fishBatchRepo: repo.FishBatchRepo,
+    private readonly fishKindRepo: repo.FishKindRepo,
+    private readonly eventRepo: repo.EventRepo,
+    private readonly eventTypeRepo: repo.EventTypeRepo,
   ) {}
 
   async executeMock(scriptName?: string): Promise<void> {
@@ -71,10 +75,12 @@ export class MockDataUseCase {
     if (!sensorParameters.length)
       sensorParameters = (await this.#mockSensorParameters()).sensorParameters;
 
+    let mockFishBatch = (await this.#mockFishBatch()).fishBatch;
+
     const reservoir = await this.reservoirRepo.createOnePlain({
       name: `Бассейн №${Math.random()}`,
       fish_count: 2,
-      fish_part_id: 4,
+      fish_part_id: mockFishBatch.id,
     });
     console.log('reservoir: ', reservoir);
     const { abstractSensor: abstractSensor1 } = await this.#mockAbstractSensor(
@@ -88,6 +94,8 @@ export class MockDataUseCase {
       abstractSensor1,
       abstractSensor2,
     ]);
+
+    await this.#mockEvent(reservoir);
   }
 
   async mockSensorMeasurements(): Promise<void> {
@@ -260,6 +268,58 @@ export class MockDataUseCase {
         ({ recordedAt: a }, { recordedAt: b }) => a.getTime() - b.getTime(),
       );
   }
+
+  async #mockFishBatch(): Promise<{
+    fishBatch: CreatedOnePlainFishBatch,
+    fishKind: CreatedOnePlainFishKind,
+  }> {
+    const fishKind = await this.fishKindRepo.createOnePlain(
+      {
+        name: 'Пробный вид',
+        description: 'Какой-то вид рыбы',
+      }
+    )
+    const fishBatch = await this.fishBatchRepo.createOnePlain(
+      {
+        name: 'Пробная партия',
+        age: 2,
+        fishKindId: fishKind.id,
+      }
+      );
+    console.log('fishBatch: ', fishBatch);
+    return {
+      fishBatch: fishBatch as CreatedOnePlainFishBatch,
+      fishKind: fishKind as CreatedOnePlainFishKind,
+    };
+  }
+
+  async #mockEvent(
+    reservoir: CreatedOnePlainReservoir
+    ): Promise<{
+    event: CreatedOnePlainEvent
+    eventType: CreatedOnePlainEventType
+  }> {
+    const eventType = await this.eventTypeRepo.createOnePlain(
+      {
+        name: 'Пробное событие',
+        description: 'Пробное событие для тестирования',
+      }
+    )
+    const event = await this.eventRepo.createOnePlain(
+      {
+        description: 'Был создан пробный бассейн',
+        eventTypeId: eventType.id,
+        reservoirId: reservoir.id,
+        completionTime: sub(new Date(), { seconds: 720 + Math.random() * 3 }),
+      }
+      );
+    console.log('event: ', event);
+    return {
+      event: event as CreatedOnePlainEvent,
+      eventType: eventType as CreatedOnePlainEventType,
+    };
+  }
+
 }
 
 type CreatedOnePlainSensorParameter = Required<
@@ -289,6 +349,37 @@ type CreatedOnePlainSensorParameterInstance = Required<
     abstractSensorId: number;
     sensorInstanceId: number;
   } & Pick<model.SensorParameterInstance, 'id' | 'createdAt' | 'updatedAt'>
+>;
+
+type CreatedOnePlainFishBatch = Required<
+  {
+    name: string;
+    fishKindId: number;
+    age: number;
+  } & Pick<model.FishBatch, 'id' | 'createdAt' | 'updatedAt'>
+>;
+
+type CreatedOnePlainFishKind = Required<
+  {
+    name: string;
+    description: string;
+  } & Pick<model.FishKind, 'id' | 'createdAt' | 'updatedAt'>
+>;
+
+type CreatedOnePlainEvent = Required<
+  {
+    description: string;
+    eventTypeId: number;
+    reservoirId: number;
+    completionTime: Date;
+  } & Pick<model.Event, 'id' | 'createdAt' | 'updatedAt'>
+>;
+
+type CreatedOnePlainEventType = Required<
+  {
+    name: string;
+    description: string;
+  } & Pick<model.EventType, 'id' | 'createdAt' | 'updatedAt'>
 >;
 
 type CreatedOnePlainReservoir = Required<
