@@ -17,7 +17,9 @@ export class MockDataUseCase {
     private readonly sensorInstanceRepo: repo.SensorInstanceRepo,
     private readonly sensorMeasurementRepo: repo.SensorMeasurementRepo,
     private readonly sensorParameterInstanceRepo: repo.SensorParameterInstanceRepo,
-    private readonly sensorParameterRepo: repo.SensorParameterRepo, //private readonly fishKindRepo: repo.FishKindRepo,
+    private readonly sensorParameterRepo: repo.SensorParameterRepo,
+    private readonly fishBatchRepo: repo.FishBatchRepo,
+    private readonly fishKindRepo: repo.FishKindRepo,
   ) {}
 
   async executeMock(scriptName?: string): Promise<void> {
@@ -71,10 +73,21 @@ export class MockDataUseCase {
     if (!sensorParameters.length)
       sensorParameters = (await this.#mockSensorParameters()).sensorParameters;
 
+      /*
+    let fishBatches = await this.fishBatchRepo.getAll();
+    let mock_fish_batch_id =
+
+    if (!fishBatches.length) {
+      mock_fishBatch = (await this.#mockFishBatch()).fishBatch
+      mock_fish_batch_id = mock_fishBatch.id
+    }
+      */
+
     const reservoir = await this.reservoirRepo.createOnePlain({
       name: `Бассейн №${Math.random()}`,
       fish_count: 2,
       fish_part_id: 4,
+      // fish_part_id: mock_fish_batch_id
     });
     console.log('reservoir: ', reservoir);
     const { abstractSensor: abstractSensor1 } = await this.#mockAbstractSensor(
@@ -260,6 +273,30 @@ export class MockDataUseCase {
         ({ recordedAt: a }, { recordedAt: b }) => a.getTime() - b.getTime(),
       );
   }
+
+  async #mockFishBatch(): Promise<{
+    fishBatch: CreatedOnePlainFishBatch,
+    fishKind: CreatedOnePlainFishKind,
+  }> {
+    const fishKind = await this.fishKindRepo.createOnePlain(
+      {
+        name: 'Тестовый вид',
+        description: 'Какой-то вид рыбы',
+      }
+    )
+    const fishBatch = await this.fishBatchRepo.createOnePlain(
+      {
+        name: 'Тестовая партия',
+        age: 2,
+        fishKindId: fishKind.id,
+      }
+      );
+    console.log('fishBatch: ', fishBatch);
+    return {
+      fishBatch: fishBatch as CreatedOnePlainFishBatch,
+      fishKind: fishKind as CreatedOnePlainFishKind,
+    };
+  }
 }
 
 type CreatedOnePlainSensorParameter = Required<
@@ -289,6 +326,21 @@ type CreatedOnePlainSensorParameterInstance = Required<
     abstractSensorId: number;
     sensorInstanceId: number;
   } & Pick<model.SensorParameterInstance, 'id' | 'createdAt' | 'updatedAt'>
+>;
+
+type CreatedOnePlainFishBatch = Required<
+  {
+    name: string;
+    fishKindId: number;
+    age: number;
+  } & Pick<model.FishBatch, 'id' | 'createdAt' | 'updatedAt'>
+>;
+
+type CreatedOnePlainFishKind = Required<
+  {
+    name: string;
+    description: string;
+  } & Pick<model.FishKind, 'id' | 'createdAt' | 'updatedAt'>
 >;
 
 type CreatedOnePlainReservoir = Required<
