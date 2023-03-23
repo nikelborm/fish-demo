@@ -42,8 +42,8 @@ export class EventUseCase {
   ): Promise<CreateOneEventResponseDTO> {
     try {
       const insertedEvent = await this.eventRepo.createOnePlain(event);
-      return { Event: insertedEvent };
-    } catch (error) {
+      return {Event: insertedEvent};
+    } catch (error: any) {
       throw (error)
     }
   }
