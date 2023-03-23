@@ -23,6 +23,21 @@ export class AlertUseCase {
     return alert;
   }
 
+  async getOneByIdWithAlertType(id: number): Promise<
+    repo.SelectedOnePlainAlert & {
+      alertType: repo.SelectedOnePlainAlertType;
+    }
+  > {
+    const alert = await this.alertRepo.findOneByIdWithAlertType(id);
+
+    if (!alert)
+      throw new BadRequestException(
+        messages.repo.common.cantGetNotFoundById(id, 'alert'),
+      );
+
+    return alert;
+  }
+
   async createAlert(
     alert: CreateOneAlertRequestDTO,
   ): Promise<CreateOneAlertResponseDTO> {

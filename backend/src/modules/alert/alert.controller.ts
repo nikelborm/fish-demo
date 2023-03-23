@@ -5,6 +5,7 @@ import {
   CreateOneAlertRequestDTO,
   // UpdateAlertDTO,
   CreateOneAlertResponseDTO,
+  GetOneAlertTypeByIdResponseDTO,
   // UpdateOneAlertResponse,
 } from 'src/types';
 import { AlertUseCase } from './alert.useCase';
@@ -23,10 +24,14 @@ export class AlertController {
   }
 
   @Get('/:alertId')
-  async findOneAlertById(
+  async findOneAlertByIdWithAlertType(
     @Param('alertId', ParseIntPipe) alertId: number,
-  ): Promise<GetOneAlertByIdResponseDTO> {
-    const alert = await this.alertUseCase.getOneById(alertId);
+  ): Promise<
+    GetOneAlertByIdResponseDTO & {
+      alertType: GetOneAlertTypeByIdResponseDTO;
+    }
+  > {
+    const alert = await this.alertUseCase.getOneByIdWithAlertType(alertId);
     return alert;
   }
 
