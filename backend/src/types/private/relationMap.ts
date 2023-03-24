@@ -193,6 +193,12 @@ const RelationMapValue = {
       // Behavior relationToEntityNameMap token
     },
   },
+  AlertType: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      // AlertType relationToEntityNameMap token
+    },
+  },
   // RelationMapValue end token
 } as const;
 

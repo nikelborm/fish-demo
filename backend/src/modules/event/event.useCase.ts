@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { messages } from 'src/config';
-import type { CreateOneEventRequestDTO, CreateOneEventResponseDTO } from 'src/types';
+import { isQueryFailedError } from 'src/tools';
+import { CreateOneEventRequestDTO, CreateOneEventResponseDTO, PG_FOREIGN_KEY_CONSTRAINT_VIOLATION } from 'src/types';
 import { repo } from '../infrastructure';
 
 @Injectable()
@@ -40,11 +41,17 @@ export class EventUseCase {
   async createEvent(
     event: CreateOneEventRequestDTO,
   ): Promise<CreateOneEventResponseDTO> {
-    const insertedEvent = await this.eventRepo.createOnePlain(
-      event
-    );
-    return { Event: insertedEvent };
+    try {
+      const insertedEvent = await this.eventRepo.createOnePlain(event);
+      return {Event: insertedEvent};
+    } catch (error: any) {
+      if (isQueryFailedError(error))
+        if (error.code === PG_FOREIGN_KEY_CONSTRAINT_VIOLATION)
+          throw new BadRequestException(messages.repo.common.cantCreateFKDoNotExist(event, 'event'));
+      throw error;
+    }
   }
+
 
   async deleteOne(id: number): Promise<void> {
     await this.eventRepo.deleteOneById(id);

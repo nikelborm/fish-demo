@@ -53,7 +53,9 @@ export class EventController {
     @ValidatedBody()
     createEventDTO: CreateOneEventRequestDTO,
   ): Promise<CreateOneEventResponseDTO> {
-    return await this.eventUseCase.createEvent(createEventDTO);
+    return await this.eventUseCase.createEvent(
+      createEventDTO,
+    );
   }
 
   @Delete('deleteById')

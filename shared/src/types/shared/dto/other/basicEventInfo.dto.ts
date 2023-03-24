@@ -1,7 +1,6 @@
 import { IsString, MaxLength, IsNumber, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
 
-
 export class BasicEventInfoDTO {
   @IsNumber()
   reservoirId!: number;

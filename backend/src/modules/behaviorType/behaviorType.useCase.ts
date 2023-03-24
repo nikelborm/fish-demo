@@ -1,8 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { messages } from 'src/config';
-import type {
+import { isQueryFailedError } from 'src/tools';
+import {
   CreateBehaviorTypeDTO,
   CreateOneBehaviorTypeResponse,
+  PG_UNIQUE_CONSTRAINT_VIOLATION,
   UpdateBehaviorTypeDTO,
   UpdateOneBehaviorTypeResponse,
 } from 'src/types';
@@ -40,10 +46,22 @@ export class BehaviorTypeUseCase {
   async createBehaviorType(
     BehaviorType: CreateBehaviorTypeDTO,
   ): Promise<CreateOneBehaviorTypeResponse> {
-    const insertedBehaviorType = await this.behaviorTypeRepo.createOnePlain(
-      BehaviorType,
-    );
-    return { BehaviorType: insertedBehaviorType };
+    try {
+      const insertedBehaviorType = await this.behaviorTypeRepo.createOnePlain(
+        BehaviorType,
+      );
+      return { BehaviorType: insertedBehaviorType };
+    } catch (error) {
+      if (isQueryFailedError(error))
+        if (error.code === PG_UNIQUE_CONSTRAINT_VIOLATION)
+          throw new BadRequestException(
+            messages.repo.common.cantCreateUKDuplicate(
+              BehaviorType,
+              'behaviorType',
+            ),
+          );
+      throw error;
+    }
   }
 
   async updateKind({

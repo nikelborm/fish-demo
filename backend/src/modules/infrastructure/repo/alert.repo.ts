@@ -14,6 +14,7 @@ import {
 import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
 import { Alert } from '../model';
+import { SelectedOnePlainAlertType } from './alertType.repo';
 
 @Injectable()
 export class AlertRepo {
@@ -28,6 +29,20 @@ export class AlertRepo {
     id: number,
   ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
     await findOnePlainByIdentity(this.repo)<Config>()({ id });
+
+  findOneByIdWithAlertType = async (
+    id: number,
+  ): Promise<
+    | (RepoTypes['SelectedOnePlainEntity'] & {
+        alertType: SelectedOnePlainAlertType;
+      })
+    | null
+  > => {
+    return await this.repo.findOne({
+      relations: { alertType: true },
+      where: { id },
+    });
+  };
 
   createOnePlain = createOnePlain(this.repo)<Config>();
   createManyPlain = createManyPlain(this.repo)<Config>();

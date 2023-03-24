@@ -1,7 +1,13 @@
 import { PrimaryIdentityColumn } from 'src/tools';
 import type { IEventType } from 'src/types';
-import { Column, CreateDateColumn, Entity, OneToMany, UpdateDateColumn } from 'typeorm';
-import { Event } from '.' ;
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Event } from '.';
 
 @Entity({ name: 'event_type' })
 export class EventType implements IEventType {
@@ -41,5 +47,4 @@ export class EventType implements IEventType {
 
   @OneToMany(() => Event, (event) => event.eventType)
   events?: Event[];
-
 }

@@ -1,17 +1,27 @@
 # please remember that context of this Dockerfile is project root
 # so you need to add ./backend/ prefix to file names
 
-FROM nikelborm/node as prepare
 
-COPY ./backend/package.json ./backend/yarn.lock ./backend/tsconfig.json ./backend/tsconfig.build.json ./backend/.prettierrc ./backend/.eslintrc.js ./backend/nest-cli.json ./
+FROM nikelborm/node as prepare_back_dev_deps
 
+COPY ./backend/package.json ./backend/yarn.lock ./
+# see node.Dockerfile for this RUN details
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=private yarn install --network-timeout 600000 --frozen-lockfile
+COPY ./backend/tsconfig.json ./backend/tsconfig.build.json ./backend/.prettierrc ./backend/.eslintrc.js ./backend/nest-cli.json ./
+COPY ./backend/scripts scripts/
+
+
+FROM nikelborm/node as prepare_back_prod_deps
+
+COPY ./backend/package.json ./backend/yarn.lock ./
+# see node.Dockerfile for this RUN details
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=private yarn install --network-timeout 600000 --frozen-lockfile --production
+COPY ./backend/tsconfig.json ./backend/tsconfig.build.json ./backend/.prettierrc ./backend/.eslintrc.js ./backend/nest-cli.json ./
 COPY ./backend/scripts scripts/
 
 
 
-FROM prepare as production
-# see node.Dockerfile for this RUN details
-RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=private yarn install --network-timeout 600000 --frozen-lockfile --production
+FROM prepare_back_prod_deps as production
 
 COPY ./backend/src/ /app/src/
 
@@ -34,9 +44,7 @@ CMD [ "node", "dist/main" ]
 
 
 
-FROM prepare as development
-# see node.Dockerfile for this RUN details
-RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=private yarn install --network-timeout 600000 --frozen-lockfile
+FROM prepare_back_dev_deps as development
 
 # src and [types|tools]/shared are both bind-mounted in docker-compose file before running CMD
 # there is no need to copy src before running CMD https://stackoverflow.com/questions/69308389/docker-is-volume-mounted-before-running-cmd

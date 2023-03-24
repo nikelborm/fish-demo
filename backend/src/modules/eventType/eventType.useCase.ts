@@ -1,8 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { messages } from 'src/config';
-import type {
+import { isQueryFailedError } from 'src/tools';
+import {
   CreateEventTypeDTO,
   CreateOneEventTypeResponse,
+  PG_UNIQUE_CONSTRAINT_VIOLATION,
   UpdateEventTypeDTO,
   UpdateOneEventTypeResponse,
 } from 'src/types';
@@ -40,10 +46,19 @@ export class EventTypeUseCase {
   async createKind(
     EventType: CreateEventTypeDTO,
   ): Promise<CreateOneEventTypeResponse> {
-    const insertedEventType = await this.eventTypeRepo.createOnePlain(
-      EventType,
-    );
-    return { EventType: insertedEventType };
+    try {
+      const insertedEventType = await this.eventTypeRepo.createOnePlain(
+        EventType,
+      );
+      return { EventType: insertedEventType };
+    } catch (error) {
+      if (isQueryFailedError(error))
+        if (error.code === PG_UNIQUE_CONSTRAINT_VIOLATION)
+          throw new BadRequestException(
+            messages.repo.common.cantCreateUKDuplicate(EventType, 'eventType'),
+          );
+      throw error;
+    }
   }
 
   async updateKind({
