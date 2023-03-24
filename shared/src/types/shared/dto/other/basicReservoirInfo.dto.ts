@@ -8,7 +8,7 @@ import { IsNumber,
 export class BasicReservoirInfoDTO {
 
   @IsString()
-  @MinLength(8)
+  @MinLength(3)
   @MaxLength(128)
   name!: string;
 
@@ -16,6 +16,6 @@ export class BasicReservoirInfoDTO {
   fish_count!: number;
 
   @IsNumber()
-  fish_part_id!: number;
+  fish_batch_id!: number;
 
 }

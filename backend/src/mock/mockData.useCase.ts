@@ -80,7 +80,7 @@ export class MockDataUseCase {
     const reservoir = await this.reservoirRepo.createOnePlain({
       name: `Бассейн №${Math.random()}`,
       fish_count: 2,
-      fish_part_id: mockFishBatch.id,
+      fish_batch_id: mockFishBatch.id,
     });
     console.log('reservoir: ', reservoir);
     const { abstractSensor: abstractSensor1 } = await this.#mockAbstractSensor(
@@ -386,6 +386,6 @@ type CreatedOnePlainReservoir = Required<
   {
     name: string;
     fish_count: number;
-    fish_part_id: number;
+    fish_batch_id: number;
   } & Pick<model.Reservoir, 'id' | 'createdAt' | 'updatedAt'>
 >;

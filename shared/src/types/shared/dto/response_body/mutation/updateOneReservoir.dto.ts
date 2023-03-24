@@ -13,7 +13,7 @@ export class UpdateOneReservoirResponse {
 
   @IsOptional()
   @IsString()
-  @MinLength(8)
+  @MinLength(3)
   @MaxLength(128)
   name?: string;
 
@@ -23,5 +23,5 @@ export class UpdateOneReservoirResponse {
 
   @IsOptional()
   @IsNumber()
-  fish_part_id?: number;
+  fish_batch_id?: number;
 }
