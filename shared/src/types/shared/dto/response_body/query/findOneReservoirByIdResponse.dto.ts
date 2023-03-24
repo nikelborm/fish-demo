@@ -1,6 +1,7 @@
 import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { NestedArrayDTO, NestedDTO } from '../../../../../tools/shared';
 import { SensorParameterValueTypenameEnum } from '../../../modelHelper';
+import { GetOneFishBatchByIdForReservoirResponseDTO } from './getOneFishBatch.dto';
 
 class AbstractSensorInReservoir {
   @IsNumber()
@@ -58,8 +59,22 @@ export class ReservoirInfoDTO {
   @IsString()
   name!: string;
 
+  @NestedDTO(() => GetOneFishBatchByIdForReservoirResponseDTO)
+  fishBatch!: GetOneFishBatchByIdForReservoirResponseDTO;
+
   @NestedArrayDTO(() => SensorInstanceInReservoir)
   sensorInstances!: SensorInstanceInReservoir[];
+}
+
+export class ReservoirInfoWithBatchDTO {
+  @IsNumber()
+  id!: number;
+
+  @IsString()
+  name!: string;
+
+  @NestedDTO(() => GetOneFishBatchByIdForReservoirResponseDTO)
+  fishBatch!: GetOneFishBatchByIdForReservoirResponseDTO;
 }
 
 export class FindOneReservoirByIdResponseDTO {

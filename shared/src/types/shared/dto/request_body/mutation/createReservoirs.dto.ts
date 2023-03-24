@@ -11,7 +11,7 @@ export class CreateReservoirDTO {
   fish_count!: number;
 
   @IsNumber()
-  fish_part_id!: number;
+  fishBatchId!: number;
 }
 export class CreateReservoirsDTO {
   @NestedArrayDTO(() => CreateReservoirDTO)

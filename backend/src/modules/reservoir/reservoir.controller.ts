@@ -9,7 +9,8 @@ import {
 import {
   CreateOneReservoirResponse,
   CreateReservoirDTO,
-  FindOneReservoirByIdResponseDTO,
+  GetOneFishBatchByIdForReservoirResponseDTO,
+  ReservoirInfoWithBatchDTO,
   UpdateOneReservoirResponse,
   UpdateReservoirDTO,
 } from 'src/types';
@@ -28,17 +29,20 @@ export class ReservoirController {
     return await this.reservoirUseCase.createReservoir(createReservoirDTO);
   }
 
-  @Get('/:reservoirId')
+  @Get('/:reservoirIdWithBatch')
   @AuthorizedOnly()
-  async findOneReservoirById(
-    @Param('reservoirId', ParseIntPipe) reservoirId: number,
-  ): Promise<FindOneReservoirByIdResponseDTO> {
-    const reservoir = await this.reservoirUseCase.findOneReservoirById(
-      reservoirId,
-    );
-    return {
-      reservoir,
-    };
+  async getOneByIdWithFishBatch(
+    @Param('reservoirIdWithBatch', ParseIntPipe) reservoirId: number,
+  ): Promise<
+    ReservoirInfoWithBatchDTO & {
+      fishBatch: GetOneFishBatchByIdForReservoirResponseDTO;
+    }
+  > {
+    const reservoir =
+      await this.reservoirUseCase.findOneReservoirByIdWithFishBatch(
+        reservoirId,
+      );
+    return reservoir;
   }
 
   @Post('updateReservoir')

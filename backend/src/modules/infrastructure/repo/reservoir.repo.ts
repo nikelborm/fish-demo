@@ -15,6 +15,7 @@ import {
 import type { EntityRepoMethodTypes, ReservoirInfoDTO } from 'src/types';
 import { Repository } from 'typeorm';
 import { Reservoir } from '../model';
+import { SelectedOnePlainFishBatch } from './fishBatch.repo';
 
 @Injectable()
 export class ReservoirRepo {
@@ -22,6 +23,20 @@ export class ReservoirRepo {
     @InjectRepository(Reservoir)
     private readonly repo: Repository<Reservoir>,
   ) {}
+
+  findOneByIDWithFishBatch = async (
+    id: number,
+  ): Promise<
+    | (RepoTypes['SelectedOnePlainEntity'] & {
+        fishBatch: SelectedOnePlainFishBatch;
+      })
+    | null
+  > => {
+    return await this.repo.findOne({
+      relations: { fishBatch: true },
+      where: { id },
+    });
+  };
 
   async getReservoirFullInfo(
     reservoirId: number,
@@ -169,7 +184,7 @@ type RepoTypes = EntityRepoMethodTypes<
       | 'updatedAt'
       | 'name'
       | 'fish_count'
-      | 'fish_part_id'
+      | 'fishBatchId'
       | 'name';
     OptionalToCreateAndSelectRegularPlainKeys: null;
 
@@ -220,3 +235,5 @@ type RawResultsItemType = {
   short_name: string;
   value_type_name: string;
 };
+
+export type SelectedOnePlainReservoir = RepoTypes['SelectedOnePlainEntity'];
