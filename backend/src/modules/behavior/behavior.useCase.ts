@@ -4,7 +4,7 @@ import { isQueryFailedError } from 'src/tools';
 import {
   CreateOneBehaviorRequestDTO,
   CreateOneBehaviorResponseDTO,
-  PG_FOREIGN_KEY_CONSTRAINT_VIOLATION
+  PG_FOREIGN_KEY_CONSTRAINT_VIOLATION,
 } from 'src/types';
 import { repo } from '../infrastructure';
 
@@ -16,8 +16,14 @@ export class BehaviorUseCase {
     return await this.behaviorRepo.getAll();
   }
 
-  async getOneById(behaviorId: number): Promise<repo.SelectedOnePlainBehavior> {
-    const behavior = await this.behaviorRepo.findOneById(behaviorId);
+  async getOneByIdWithReservoir(behaviorId: number): Promise<
+    repo.SelectedOnePlainBehavior & {
+      reservoir: repo.SelectedOnePlainReservoir;
+    }
+  > {
+    const behavior = await this.behaviorRepo.findOneByIdWithReservoir(
+      behaviorId,
+    );
     if (!behavior)
       throw new BadRequestException(
         messages.repo.common.cantGetNotFoundById(behaviorId, 'behavior'),
@@ -28,12 +34,14 @@ export class BehaviorUseCase {
   async createBehavior(
     behavior: CreateOneBehaviorRequestDTO,
   ): Promise<CreateOneBehaviorResponseDTO> {
-    try{
-    return await this.behaviorRepo.createOnePlain(behavior);
+    try {
+      return await this.behaviorRepo.createOnePlain(behavior);
     } catch (error: any) {
       if (isQueryFailedError(error))
         if (error.code === PG_FOREIGN_KEY_CONSTRAINT_VIOLATION)
-          throw new BadRequestException(messages.repo.common.cantCreateFKDoNotExist(behavior, 'behavior'));
+          throw new BadRequestException(
+            messages.repo.common.cantCreateFKDoNotExist(behavior, 'behavior'),
+          );
       throw error;
     }
   }
