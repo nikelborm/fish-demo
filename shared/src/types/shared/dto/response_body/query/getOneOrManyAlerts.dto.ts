@@ -1,5 +1,10 @@
 import { IsNumber, IsPositive } from 'class-validator';
-import { IsDateConverted, NestedArrayDTO } from '../../../../../tools/shared';
+import {
+  IsDateConverted,
+  NestedArrayDTO,
+  NestedDTO,
+} from '../../../../../tools/shared';
+import { GetOneReservoirByIdResponseDTO } from './findOneReservoirByIdResponse.dto';
 
 export class GetOneAlertByIdResponseDTO {
   @IsPositive()
@@ -27,6 +32,9 @@ export class GetOneAlertForManyResponseDTO {
 
   @IsNumber()
   reservoir_id!: number;
+
+  @NestedDTO(() => GetOneReservoirByIdResponseDTO)
+  reservoir!: GetOneReservoirByIdResponseDTO;
 
   @IsNumber()
   alert_type_id!: number;

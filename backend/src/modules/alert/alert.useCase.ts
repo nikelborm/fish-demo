@@ -27,12 +27,14 @@ export class AlertUseCase {
     return alert;
   }
 
-  async getOneByIdWithAlertType(id: number): Promise<
+  async getOneByIdWithTypeAndReservoir(id: number): Promise<
     repo.SelectedOnePlainAlert & {
       alertType: repo.SelectedOnePlainAlertType;
+    } & {
+      reservoir: repo.SelectedOnePlainReservoir;
     }
   > {
-    const alert = await this.alertRepo.findOneByIdWithAlertType(id);
+    const alert = await this.alertRepo.findOneByIdWithAlertTypeAndReservoir(id);
 
     if (!alert)
       throw new BadRequestException(

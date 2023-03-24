@@ -58,7 +58,8 @@ const RelationMapValue = {
       sensorInstances: ['SensorInstance'],
       tasksWithThatReservoir: ['Task'],
       taskToReservoirRelations: ['TaskToReservoir'],
-      events: ['Event']
+      events: ['Event'],
+      alerts: ['Alert'],
       // Reservoir relationToEntityNameMap token
     },
   },
@@ -151,13 +152,14 @@ const RelationMapValue = {
     identityKeys: ['id'],
     relationToEntityNameMap: {
       eventType: 'EventType',
-      reservoir: 'Reservoir'
+      reservoir: 'Reservoir',
       // Event relationToEntityNameMap token
     },
   },
   Alert: {
     identityKeys: ['id'],
     relationToEntityNameMap: {
+      reservoir: 'Reservoir',
       // Alert relationToEntityNameMap token
     },
   },
