@@ -7,6 +7,10 @@ export class IReservoir {
 
   name!: string;
 
+  fishBatchId!: number;
+
+  fishCount!: number;
+
   createdAt!: Date;
 
   updatedAt!: Date;

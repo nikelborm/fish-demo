@@ -27,13 +27,13 @@ export class Reservoir implements IReservoir {
     name: 'fish_count',
     type: 'int',
   })
-  fish_count!: number;
+  fishCount!: number;
 
   @Column({
     name: 'fish_batch_id',
     type: 'int',
   })
-  fish_batch_id!: number;
+  fishBatchId!: number;
 
   @OneToMany(() => SensorInstance, (sensorInstance) => sensorInstance.reservoir)
   sensorInstances!: SensorInstance[];

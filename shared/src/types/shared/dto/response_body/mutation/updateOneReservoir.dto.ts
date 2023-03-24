@@ -19,9 +19,9 @@ export class UpdateOneReservoirResponse {
 
   @IsOptional()
   @IsNumber()
-  fish_count?: number;
+  fishCount?: number;
 
   @IsOptional()
   @IsNumber()
-  fish_batch_id?: number;
+  fishBatchId?: number;
 }

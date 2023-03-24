@@ -15,8 +15,8 @@ export class UpdateReservoirDTO {
   name!: string;
 
   @IsNumber()
-  fish_count!: number;
+  fishCount!: number;
 
   @IsNumber()
-  fish_batch_id!: number;
+  fishBatchId!: number;
 }
