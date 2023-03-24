@@ -66,7 +66,6 @@ export class MockDataUseCase {
     });
     console.log('userToAccessScope: ', userToAccessScope);
   }
-  
 
   async mockReservoirAndAllInternals(): Promise<void> {
     console.log('mockReservoirAndAllInternals called');
