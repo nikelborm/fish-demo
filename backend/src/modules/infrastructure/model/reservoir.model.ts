@@ -63,5 +63,5 @@ export class Reservoir implements IReservoir {
   events!: Event[];
 
   @OneToMany(() => Behavior, (behavior) => behavior.reservoir)
-  behaviours!: Behavior[];
+  behaviors!: Behavior[];
 }

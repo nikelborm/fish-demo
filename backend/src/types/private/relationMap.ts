@@ -59,7 +59,7 @@ const RelationMapValue = {
       tasksWithThatReservoir: ['Task'],
       taskToReservoirRelations: ['TaskToReservoir'],
       events: ['Event'],
-      behaviours: ['Behaviour'],
+      behaviors: ['Behavior'],
       // Reservoir relationToEntityNameMap token
     },
   },

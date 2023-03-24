@@ -43,7 +43,7 @@ export class Behavior implements IBehavior {
   })
   behaviorTypeId!: number;
 
-  @ManyToOne(() => Reservoir, (reservoir) => reservoir.behaviours)
+  @ManyToOne(() => Reservoir, (reservoir) => reservoir.behaviors)
   @JoinColumn({
     name: 'reservoir_id',
   })
