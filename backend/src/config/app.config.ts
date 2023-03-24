@@ -5,6 +5,8 @@ import { ConfigKeys } from './types';
 export const appConfig: () => IAppConfigMap = () => ({
   [ConfigKeys.IS_DEVELOPMENT]: process.env['NODE_ENV'] === 'development',
   [ConfigKeys.IS_PRODUCTION]: process.env['NODE_ENV'] === 'production',
+  [ConfigKeys.ENABLE_SWAGGER_IN_PROD]:
+    process.env['ENABLE_SWAGGER_IN_PROD'] === 'true',
   [ConfigKeys.SERVER_PORT]: parseInt(process.env['SERVER_PORT'] || '3000', 10),
   [ConfigKeys.WEB_SOCKET_SERVER_PORT]: parseInt(
     process.env['WEB_SOCKET_SERVER_PORT'] || '2999',
