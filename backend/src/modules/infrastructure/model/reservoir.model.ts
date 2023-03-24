@@ -8,7 +8,7 @@ import {
   OneToMany,
   UpdateDateColumn,
 } from 'typeorm';
-import { SensorInstance } from '.';
+import { Behavior, SensorInstance } from '.';
 import { Task, TaskToReservoir } from '.';
 import { Event } from '.';
 
@@ -59,9 +59,9 @@ export class Reservoir implements IReservoir {
   )
   taskToReservoirRelations!: TaskToReservoir[];
 
-  @OneToMany(
-    () => Event,
-    (event) => event.reservoir,
-  )
+  @OneToMany(() => Event, (event) => event.reservoir)
   events!: Event[];
+
+  @OneToMany(() => Behavior, (behavior) => behavior.reservoir)
+  behaviours!: Behavior[];
 }

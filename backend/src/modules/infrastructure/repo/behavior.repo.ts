@@ -4,7 +4,6 @@ import {
   createManyPlain,
   createOnePlain,
   deleteEntityByIdentity,
-  findOnePlainByIdentity,
   getAllEntities,
   updateManyPlain,
   updateManyWithRelations,
@@ -14,6 +13,7 @@ import {
 import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
 import { Behavior } from '../model';
+import { SelectedOnePlainReservoir } from './reservoir.repo';
 
 @Injectable()
 export class BehaviorRepo {
@@ -24,10 +24,19 @@ export class BehaviorRepo {
 
   getAll = getAllEntities(this.repo)<Config>();
 
-  findOneById = async (
+  findOneByIdWithReservoir = async (
     id: number,
-  ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
-    await findOnePlainByIdentity(this.repo)<Config>()({ id });
+  ): Promise<
+    | (RepoTypes['SelectedOnePlainEntity'] & {
+        reservoir: SelectedOnePlainReservoir;
+      })
+    | null
+  > => {
+    return await this.repo.findOne({
+      relations: { reservoir: true },
+      where: { id },
+    });
+  };
 
   createOnePlain = createOnePlain(this.repo)<Config>();
   createManyPlain = createManyPlain(this.repo)<Config>();
