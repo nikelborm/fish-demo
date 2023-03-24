@@ -11,13 +11,13 @@ export class UpdateReservoirDTO {
   id!: number;
 
   @IsString()
-  @MinLength(8)
+  @MinLength(3)
   @MaxLength(128)
   name!: string;
 
   @IsNumber()
-  fish_count!: number;
+  fishCount!: number;
 
   @IsNumber()
-  fish_part_id!: number;
+  fishBatchId!: number;
 }
