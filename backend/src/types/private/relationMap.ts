@@ -58,6 +58,7 @@ const RelationMapValue = {
       sensorInstances: ['SensorInstance'],
       tasksWithThatReservoir: ['Task'],
       taskToReservoirRelations: ['TaskToReservoir'],
+      fishBatch: 'FishBatch',
       events: ['Event'],
       alerts: ['Alert'],
       behaviors: ['Behavior'],
@@ -133,6 +134,7 @@ const RelationMapValue = {
   FishBatch: {
     identityKeys: ['id'],
     relationToEntityNameMap: {
+      fishKind: 'FishKind',
       // FishBatch relationToEntityNameMap token
     },
   },

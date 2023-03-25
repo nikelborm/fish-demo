@@ -7,8 +7,9 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
-import { FishKind } from '.';
+import { FishKind, Reservoir } from '.';
 
 @Entity({ name: 'fish_batch' })
 export class FishBatch implements IFishBatch {
@@ -26,6 +27,9 @@ export class FishBatch implements IFishBatch {
     nullable: false,
   })
   fishKindId!: number;
+
+  @OneToMany(() => Reservoir, (reservoir) => reservoir.fishBatch)
+  reservoirs!: Reservoir[];
 
   @ManyToOne(() => FishKind, (fishKind) => fishKind.fishBatches)
   @JoinColumn({ name: 'fish_kind_id' })

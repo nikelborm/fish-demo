@@ -4,11 +4,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   UpdateDateColumn,
 } from 'typeorm';
-import { Alert, Behavior, SensorInstance } from '.';
+
+import { FishBatch, Alert, Behavior, SensorInstance } from '.';
 import { Task, TaskToReservoir } from '.';
 import { Event } from '.';
 
@@ -31,9 +34,13 @@ export class Reservoir implements IReservoir {
 
   @Column({
     name: 'fish_batch_id',
-    type: 'int',
+    nullable: false,
   })
   fishBatchId!: number;
+
+  @ManyToOne(() => FishBatch, (fishBatch) => fishBatch.reservoirs)
+  @JoinColumn({ name: 'fish_batch_id' })
+  fishBatch!: FishBatch;
 
   @OneToMany(() => SensorInstance, (sensorInstance) => sensorInstance.reservoir)
   sensorInstances!: SensorInstance[];

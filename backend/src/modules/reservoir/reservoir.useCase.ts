@@ -27,6 +27,23 @@ export class ReservoirUseCase {
     return reservoir;
   }
 
+  async findOneReservoirByIdWithFishBatch(reservoirId: number): Promise<
+    repo.SelectedOnePlainReservoir & {
+      fishBatch: repo.SelectedOnePlainFishBatch;
+    }
+  > {
+    const reservoir = await this.reservoirRepo.findOneByIDWithFishBatch(
+      reservoirId,
+    );
+
+    if (!reservoir)
+      throw new NotFoundException(
+        messages.repo.common.cantGetNotFoundById(reservoirId, 'reservoir'),
+      );
+
+    return reservoir;
+  }
+
   async createManyReservoirs(
     reservoirs: CreateReservoirDTO[],
   ): Promise<
