@@ -60,6 +60,7 @@ const RelationMapValue = {
       taskToReservoirRelations: ['TaskToReservoir'],
       events: ['Event'],
       alerts: ['Alert'],
+      behaviors: ['Behavior'],
       // Reservoir relationToEntityNameMap token
     },
   },
@@ -192,6 +193,7 @@ const RelationMapValue = {
     identityKeys: ['id'],
     relationToEntityNameMap: {
       behaviorType: 'BehaviorType',
+      reservoir: 'Reservoir',
       // Behavior relationToEntityNameMap token
     },
   },

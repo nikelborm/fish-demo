@@ -8,7 +8,7 @@ import {
   OneToMany,
   UpdateDateColumn,
 } from 'typeorm';
-import { Alert, SensorInstance } from '.';
+import { Alert, Behavior, SensorInstance } from '.';
 import { Task, TaskToReservoir } from '.';
 import { Event } from '.';
 
@@ -27,13 +27,13 @@ export class Reservoir implements IReservoir {
     name: 'fish_count',
     type: 'int',
   })
-  fish_count!: number;
+  fishCount!: number;
 
   @Column({
-    name: 'fish_part_id',
+    name: 'fish_batch_id',
     type: 'int',
   })
-  fish_part_id!: number;
+  fishBatchId!: number;
 
   @OneToMany(() => SensorInstance, (sensorInstance) => sensorInstance.reservoir)
   sensorInstances!: SensorInstance[];
@@ -64,4 +64,7 @@ export class Reservoir implements IReservoir {
 
   @OneToMany(() => Alert, (alert) => alert.reservoir_id)
   alerts!: Alert[];
+
+  @OneToMany(() => Behavior, (behavior) => behavior.reservoir)
+  behaviors!: Behavior[];
 }
