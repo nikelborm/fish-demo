@@ -50,7 +50,6 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@darraghor/eslint-plugin-nestjs-typed": "^3.19.0",
     "@dbml/cli": "^2.4.1",
     "@nestjs/schematics": "^9.0.4",
     "@nestjsi/typeorm-pg": "0.2.3",

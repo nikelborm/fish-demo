@@ -55,7 +55,7 @@ export class EventTypeUseCase {
       if (isQueryFailedError(error))
         if (error.code === PG_UNIQUE_CONSTRAINT_VIOLATION)
           throw new BadRequestException(
-            messages.repo.common.cantCreateUKDuplicate(EventType, 'eventType'),
+            messages.repo.common.cantCreateUKDuplicate('eventType'),
           );
       throw error;
     }

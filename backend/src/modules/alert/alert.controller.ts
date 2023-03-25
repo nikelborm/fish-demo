@@ -31,7 +31,6 @@ export class AlertController {
   ): Promise<
     GetOneAlertByIdResponseDTO & {
       alertType: GetOneAlertTypeByIdResponseDTO;
-    } & {
       reservoir: GetOneReservoirByIdResponseDTO;
     }
   > {

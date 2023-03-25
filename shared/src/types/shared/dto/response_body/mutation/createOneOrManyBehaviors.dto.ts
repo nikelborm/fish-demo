@@ -14,6 +14,9 @@ export class CreateOneBehaviorResponseDTO {
   @IsPositive()
   behaviorTypeId!: number;
 
+  @IsPositive()
+  reservoirId!: number;
+
   @IsDateConverted()
   createdAt!: Date;
 
