@@ -1,11 +1,12 @@
 import { Delete, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
-import { ApiController, ValidatedBody } from 'src/tools';
+import { ApiController, AuthorizedOnly, ValidatedBody } from 'src/tools';
 import {
   GetOneAlertByIdResponseDTO,
   CreateOneAlertRequestDTO,
   // UpdateAlertDTO,
   CreateOneAlertResponseDTO,
   GetOneAlertTypeByIdResponseDTO,
+  GetOneReservoirByIdResponseDTO,
   // UpdateOneAlertResponse,
 } from 'src/types';
 import { AlertUseCase } from './alert.useCase';
@@ -23,15 +24,20 @@ export class AlertController {
     return await this.alertUseCase.createAlert(createAlertDTO);
   }
 
-  @Get('/:alertId')
-  async findOneAlertByIdWithAlertType(
+  @Get('/:alertFId')
+  @AuthorizedOnly()
+  async getOneAlertByIdWithTypeAndReservoir(
     @Param('alertId', ParseIntPipe) alertId: number,
   ): Promise<
     GetOneAlertByIdResponseDTO & {
       alertType: GetOneAlertTypeByIdResponseDTO;
+    } & {
+      reservoir: GetOneReservoirByIdResponseDTO;
     }
   > {
-    const alert = await this.alertUseCase.getOneByIdWithAlertType(alertId);
+    const alert = await this.alertUseCase.getOneByIdWithTypeAndReservoir(
+      alertId,
+    );
     return alert;
   }
 
