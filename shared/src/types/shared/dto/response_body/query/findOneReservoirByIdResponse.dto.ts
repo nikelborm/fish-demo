@@ -81,3 +81,11 @@ export class FindOneReservoirByIdResponseDTO {
   @NestedDTO(() => ReservoirInfoDTO)
   reservoir!: ReservoirInfoDTO;
 }
+
+export class GetOneReservoirByIdResponseDTO {
+  @IsNumber()
+  id!: number;
+
+  @IsString()
+  name!: string;
+}

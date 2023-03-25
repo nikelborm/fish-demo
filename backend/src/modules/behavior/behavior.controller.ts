@@ -15,6 +15,7 @@ import {
   EmptyResponseDTO,
   FindManyBehaviorsResponseDTO,
   GetOneBehaviorByIdResponseDTO,
+  GetOneReservoirByIdResponseDTO,
 } from 'src/types';
 import { BehaviorUseCase } from './behavior.useCase';
 
@@ -35,10 +36,17 @@ export class BehaviorController {
 
   @Get('/:behaviorId')
   @AuthorizedOnly()
-  async getOneBehaviorById(
+  async getOneBehaviorByIdWithReservoir(
     @Param('behaviorId', ParseIntPipe) behaviorId: number,
-  ): Promise<GetOneBehaviorByIdResponseDTO> {
-    return await this.behaviorUseCase.getOneById(behaviorId);
+  ): Promise<
+    GetOneBehaviorByIdResponseDTO & {
+      reservoir: GetOneReservoirByIdResponseDTO;
+    }
+  > {
+    const behavior = await this.behaviorUseCase.getOneByIdWithReservoir(
+      behaviorId,
+    );
+    return behavior;
   }
 
   @Post('create')

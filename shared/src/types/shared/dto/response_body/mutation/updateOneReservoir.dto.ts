@@ -13,15 +13,15 @@ export class UpdateOneReservoirResponse {
 
   @IsOptional()
   @IsString()
-  @MinLength(8)
+  @MinLength(3)
   @MaxLength(128)
   name?: string;
 
   @IsOptional()
   @IsNumber()
-  fish_count?: number;
+  fishCount?: number;
 
   @IsOptional()
   @IsNumber()
-  fish_part_id?: number;
+  fishBatchId?: number;
 }

@@ -1,12 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import type {
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
   CreateOneReservoirResponse,
   CreateReservoirDTO,
   ReservoirInfoDTO,
   UpdateOneReservoirResponse,
   UpdateReservoirDTO,
+  PG_FOREIGN_KEY_CONSTRAINT_VIOLATION,
 } from 'src/types';
 import { messages } from 'src/config';
+import { isQueryFailedError } from 'src/tools';
 import { model, repo } from '../infrastructure';
 
 @Injectable()
@@ -58,12 +60,18 @@ export class ReservoirUseCase {
 
   async createReservoir(
     reservoir: CreateReservoirDTO,
-  ): Promise<CreateOneReservoirResponse> {
+  ): Promise<CreateOneReservoirResponse> { try {
     const insertedReservoir = await this.reservoirRepo.createOnePlain(
       reservoir,
     );
     return { reservoir: insertedReservoir };
+  } catch (error: any) {
+    if (isQueryFailedError(error))
+      if (error.code === PG_FOREIGN_KEY_CONSTRAINT_VIOLATION)
+        throw new BadRequestException(messages.repo.common.cantCreateFKDoNotExist(reservoir, 'reservoir'));
+    throw error;
   }
+}
 
   async updateReservoir({
     id,

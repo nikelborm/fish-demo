@@ -1,5 +1,10 @@
-import { IsPositive } from 'class-validator';
-import { IsDateConverted, NestedArrayDTO } from '../../../../../tools/shared';
+import { IsNumber, IsPositive } from 'class-validator';
+import {
+  IsDateConverted,
+  NestedArrayDTO,
+  NestedDTO,
+} from '../../../../../tools/shared';
+import { GetOneReservoirByIdResponseDTO } from './findOneReservoirByIdResponse.dto';
 
 export class GetOneAlertByIdResponseDTO {
   @IsPositive()
@@ -21,7 +26,30 @@ export class GetOneAlertByIdResponseDTO {
   updatedAt!: Date;
 }
 
+export class GetOneAlertForManyResponseDTO {
+  @IsPositive()
+  id!: number;
+
+  @IsNumber()
+  reservoir_id!: number;
+
+  @NestedDTO(() => GetOneReservoirByIdResponseDTO)
+  reservoir!: GetOneReservoirByIdResponseDTO;
+
+  @IsNumber()
+  alert_type_id!: number;
+
+  @IsNumber()
+  importance!: number;
+
+  @IsDateConverted()
+  createdAt!: Date;
+
+  @IsDateConverted()
+  updatedAt!: Date;
+}
+
 export class FindManyAlertsResponseDTO {
-  @NestedArrayDTO(() => GetOneAlertByIdResponseDTO)
-  alerts!: GetOneAlertByIdResponseDTO[];
+  @NestedArrayDTO(() => GetOneAlertForManyResponseDTO)
+  alerts!: GetOneAlertForManyResponseDTO[];
 }

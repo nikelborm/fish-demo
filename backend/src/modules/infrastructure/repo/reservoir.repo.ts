@@ -183,7 +183,7 @@ type RepoTypes = EntityRepoMethodTypes<
       | 'createdAt'
       | 'updatedAt'
       | 'name'
-      | 'fish_count'
+      | 'fishCount'
       | 'fishBatchId'
       | 'name';
     OptionalToCreateAndSelectRegularPlainKeys: null;

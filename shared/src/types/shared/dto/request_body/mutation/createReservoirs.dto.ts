@@ -3,12 +3,12 @@ import { NestedArrayDTO } from '../../../../../tools/shared';
 
 export class CreateReservoirDTO {
   @IsString()
-  @MinLength(8)
+  @MinLength(3)
   @MaxLength(128)
   name!: string;
 
   @IsNumber()
-  fish_count!: number;
+  fishCount!: number;
 
   @IsNumber()
   fishBatchId!: number;

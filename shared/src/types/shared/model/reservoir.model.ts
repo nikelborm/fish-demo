@@ -11,6 +11,8 @@ export class IReservoir {
 
   fishBatch!: IFishBatch;
 
+  fishCount!: number;
+
   createdAt!: Date;
 
   updatedAt!: Date;

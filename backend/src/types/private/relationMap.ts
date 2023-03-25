@@ -59,6 +59,9 @@ const RelationMapValue = {
       tasksWithThatReservoir: ['Task'],
       taskToReservoirRelations: ['TaskToReservoir'],
       fishBatch: 'FishBatch',
+      events: ['Event'],
+      alerts: ['Alert'],
+      behaviors: ['Behavior'],
       // Reservoir relationToEntityNameMap token
     },
   },
@@ -152,12 +155,14 @@ const RelationMapValue = {
     identityKeys: ['id'],
     relationToEntityNameMap: {
       eventType: 'EventType',
+      reservoir: 'Reservoir',
       // Event relationToEntityNameMap token
     },
   },
   Alert: {
     identityKeys: ['id'],
     relationToEntityNameMap: {
+      reservoir: 'Reservoir',
       // Alert relationToEntityNameMap token
     },
   },
@@ -190,7 +195,14 @@ const RelationMapValue = {
     identityKeys: ['id'],
     relationToEntityNameMap: {
       behaviorType: 'BehaviorType',
+      reservoir: 'Reservoir',
       // Behavior relationToEntityNameMap token
+    },
+  },
+  AlertType: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      // AlertType relationToEntityNameMap token
     },
   },
   // RelationMapValue end token

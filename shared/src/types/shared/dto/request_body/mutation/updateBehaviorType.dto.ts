@@ -1,4 +1,5 @@
 import { IsPositive, IsString, MaxLength, MinLength } from 'class-validator';
+
 export class UpdateBehaviorTypeDTO {
   @IsPositive()
   id!: number;
