@@ -15,6 +15,7 @@ import {
   GetOneEventByIdResponseDTO,
   GetOneEventTypeByIdResponseDTO,
   GetOneReservoirByIdResponseDTO,
+  GetOneEventForManyResponseDTO,
 } from 'src/types';
 import { EventUseCase } from './event.useCase';
 
@@ -31,6 +32,15 @@ export class EventController {
     return {
       events,
     };
+  }
+
+  @Get('/:createdAt')
+  async findEventsByData(
+    @Param('createdAt')
+    createdAt: Date,
+  ): Promise<GetOneEventForManyResponseDTO[] | null> {
+    const event = await this.eventUseCase.getOneByData(createdAt);
+    return event;
   }
 
   @Get('/:eventId')
