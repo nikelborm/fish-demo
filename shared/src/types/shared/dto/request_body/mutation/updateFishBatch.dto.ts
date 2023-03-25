@@ -22,7 +22,7 @@ export class UpdateFishBatchDTO {
 
   @IsOptional()
   @IsNumber()
-  fish_kind_id?: number;
+  fishBatchId?: number;
 
   @IsOptional()
   @IsNumber()

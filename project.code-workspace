@@ -746,7 +746,8 @@
       "frontend/config": true,
       "**/.github": true
     },
-    "window.title": "${dirty}${activeEditorLong}${separator}${profileName}"
+    "window.title": "${dirty}${activeEditorLong}${separator}${profileName}",
+    "peacock.color": "ffc845"
   },
   "launch": {
     "version": "0.2.0",

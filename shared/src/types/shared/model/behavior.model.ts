@@ -1,5 +1,5 @@
 //
-import type { IBehaviorType } from '.';
+import type { IBehaviorType, IReservoir } from '.';
 
 export class IBehavior {
   id!: number;
@@ -12,7 +12,11 @@ export class IBehavior {
 
   behaviorTypeId!: number;
 
+  reservoirId!: number;
+
   probability!: number;
+
+  reservoir!: IReservoir;
 
   time!: Date;
 }

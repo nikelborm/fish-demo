@@ -104,12 +104,14 @@ const rawMessages = {
         `Unable to create new ${entityName || 'entity'} JSON: {${JSON.stringify(
           newEntity,
         )}}`,
-      cantCreateUKDuplicate: (newEntity: any, entityName?: string): string =>
+      cantCreateUKDuplicate: (entityName?: string): string =>
         `Unable to create new ${
           entityName || 'entity'
         }, because this name is not unique, please change name.`,
-      cantCreateFKDoNotExist: (newEntity: any, entityName?: string): string =>
-        `Unable to create new ${entityName || 'entity'}, because one or more foreign keys specified do not exist in the database.`,
+      cantCreateFKDoNotExist: (entityName?: string): string =>
+        `Unable to create new ${
+          entityName || 'entity'
+        }, because one or more foreign keys specified do not exist in the database.`,
       cantCreateMany: (newEntities: any[], entityName?: string): string =>
         `Unable to insert ${pluralForm(
           entityName || 'entity',

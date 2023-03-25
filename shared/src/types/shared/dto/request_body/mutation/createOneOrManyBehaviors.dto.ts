@@ -10,6 +10,9 @@ export class CreateOneBehaviorRequestDTO {
 
   @IsPositive()
   behaviorTypeId!: number;
+
+  @IsPositive()
+  reservoirId!: number;
 }
 
 export class CreateManyBehaviorsRequestDTO {

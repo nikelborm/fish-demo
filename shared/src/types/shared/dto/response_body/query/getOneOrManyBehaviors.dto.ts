@@ -1,5 +1,10 @@
 import { IsPositive } from 'class-validator';
-import { IsDateConverted, NestedArrayDTO } from '../../../../../tools/shared';
+import {
+  IsDateConverted,
+  NestedArrayDTO,
+  NestedDTO,
+} from '../../../../../tools/shared';
+import { GetOneReservoirByIdResponseDTO } from './findOneReservoirByIdResponse.dto';
 
 export class GetOneBehaviorByIdResponseDTO {
   @IsPositive()
@@ -14,6 +19,35 @@ export class GetOneBehaviorByIdResponseDTO {
   @IsPositive()
   behaviorTypeId!: number;
 
+  @IsPositive()
+  reservoirId!: number;
+
+  @IsDateConverted()
+  createdAt!: Date;
+
+  @IsDateConverted()
+  updatedAt!: Date;
+
+  @NestedDTO(() => GetOneReservoirByIdResponseDTO)
+  reservoir!: GetOneReservoirByIdResponseDTO;
+}
+
+export class OneOfFoundBehaviorsResponseDTO {
+  @IsPositive()
+  id!: number;
+
+  @IsPositive()
+  probability!: number;
+
+  @IsDateConverted()
+  time!: Date;
+
+  @IsPositive()
+  behaviorTypeId!: number;
+
+  @IsPositive()
+  reservoirId!: number;
+
   @IsDateConverted()
   createdAt!: Date;
 
@@ -22,6 +56,6 @@ export class GetOneBehaviorByIdResponseDTO {
 }
 
 export class FindManyBehaviorsResponseDTO {
-  @NestedArrayDTO(() => GetOneBehaviorByIdResponseDTO)
-  behaviors!: GetOneBehaviorByIdResponseDTO[];
+  @NestedArrayDTO(() => OneOfFoundBehaviorsResponseDTO)
+  behaviors!: OneOfFoundBehaviorsResponseDTO[];
 }

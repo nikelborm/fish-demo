@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { AlertType } from './alertType.model';
+import { Reservoir } from './reservoir.model';
 
 @Entity({ name: 'alert' })
 export class Alert implements IAlert {
@@ -51,4 +52,10 @@ export class Alert implements IAlert {
     name: 'alert_type_id',
   })
   alertType!: AlertType;
+
+  @ManyToOne(() => Reservoir, (reservoir) => reservoir.alerts)
+  @JoinColumn({
+    name: 'reservoir_id',
+  })
+  reservoir!: Reservoir;
 }

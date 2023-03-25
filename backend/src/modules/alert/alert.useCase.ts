@@ -27,12 +27,14 @@ export class AlertUseCase {
     return alert;
   }
 
-  async getOneByIdWithAlertType(id: number): Promise<
+  async getOneByIdWithTypeAndReservoir(id: number): Promise<
     repo.SelectedOnePlainAlert & {
       alertType: repo.SelectedOnePlainAlertType;
+    } & {
+      reservoir: repo.SelectedOnePlainReservoir;
     }
   > {
-    const alert = await this.alertRepo.findOneByIdWithAlertType(id);
+    const alert = await this.alertRepo.findOneByIdWithAlertTypeAndReservoir(id);
 
     if (!alert)
       throw new BadRequestException(
@@ -52,7 +54,7 @@ export class AlertUseCase {
       if (isQueryFailedError(error))
         if (error.code === PG_FOREIGN_KEY_CONSTRAINT_VIOLATION)
           throw new BadRequestException(
-            messages.repo.common.cantCreateFKDoNotExist(alert, 'alert'),
+            messages.repo.common.cantCreateFKDoNotExist('alert'),
           );
       throw error;
     }

@@ -8,7 +8,7 @@ import {
   ManyToOne,
   UpdateDateColumn,
 } from 'typeorm';
-import { BehaviorType } from '.';
+import { BehaviorType, Reservoir } from '.';
 
 @Entity({ name: 'behavior' })
 export class Behavior implements IBehavior {
@@ -42,4 +42,16 @@ export class Behavior implements IBehavior {
     nullable: false,
   })
   behaviorTypeId!: number;
+
+  @ManyToOne(() => Reservoir, (reservoir) => reservoir.behaviors)
+  @JoinColumn({
+    name: 'reservoir_id',
+  })
+  reservoir!: Reservoir;
+
+  @Column({
+    name: 'reservoir_id',
+    nullable: false,
+  })
+  reservoirId!: number;
 }
