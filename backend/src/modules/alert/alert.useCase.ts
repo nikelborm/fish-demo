@@ -54,7 +54,7 @@ export class AlertUseCase {
       if (isQueryFailedError(error))
         if (error.code === PG_FOREIGN_KEY_CONSTRAINT_VIOLATION)
           throw new BadRequestException(
-            messages.repo.common.cantCreateFKDoNotExist(alert, 'alert'),
+            messages.repo.common.cantCreateFKDoNotExist('alert'),
           );
       throw error;
     }

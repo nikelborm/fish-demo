@@ -26,7 +26,7 @@ export class EventController {
   @AuthorizedOnly()
   async findManyEvents(
     @Query('search') search?: string,
-  ): Promise<(FindManyEventsResponseDTO)> {
+  ): Promise<FindManyEventsResponseDTO> {
     const events = await this.eventUseCase.findMany(search);
     return {
       events,
@@ -38,13 +38,16 @@ export class EventController {
   //async getOneEventById(
   async getOneEventByIdWithTypeAndReservoir(
     @Param('eventId', ParseIntPipe) eventId: number,
-  ): Promise<(GetOneEventByIdResponseDTO & {
-    eventType: GetOneEventTypeByIdResponseDTO;
-  } & {
-    reservoir: GetOneReservoirByIdResponseDTO;
-  })> {
-  //  return await this.eventUseCase.getOneById(
-    const event = await this.eventUseCase.getOneByIdWithTypeAndReservoir(eventId);
+  ): Promise<
+    GetOneEventByIdResponseDTO & {
+      eventType: GetOneEventTypeByIdResponseDTO;
+      reservoir: GetOneReservoirByIdResponseDTO;
+    }
+  > {
+    //  return await this.eventUseCase.getOneById(
+    const event = await this.eventUseCase.getOneByIdWithTypeAndReservoir(
+      eventId,
+    );
     return event;
   }
 
@@ -53,9 +56,7 @@ export class EventController {
     @ValidatedBody()
     createEventDTO: CreateOneEventRequestDTO,
   ): Promise<CreateOneEventResponseDTO> {
-    return await this.eventUseCase.createEvent(
-      createEventDTO,
-    );
+    return await this.eventUseCase.createEvent(createEventDTO);
   }
 
   @Delete('deleteById')

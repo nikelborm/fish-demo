@@ -12,6 +12,8 @@ export class IBehavior {
 
   behaviorTypeId!: number;
 
+  reservoirId!: number;
+
   probability!: number;
 
   reservoir!: IReservoir;

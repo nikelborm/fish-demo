@@ -51,7 +51,7 @@ export class FishKindUseCase {
       if (isQueryFailedError(error))
         if (error.code === PG_UNIQUE_CONSTRAINT_VIOLATION)
           throw new BadRequestException(
-            messages.repo.common.cantCreateUKDuplicate(fishKind, 'fishKind'),
+            messages.repo.common.cantCreateUKDuplicate('fishKind'),
           );
       throw error;
     }

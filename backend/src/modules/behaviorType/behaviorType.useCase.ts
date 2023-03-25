@@ -55,10 +55,7 @@ export class BehaviorTypeUseCase {
       if (isQueryFailedError(error))
         if (error.code === PG_UNIQUE_CONSTRAINT_VIOLATION)
           throw new BadRequestException(
-            messages.repo.common.cantCreateUKDuplicate(
-              BehaviorType,
-              'behaviorType',
-            ),
+            messages.repo.common.cantCreateUKDuplicate('behaviorType'),
           );
       throw error;
     }

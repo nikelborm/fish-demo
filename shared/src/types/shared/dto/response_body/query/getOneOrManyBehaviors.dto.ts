@@ -19,6 +19,9 @@ export class GetOneBehaviorByIdResponseDTO {
   @IsPositive()
   behaviorTypeId!: number;
 
+  @IsPositive()
+  reservoirId!: number;
+
   @IsDateConverted()
   createdAt!: Date;
 
@@ -29,7 +32,7 @@ export class GetOneBehaviorByIdResponseDTO {
   reservoir!: GetOneReservoirByIdResponseDTO;
 }
 
-export class GetOneBehaviorForManyResponseDTO {
+export class OneOfFoundBehaviorsResponseDTO {
   @IsPositive()
   id!: number;
 
@@ -42,6 +45,9 @@ export class GetOneBehaviorForManyResponseDTO {
   @IsPositive()
   behaviorTypeId!: number;
 
+  @IsPositive()
+  reservoirId!: number;
+
   @IsDateConverted()
   createdAt!: Date;
 
@@ -50,6 +56,6 @@ export class GetOneBehaviorForManyResponseDTO {
 }
 
 export class FindManyBehaviorsResponseDTO {
-  @NestedArrayDTO(() => GetOneBehaviorForManyResponseDTO)
-  behaviors!: GetOneBehaviorForManyResponseDTO[];
+  @NestedArrayDTO(() => OneOfFoundBehaviorsResponseDTO)
+  behaviors!: OneOfFoundBehaviorsResponseDTO[];
 }

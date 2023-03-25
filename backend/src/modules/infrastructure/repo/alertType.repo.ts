@@ -29,6 +29,13 @@ export class AlertTypeRepo {
   ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
     await findOnePlainByIdentity(this.repo)<Config>()({ id });
 
+  findOneByExactDescription = async (
+    description: string,
+  ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
+    await this.repo.findOne({
+      where: { description },
+    });
+
   createOnePlain = createOnePlain(this.repo)<Config>();
   createManyPlain = createManyPlain(this.repo)<Config>();
 

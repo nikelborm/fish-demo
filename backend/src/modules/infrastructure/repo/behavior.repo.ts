@@ -59,6 +59,7 @@ type RepoTypes = EntityRepoMethodTypes<
       | 'probability'
       | 'time'
       | 'behaviorTypeId'
+      | 'reservoirId'
       | 'createdAt'
       | 'updatedAt';
     OptionalToCreateAndSelectRegularPlainKeys: null;

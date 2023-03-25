@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { messages } from 'src/config';
 import { isQueryFailedError } from 'src/tools';
 import {
@@ -6,7 +10,8 @@ import {
   CreateOneFishBatchResponse,
   UpdateFishBatchDTO,
   UpdateOneFishBatchResponse,
-  PG_FOREIGN_KEY_CONSTRAINT_VIOLATION} from 'src/types';
+  PG_FOREIGN_KEY_CONSTRAINT_VIOLATION,
+} from 'src/types';
 import { model, repo } from '../infrastructure';
 
 @Injectable()
@@ -57,12 +62,16 @@ export class FishBatchUseCase {
     fishBatch: CreateFishBatchDTO,
   ): Promise<CreateOneFishBatchResponse> {
     try {
-      const insertedFishBatch = await this.fishBatchRepo.createOnePlain(fishBatch);
-      return {fishBatch: insertedFishBatch};
+      const insertedFishBatch = await this.fishBatchRepo.createOnePlain(
+        fishBatch,
+      );
+      return { fishBatch: insertedFishBatch };
     } catch (error: any) {
       if (isQueryFailedError(error))
         if (error.code === PG_FOREIGN_KEY_CONSTRAINT_VIOLATION)
-          throw new BadRequestException(messages.repo.common.cantCreateFKDoNotExist(fishBatch, 'fishBatch'));
+          throw new BadRequestException(
+            messages.repo.common.cantCreateFKDoNotExist('fishBatch'),
+          );
       throw error;
     }
   }

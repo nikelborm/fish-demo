@@ -3,5 +3,5 @@ import { BasicEventInfoWithIdDTO } from '../../other/basicEventInfoWithId.dto';
 
 export class CreateOneEventResponseDTO {
   @NestedDTO(() => BasicEventInfoWithIdDTO)
-  Event!: BasicEventInfoWithIdDTO;
+  event!: BasicEventInfoWithIdDTO;
 }
