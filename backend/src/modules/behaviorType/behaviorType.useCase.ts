@@ -32,7 +32,7 @@ export class BehaviorTypeUseCase {
 
   async getOneByIdWithInfo(id: number): Promise<
     repo.SelectedOnePlainFishInfo & {
-      fishInfo: repo.SelectedOnePlainEventType;
+      fishInfo: repo.SelectedOnePlainFishInfo;
     }
   > {
     const behaviorType = await this.fishInfoRepo.findOneByIdWithInfo(id);
