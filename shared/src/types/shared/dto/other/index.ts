@@ -11,3 +11,5 @@ export * from './basicFishBatchInfo.dto';
 export * from './basicFishBatchInfoWithId.dto';
 export * from './basicBehaviorTypeInfo.dto';
 export * from './basicBehaviorTypeInfoWithId.dto';
+export * from './basicFishInfo.dto';
+export * from './basicFishInfoWithId.dto';

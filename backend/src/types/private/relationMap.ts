@@ -205,6 +205,12 @@ const RelationMapValue = {
       // AlertType relationToEntityNameMap token
     },
   },
+  FishInfo: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      // FishInfo relationToEntityNameMap token
+    },
+  },
   // RelationMapValue end token
 } as const;
 
