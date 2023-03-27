@@ -14,6 +14,7 @@ import {
 import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
 import { BehaviorType } from '../model';
+import { SelectedOnePlainFishInfo } from './fishInfo.repo';
 
 @Injectable()
 export class BehaviorTypeRepo {
@@ -28,6 +29,20 @@ export class BehaviorTypeRepo {
     id: number,
   ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
     await findOnePlainByIdentity(this.repo)<Config>()({ id });
+
+  findOneByIdWithInfo = async (
+    id: number,
+  ): Promise<
+    | (RepoTypes['SelectedOnePlainEntity'] & {
+        fishInfo: SelectedOnePlainFishInfo;
+      })
+    | null
+  > => {
+    return await this.repo.findOne({
+      relations: { fishInfo: true },
+      where: { id },
+    });
+  };
 
   createOnePlain = createOnePlain(this.repo)<Config>();
   createManyPlain = createManyPlain(this.repo)<Config>();
@@ -50,8 +65,7 @@ type RepoTypes = EntityRepoMethodTypes<
       | 'createdAt'
       | 'updatedAt'
       | 'name'
-      | 'description'
-      | 'id';
+      | 'description';
     OptionalToCreateAndSelectRegularPlainKeys: null;
 
     ForbiddenToCreateGeneratedPlainKeys: 'id' | 'createdAt' | 'updatedAt';

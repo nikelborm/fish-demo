@@ -1,6 +1,13 @@
 import { PrimaryIdentityColumn } from 'src/tools';
 import type { IFishInfo } from 'src/types';
-import { Column, CreateDateColumn, Entity, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToOne,
+  UpdateDateColumn,
+} from 'typeorm';
+import { BehaviorType } from './behaviorType.model';
 
 @Entity({ name: 'fish_info' })
 export class FishInfo implements IFishInfo {
@@ -37,4 +44,7 @@ export class FishInfo implements IFishInfo {
     type: 'timestamptz',
   })
   updatedAt!: Date;
+
+  @OneToOne(() => BehaviorType, (behaviorType) => behaviorType.fishInfo)
+  behaviorType!: BehaviorType[];
 }

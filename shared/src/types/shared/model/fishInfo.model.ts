@@ -1,5 +1,7 @@
 //
 
+import { IBehaviorType } from './behaviorType.model';
+
 export class IFishInfo {
   id!: number;
 
@@ -12,4 +14,6 @@ export class IFishInfo {
   createdAt!: Date;
 
   updatedAt!: Date;
+
+  behaviorType!: IBehaviorType[];
 }

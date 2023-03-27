@@ -1,13 +1,15 @@
 import { PrimaryIdentityColumn } from 'src/tools';
-import type { IBehaviorType } from 'src/types';
+import type { IBehaviorType, IFishInfo } from 'src/types';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   UpdateDateColumn,
 } from 'typeorm';
-import { Behavior } from '.';
+import { Behavior, FishInfo } from '.';
 
 @Entity({ name: 'behavior_type' })
 export class BehaviorType implements IBehaviorType {
@@ -41,4 +43,10 @@ export class BehaviorType implements IBehaviorType {
 
   @OneToMany(() => Behavior, (behavior) => behavior.behaviorType)
   behaviors!: Behavior[];
+
+  @OneToOne(() => FishInfo, (fishInfo) => fishInfo.behaviorType)
+  @JoinColumn({
+    name: 'fish_info_id',
+  })
+  fishInfo!: IFishInfo;
 }
