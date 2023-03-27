@@ -24,6 +24,7 @@ import {
   TaskTimeModule,
   BehaviorModule,
 } from './modules';
+import { FishInfoModule } from './modules/fishInfo';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import {
     TaskModule,
     TaskTimeModule,
     BehaviorModule,
+    FishInfoModule,
   ],
   controllers: [MockDataController],
   providers: [...Object.values(MockServices)],
