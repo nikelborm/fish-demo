@@ -299,7 +299,7 @@ export class MockDataUseCase {
     });
     const event = await this.eventRepo.createOnePlain({
       description: 'Был создан пробный бассейн',
-      eventTypeId: eventType.id,
+      eventTypeName: eventType.name,
       reservoirId: reservoir.id,
       completionTime: sub(new Date(), { seconds: 720 + Math.random() * 3 }),
     });
