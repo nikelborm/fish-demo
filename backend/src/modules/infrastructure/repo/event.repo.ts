@@ -60,8 +60,8 @@ export class EventRepo {
       const newEventType = await this.eventTypeRepo.createOnePlain(
         { name: request.eventTypeName,
           description: 'not set',
-          icon: '',}
-          ); //what to do with the icon
+        }
+      );
       idToInsert = newEventType.id;
     } else {
       idToInsert = eventType.id;
