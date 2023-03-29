@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository, /*getRepositoryToken*/ } from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import {
   createManyPlain,
   createOnePlain,
@@ -11,7 +11,11 @@ import {
   updateOnePlain,
   updateOneWithRelations,
 } from 'src/tools';
-import { CreateOneEventRequestDTO, EntityRepoMethodTypes, BasicEventInfoWithIdDTO } from 'src/types';
+import {
+  CreateOneEventRequestDTO,
+  EntityRepoMethodTypes,
+  BasicEventInfoWithIdDTO
+} from 'src/types';
 import { Repository } from 'typeorm';
 import { Event } from '../model';
 import { SelectedOnePlainEventType } from './eventType.repo';
@@ -57,8 +61,8 @@ export class EventRepo {
     const eventType = await this.eventTypeRepo.findOneByName(request.eventTypeName);
 
     if (!eventType) {
-      const newEventType = await this.eventTypeRepo.createOnePlain(
-        { name: request.eventTypeName,
+      const newEventType = await this.eventTypeRepo.createOnePlain({
+          name: request.eventTypeName,
           description: 'not set',
         }
       );
