@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository, /*getRepositoryToken*/ } from '@nestjs/typeorm';
 import {
   createManyPlain,
+  createOnePlain,
   deleteEntityByIdentity,
   findOnePlainByIdentity,
   getAllEntities,
@@ -64,13 +65,13 @@ export class EventRepo {
       // If the event type exists, use its ID
       idToInsert = eventType.id;
     }
-    const eventToInsert = new CreateOneEventDTO;
+    const eventToInsert = new CreateOneEventDTO();
     eventToInsert.eventTypeId = idToInsert;
     eventToInsert.completionTime = request.completionTime;
     eventToInsert.description = request.description;
     eventToInsert.reservoirId = request.reservoirId;
 
-    const insertedEvent = await this.repo.create(eventToInsert);
+    const insertedEvent = await this.createOneWithId(eventToInsert);
     const response = new BasicEventInfoWithIdDTO();
     response.reservoirId = insertedEvent.reservoirId;
     response.id = insertedEvent.id;
@@ -79,6 +80,7 @@ export class EventRepo {
     response.completionTime = insertedEvent.completionTime;
     return response;
   }
+  createOneWithId = createOnePlain(this.repo)<Config>();
   createManyPlain = createManyPlain(this.repo)<Config>();
 
   updateManyPlain = updateManyPlain(this.repo)<Config>();
