@@ -71,7 +71,7 @@ export class EventRepo {
     eventToInsert.reservoirId = request.reservoirId;
 
     const insertedEvent = await this.repo.create(eventToInsert);
-    const response = new BasicEventInfoWithIdDTO;
+    const response = new BasicEventInfoWithIdDTO();
     response.reservoirId = insertedEvent.reservoirId;
     response.id = insertedEvent.id;
     response.eventTypeId = insertedEvent.eventTypeId;
