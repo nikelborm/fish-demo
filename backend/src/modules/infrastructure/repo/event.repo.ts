@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository, /*getRepositoryToken*/ } from '@nestjs/typeorm';
 import {
   createManyPlain,
-  createOnePlain,
   deleteEntityByIdentity,
   findOnePlainByIdentity,
   getAllEntities,
@@ -11,17 +10,19 @@ import {
   updateOnePlain,
   updateOneWithRelations,
 } from 'src/tools';
-import type { EntityRepoMethodTypes } from 'src/types';
+import { CreateOneEventRequestDTO, CreateOneEventDTO, EntityRepoMethodTypes, BasicEventInfoWithIdDTO } from 'src/types';
 import { Repository } from 'typeorm';
 import { Event } from '../model';
 import { SelectedOnePlainEventType } from './eventType.repo';
 import { SelectedOnePlainReservoir } from './reservoir.repo';
+import { EventTypeRepo } from '.';
 
 @Injectable()
 export class EventRepo {
   constructor(
     @InjectRepository(Event)
     private readonly repo: Repository<Event>,
+    private readonly eventTypeRepo: EventTypeRepo
   ) {}
 
   getAll = getAllEntities(this.repo)<Config>();
@@ -48,7 +49,36 @@ export class EventRepo {
     });
   };
 
-  createOnePlain = createOnePlain(this.repo)<Config>();
+  createOnePlain = async (request: CreateOneEventRequestDTO):
+  Promise< BasicEventInfoWithIdDTO> => {
+    const eventType = await this.eventTypeRepo.findOneByName(request.eventTypeName);
+    let idToInsert = 0;
+    if (!eventType) {
+      // If the event type doesn't exist, create a new one
+      const eventTypeToInsert = { name: request.eventTypeName,
+                                  description: 'not set',
+                                icon: '',}; //what to do with the icon
+      const newEventType = await this.eventTypeRepo.createOnePlain(eventTypeToInsert);
+      idToInsert = newEventType.id;
+    } else {
+      // If the event type exists, use its ID
+      idToInsert = eventType.id;
+    }
+    const eventToInsert = new CreateOneEventDTO;
+    eventToInsert.eventTypeId = idToInsert;
+    eventToInsert.completionTime = request.completionTime;
+    eventToInsert.description = request.description;
+    eventToInsert.reservoirId = request.reservoirId;
+
+    const insertedEvent = await this.repo.create(eventToInsert);
+    const response = new BasicEventInfoWithIdDTO;
+    response.reservoirId = insertedEvent.reservoirId;
+    response.id = insertedEvent.id;
+    response.eventTypeId = insertedEvent.eventTypeId;
+    response.description = insertedEvent.description;
+    response.completionTime = insertedEvent.completionTime;
+    return response;
+  }
   createManyPlain = createManyPlain(this.repo)<Config>();
 
   updateManyPlain = updateManyPlain(this.repo)<Config>();
