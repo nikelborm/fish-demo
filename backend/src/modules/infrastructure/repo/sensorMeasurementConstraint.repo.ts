@@ -29,6 +29,15 @@ export class SensorMeasurementConstraintRepo {
   ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
     await findOnePlainByIdentity(this.repo)<Config>()({ id });
 
+  findAllBySensorParameterInstanceId = async (
+    sensorParameterInstanceId: number,
+  ): Promise<SensorMeasurementConstraint[]> => {
+    return await this.repo.find({
+      where: {
+        sensorParameterInstanceId: sensorParameterInstanceId,
+      },
+    });
+  };
   createOnePlain = createOnePlain(this.repo)<Config>();
   createManyPlain = createManyPlain(this.repo)<Config>();
 

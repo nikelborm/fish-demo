@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import type {
+import {
   CreateSensorMeasurementDTO,
   FindSensorMeasurementsDTO,
   FlatSensorMeasurement,
 } from 'src/types';
 import { repo } from '../infrastructure';
+import { SensorMeasurementConstraintRepo } from '../infrastructure/repo';
 import { SensorMeasurementWSGateway } from './sensorMeasurements.gateway';
 
 @Injectable()
@@ -12,6 +13,7 @@ export class SensorMeasurementUseCase {
   constructor(
     private readonly sensorMeasurementRepo: repo.SensorMeasurementRepo,
     private readonly wsGateway: SensorMeasurementWSGateway,
+    private readonly sensorMeasurementConstraintRepo: SensorMeasurementConstraintRepo,
   ) {}
 
   async findManyWith(
@@ -35,6 +37,16 @@ export class SensorMeasurementUseCase {
     const insertedSensorMeasurement =
       await this.sensorMeasurementRepo.createOnePlain(sensorMeasurement);
     this.wsGateway.broadcastManyNew([insertedSensorMeasurement]);
-    return insertedSensorMeasurement;
+    const sensorParameterInstanceId =
+      CreateSensorMeasurementDTO.sensorParameterInstanceId;
+    const constraints =
+      await this.sensorMeasurementConstraintRepo.findAllBySensorParameterInstanceId(
+        sensorParameterInstanceId,
+      );
+    if (constraints.length > 0) {
+      return { insertedSensorMeasurement, constraints };
+    } else {
+      return insertedSensorMeasurement;
+    }
   }
 }
