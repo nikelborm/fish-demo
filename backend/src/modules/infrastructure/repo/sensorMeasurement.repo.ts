@@ -4,6 +4,7 @@ import {
   createManyPlain,
   createOnePlain,
   deleteEntityByIdentity,
+  findOnePlainByIdentity,
   updateManyPlain,
   updateManyWithRelations,
   updateOnePlain,
@@ -28,6 +29,11 @@ export class SensorMeasurementRepo {
       order: { recordedAt: 'desc' },
     });
   }
+
+  findOneById = async (
+    id: string,
+  ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
+    await findOnePlainByIdentity(this.repo)<Config>()({ id });
 
   async getLatestMeasurementsWhereSensorInstanceHas(
     reservoirId: number,

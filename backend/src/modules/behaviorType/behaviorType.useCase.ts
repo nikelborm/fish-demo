@@ -16,6 +16,7 @@ import { model, repo } from '../infrastructure';
 
 @Injectable()
 export class BehaviorTypeUseCase {
+  fishInfoRepo: any;
   constructor(private readonly behaviorTypeRepo: repo.BehaviorTypeRepo) {}
 
   async getOneById(id: number): Promise<repo.SelectedOnePlainBehaviorType> {
@@ -24,6 +25,21 @@ export class BehaviorTypeUseCase {
     if (!behaviorType)
       throw new NotFoundException(
         messages.repo.common.cantGetNotFoundById(id, 'behaviorType'),
+      );
+
+    return behaviorType;
+  }
+
+  async getOneByIdWithInfo(id: number): Promise<
+    repo.SelectedOnePlainFishInfo & {
+      fishInfo: repo.SelectedOnePlainFishInfo;
+    }
+  > {
+    const behaviorType = await this.fishInfoRepo.findOneByIdWithInfo(id);
+
+    if (!behaviorType)
+      throw new BadRequestException(
+        messages.repo.common.cantGetNotFoundById(id, 'event'),
       );
 
     return behaviorType;

@@ -17,6 +17,8 @@ import {
   BasicEventInfoWithIdDTO
 } from 'src/types';
 import { Repository } from 'typeorm';
+import type { EntityRepoMethodTypes } from 'src/types';
+import { Between, Repository } from 'typeorm';
 import { Event } from '../model';
 import { SelectedOnePlainEventType } from './eventType.repo';
 import { SelectedOnePlainReservoir } from './reservoir.repo';
@@ -41,15 +43,13 @@ export class EventRepo {
     id: number,
   ): Promise<
     | (RepoTypes['SelectedOnePlainEntity'] & {
-        eventType: SelectedOnePlainEventType
-      } & {
-        reservoir: SelectedOnePlainReservoir
+        eventType: SelectedOnePlainEventType;
+        reservoir: SelectedOnePlainReservoir;
       })
-      | null
-  > =>{
+    | null
+  > => {
     return await this.repo.findOne({
-      relations: { eventType: true,
-                  reservoir: true,},
+      relations: { eventType: true, reservoir: true },
       where: { id },
     });
   };
@@ -83,6 +83,20 @@ export class EventRepo {
     return insertedEvent;
   }
   createOneWithId = createOnePlain(this.repo)<Config>();
+
+  findByData = async (
+    createdAt: Date,
+  ): Promise<RepoTypes['SelectedOnePlainEntity'][] | null> => {
+    const startDate = new Date(createdAt);
+    startDate.setHours(0, 0, 0, 0);
+    const endDate = new Date(createdAt);
+    endDate.setHours(23, 59, 59, 999);
+    return await this.repo.find({
+      where: { createdAt: Between(startDate, endDate) },
+    });
+  };
+
+  
   createManyPlain = createManyPlain(this.repo)<Config>();
 
   updateManyPlain = updateManyPlain(this.repo)<Config>();

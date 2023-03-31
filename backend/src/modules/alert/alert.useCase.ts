@@ -27,6 +27,12 @@ export class AlertUseCase {
     return alert;
   }
 
+  async getOneByData(
+    createdAt: Date,
+  ): Promise<repo.SelectedOnePlainAlert[] | null> {
+    return await this.alertRepo.findByData(createdAt);
+  }
+
   async getOneByIdWithTypeAndReservoir(id: number): Promise<
     repo.SelectedOnePlainAlert & {
       alertType: repo.SelectedOnePlainAlertType;

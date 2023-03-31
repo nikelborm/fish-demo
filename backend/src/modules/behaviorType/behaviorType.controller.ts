@@ -9,6 +9,7 @@ import {
   CreateBehaviorTypeDTO,
   CreateOneBehaviorTypeResponse,
   GetOneBehaviorTypeByIdResponseDTO,
+  GetOneFishInfoByIdResponseDTO,
   UpdateBehaviorTypeDTO,
   UpdateOneBehaviorTypeResponse,
 } from 'src/types';
@@ -30,10 +31,14 @@ export class BehaviorTypeController {
   }
 
   @Get('/:behaviorTypeId')
-  async findOneBehaviorTypeById(
+  async findOneBehaviorTypeByIdWithInfo(
     @Param('behaviorTypeId', ParseIntPipe) behaviorTypeId: number,
-  ): Promise<GetOneBehaviorTypeByIdResponseDTO> {
-    const behaviorType = await this.behaviorTypeUseCase.getOneById(
+  ): Promise<
+    GetOneBehaviorTypeByIdResponseDTO & {
+      fishInfo: GetOneFishInfoByIdResponseDTO;
+    }
+  > {
+    const behaviorType = await this.behaviorTypeUseCase.getOneByIdWithInfo(
       behaviorTypeId,
     );
     return behaviorType;

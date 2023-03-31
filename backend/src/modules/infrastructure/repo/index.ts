@@ -21,3 +21,4 @@ export * from './taskTime.repo';
 export * from './taskToReservoir.repo';
 export * from './behavior.repo';
 export * from './alertType.repo';
+export * from './fishInfo.repo';

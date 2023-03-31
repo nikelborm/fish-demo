@@ -16,3 +16,4 @@ export * from './task';
 export * from './taskTime';
 export * from './behavior';
 export * from './alertType';
+export * from './taskToReservoir';
