@@ -1,14 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { Parser } from 'expr-eval';
+import { messages } from 'src/config';
+import { groupByKey } from 'src/tools';
 import {
   CreateSensorMeasurementDTO,
   FindSensorMeasurementsDTO,
   FlatSensorMeasurement,
-  SensorParameterValueType,
 } from 'src/types';
 import { repo } from '../infrastructure';
+import {
+  SensorMeasurement,
+  SensorMeasurementConstraint,
+} from '../infrastructure/model';
 import { SensorMeasurementConstraintRepo } from '../infrastructure/repo';
 import { SensorMeasurementWSGateway } from './sensorMeasurements.gateway';
-import { groupByKey } from 'src/tools';
 
 @Injectable()
 export class SensorMeasurementUseCase {
@@ -16,6 +25,9 @@ export class SensorMeasurementUseCase {
     private readonly sensorMeasurementRepo: repo.SensorMeasurementRepo,
     private readonly wsGateway: SensorMeasurementWSGateway,
     private readonly sensorMeasurementConstraintRepo: SensorMeasurementConstraintRepo,
+    private readonly sensorInstanceRepo: repo.SensorInstanceRepo,
+    private readonly alertRepo: repo.AlertRepo,
+    private readonly alertTypeRepo: repo.AlertTypeRepo,
   ) {}
 
   async findManyWith(
@@ -29,48 +41,36 @@ export class SensorMeasurementUseCase {
   ): Promise<FlatSensorMeasurement[]> {
     const insertedSensorMeasurements =
       await this.sensorMeasurementRepo.createManyPlain(sensorMeasurements);
-    const sensorParameterInstanceIds = sensorMeasurements.map(
-      (sensorMeasurement) => sensorMeasurement.sensorParameterInstanceId,
-    );
-    const uniqueSensorParameterInstanceIds = [
-      ...new Set(sensorParameterInstanceIds),
-    ];
+
     const constraints =
       await this.sensorMeasurementConstraintRepo.findAllBySensorParameterInstanceIds(
-        uniqueSensorParameterInstanceIds,
+        [
+          ...new Set(
+            sensorMeasurements.map(
+              (sensorMeasurement) =>
+                sensorMeasurement.sensorParameterInstanceId,
+            ),
+          ),
+        ],
       );
-    function satisfiesAllConstraints(
-      value: SensorParameterValueType,
-      constraintArr: typeof constraints,
-    ): boolean {
-      return true;
-    }
-
-    function createAlertForExtremeSensorMeasurement(...args: any[]): void {
-      return;
-    }
 
     const groupedConstraints = groupByKey(
       constraints,
       'sensorParameterInstanceId',
     );
-    for (const sensorMeasurement of sensorMeasurements) {
-      const filteredConstraints = groupedConstraints.get(
-        sensorMeasurement.sensorParameterInstanceId,
-      );
-      let doesValueSatisfyConstraints = false;
-      if (!filteredConstraints) {
-        doesValueSatisfyConstraints = true;
-      } else {
-        doesValueSatisfyConstraints = satisfiesAllConstraints(
-          sensorMeasurement.value,
+
+    await Promise.all(
+      insertedSensorMeasurements.map(async (sensorMeasurement) => {
+        const filteredConstraints = groupedConstraints.get(
+          sensorMeasurement.sensorParameterInstanceId,
+        );
+
+        await this.#validateSensorMeasurementAndCreateAlertInCaseOfProblem(
+          sensorMeasurement,
           filteredConstraints,
         );
-      }
-      if (!doesValueSatisfyConstraints) {
-        createAlertForExtremeSensorMeasurement();
-      }
-    }
+      }),
+    );
 
     this.wsGateway.broadcastManyNew(insertedSensorMeasurements);
     return insertedSensorMeasurements;
@@ -81,42 +81,115 @@ export class SensorMeasurementUseCase {
   ): Promise<FlatSensorMeasurement> {
     const insertedSensorMeasurement =
       await this.sensorMeasurementRepo.createOnePlain(sensorMeasurement);
+
     this.wsGateway.broadcastManyNew([insertedSensorMeasurement]);
-    const sensorParameterInstanceId =
-      sensorMeasurement.sensorParameterInstanceId;
+
     const constraints =
       await this.sensorMeasurementConstraintRepo.findAllBySensorParameterInstanceIds(
-        [sensorParameterInstanceId],
+        [sensorMeasurement.sensorParameterInstanceId],
       );
-    function satisfiesAllConstraints(
-      value: SensorParameterValueType,
-      constraintArr: typeof constraints,
-    ): boolean {
-      return true;
-    }
 
-    function createAlertForExtremeSensorMeasurement(...args: any[]): void {
-      return;
-    }
-    const groupedConstraints = groupByKey(
+    await this.#validateSensorMeasurementAndCreateAlertInCaseOfProblem(
+      insertedSensorMeasurement,
       constraints,
-      'sensorParameterInstanceId',
     );
-    const filteredConstraints = groupedConstraints.get(
-      sensorMeasurement.sensorParameterInstanceId,
-    );
-    let doesValueSatisfyConstraints = false;
-    if (!filteredConstraints) {
-      doesValueSatisfyConstraints = true;
-    } else {
-      doesValueSatisfyConstraints = satisfiesAllConstraints(
-        sensorMeasurement.value,
-        filteredConstraints,
-      );
-    }
-    if (!doesValueSatisfyConstraints) {
-      createAlertForExtremeSensorMeasurement();
-    }
+
     return insertedSensorMeasurement;
+  }
+
+  async #validateSensorMeasurementAndCreateAlertInCaseOfProblem(
+    sensorMeasurement: Required<
+      CreateSensorMeasurementDTO & Pick<SensorMeasurement, 'id'>
+    >,
+    constraintsWithTheSameParameterInstanceId:
+      | SensorMeasurementConstraint[]
+      | undefined,
+  ): Promise<void> {
+    if (
+      !constraintsWithTheSameParameterInstanceId ||
+      constraintsWithTheSameParameterInstanceId.length === 0
+    )
+      return;
+
+    const doesValueSatisfyConstraints = this.#satisfiesAllConstraints(
+      constraintsWithTheSameParameterInstanceId,
+      sensorMeasurement.value,
+    );
+
+    if (!doesValueSatisfyConstraints)
+      await this.#createAlertForExtremeSensorMeasurement(
+        sensorMeasurement.sensorParameterInstanceId,
+      );
+  }
+
+  #satisfiesAllConstraints(
+    constraints: SensorMeasurementConstraint[],
+    value: number | string,
+  ): boolean {
+    const isNormal = constraints.every(
+      (constraint: SensorMeasurementConstraint) =>
+        this.#satisfiesConstraint(+value, constraint),
+    );
+    return isNormal;
+  }
+
+  #satisfiesConstraint(
+    value: number,
+    constraint: SensorMeasurementConstraint,
+  ): boolean {
+    const parser = new Parser();
+    const expression = parser.parse(constraint.validationFormula);
+
+    const parameters = {
+      ...constraint.formulaParameters,
+      x: value, //! We accepted that x is reserved for values
+    };
+
+    const doesValueSatisfiesConstraint = expression.evaluate(
+      parameters,
+    ) as unknown;
+
+    if (typeof doesValueSatisfiesConstraint !== 'boolean')
+      throw new InternalServerErrorException(
+        messages.sensorMeasurementConstraints.doesNotReturnBoolean(
+          constraint.id,
+          parameters,
+        ),
+      );
+
+    return doesValueSatisfiesConstraint;
+  }
+
+  async #createAlertForExtremeSensorMeasurement(
+    sensorParameterInstanceId: number,
+  ): Promise<void> {
+    const sensorInstance =
+      await this.sensorInstanceRepo.getSensorInstanceBySensorParameterInstanceId(
+        sensorParameterInstanceId,
+      );
+
+    if (!sensorInstance)
+      throw new BadRequestException(
+        messages.repo.common.cantCreateFKDoNotExist('reservoir'),
+      );
+
+    const reservoir = sensorInstance.reservoir;
+
+    const alertTypeDescription = `Reservoir ${reservoir.name} require attention because sensor measurement does not satisfy some of the constraints`;
+
+    let alertType = await this.alertTypeRepo.findOneByExactDescription(
+      alertTypeDescription,
+    );
+
+    if (!alertType)
+      alertType = await this.alertTypeRepo.createOnePlain({
+        description: alertTypeDescription,
+      });
+
+    await this.alertRepo.createOnePlain({
+      reservoir_id: reservoir.id,
+      alert_type_id: alertType.id,
+      importance: 1,
+    });
   }
 }

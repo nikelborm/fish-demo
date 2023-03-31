@@ -38,6 +38,7 @@ export class SensorMeasurementConstraintRepo {
       },
     });
   };
+
   createOnePlain = createOnePlain(this.repo)<Config>();
   createManyPlain = createManyPlain(this.repo)<Config>();
 
