@@ -24,7 +24,7 @@ export class AlertController {
     return await this.alertUseCase.createAlert(createAlertDTO);
   }
 
-  @Get('/:alertFId')
+  @Get('/:alertId')
   @AuthorizedOnly()
   async getOneAlertByIdWithTypeAndReservoir(
     @Param('alertId', ParseIntPipe) alertId: number,
