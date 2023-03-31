@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddedFishInfo1680024075806 implements MigrationInterface {
-  name = 'AddedFishInfo1680024075806';
+export class Fix1680255373375 implements MigrationInterface {
+  name = 'Fix1680255373375';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
@@ -29,10 +29,6 @@ export class AddedFishInfo1680024075806 implements MigrationInterface {
       ADD "reservoir_id" integer NOT NULL
     `);
     await queryRunner.query(`
-      ALTER TABLE "reservoir"
-      ADD CONSTRAINT "FK_67270689b2cd8a0f416addd1e43" FOREIGN KEY ("fish_batch_id") REFERENCES "fish_batch"("fish_batch_id") ON DELETE NO ACTION ON UPDATE NO ACTION
-    `);
-    await queryRunner.query(`
       ALTER TABLE "behavior_type"
       ADD CONSTRAINT "FK_b83372356f7ddd656ca1c9a77da" FOREIGN KEY ("fish_info_id") REFERENCES "fish_info"("fish_info_id") ON DELETE NO ACTION ON UPDATE NO ACTION
     `);
@@ -55,9 +51,6 @@ export class AddedFishInfo1680024075806 implements MigrationInterface {
     `);
     await queryRunner.query(`
       ALTER TABLE "behavior_type" DROP CONSTRAINT "FK_b83372356f7ddd656ca1c9a77da"
-    `);
-    await queryRunner.query(`
-      ALTER TABLE "reservoir" DROP CONSTRAINT "FK_67270689b2cd8a0f416addd1e43"
     `);
     await queryRunner.query(`
       ALTER TABLE "behavior" DROP COLUMN "reservoir_id"
