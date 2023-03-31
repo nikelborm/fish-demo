@@ -25,6 +25,12 @@ export class EventUseCase {
     return event;
   }
 
+  async getOneByData(
+    createdAt: Date,
+  ): Promise<repo.SelectedOnePlainEvent[] | null> {
+    return await this.eventRepo.findByData(createdAt);
+  }
+
   async getOneByIdWithTypeAndReservoir(id: number): Promise<
     repo.SelectedOnePlainEvent & {
       eventType: repo.SelectedOnePlainEventType;

@@ -18,3 +18,4 @@ export * from './createOneOrManyTaskTimes.dto';
 export * from './createOneOrManyBehaviors.dto';
 export * from './createOneOrManyFishInfo.dto';
 export * from './updateOneFishInfo.dto';
+export * from './createOneOrManyTaskToReservoirs.dto';

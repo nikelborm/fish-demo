@@ -1,9 +1,11 @@
 import { Delete, Get, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
+import { ApiQuery } from '@nestjs/swagger';
 import {
   AccessEnum,
   AllowedFor,
   ApiController,
   AuthorizedOnly,
+  ParseDatePipe,
   ValidatedBody,
 } from 'src/tools';
 import {
@@ -15,6 +17,7 @@ import {
   GetOneEventByIdResponseDTO,
   GetOneEventTypeByIdResponseDTO,
   GetOneReservoirByIdResponseDTO,
+  GetOneEventForManyResponseDTO,
 } from 'src/types';
 import { EventUseCase } from './event.useCase';
 
@@ -31,6 +34,21 @@ export class EventController {
     return {
       events,
     };
+  }
+
+  @ApiQuery({
+    name: 'createdAt',
+    description: 'Created at date',
+    required: true,
+    type: Date,
+  })
+  @Get('/findEventByDate')
+  async findEventByData(
+    @Query('createdAt', ParseDatePipe)
+    createdAt: Date,
+  ): Promise<GetOneEventForManyResponseDTO[] | null> {
+    const event = await this.eventUseCase.getOneByData(createdAt);
+    return event;
   }
 
   @Get('/:eventId')

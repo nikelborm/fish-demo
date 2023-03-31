@@ -43,7 +43,10 @@ type RepoTypes = EntityRepoMethodTypes<
   {
     EntityName: 'TaskToReservoir';
 
-    RequiredToCreateAndSelectRegularPlainKeys: 'taskId' | 'reservoirId';
+    RequiredToCreateAndSelectRegularPlainKeys:
+      | 'taskId'
+      | 'reservoirId'
+      | 'userId';
 
     OptionalToCreateAndSelectRegularPlainKeys: null;
 

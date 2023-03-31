@@ -12,3 +12,4 @@ export * from './getOneOrManyTaskTimes.dto';
 export * from './getOneOrManyBehaviors.dto';
 export * from './getOneAlertType.dto';
 export * from './getOneFishInfo.dto';
+export * from './getOneOrManyTaskToReservoirs.dto';

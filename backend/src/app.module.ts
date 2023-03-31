@@ -23,6 +23,7 @@ import {
   TaskModule,
   TaskTimeModule,
   BehaviorModule,
+  TaskToReservoirModule,
 } from './modules';
 import { FishInfoModule } from './modules/fishInfo';
 
@@ -48,6 +49,7 @@ import { FishInfoModule } from './modules/fishInfo';
     TaskTimeModule,
     BehaviorModule,
     FishInfoModule,
+    TaskToReservoirModule,
   ],
   controllers: [MockDataController],
   providers: [...Object.values(MockServices)],
