@@ -11,25 +11,20 @@ import {
   updateOnePlain,
   updateOneWithRelations,
 } from 'src/tools';
-import {
-  CreateOneEventRequestDTO,
-  EntityRepoMethodTypes,
-  BasicEventInfoWithIdDTO
-} from 'src/types';
-import { Repository } from 'typeorm';
 import type { EntityRepoMethodTypes } from 'src/types';
+import { BasicEventInfoWithIdDTO, CreateOneEventRequestDTO } from 'src/types';
 import { Between, Repository } from 'typeorm';
+import { EventTypeRepo } from '.';
 import { Event } from '../model';
 import { SelectedOnePlainEventType } from './eventType.repo';
 import { SelectedOnePlainReservoir } from './reservoir.repo';
-import { EventTypeRepo } from '.';
 
 @Injectable()
 export class EventRepo {
   constructor(
     @InjectRepository(Event)
     private readonly repo: Repository<Event>,
-    private readonly eventTypeRepo: EventTypeRepo
+    private readonly eventTypeRepo: EventTypeRepo,
   ) {}
 
   getAll = getAllEntities(this.repo)<Config>();
@@ -55,33 +50,32 @@ export class EventRepo {
   };
 
   createOnePlain = async (
-    request: CreateOneEventRequestDTO
-    ): Promise <BasicEventInfoWithIdDTO> => {
+    request: CreateOneEventRequestDTO,
+  ): Promise<BasicEventInfoWithIdDTO> => {
     let idToInsert = 0;
-    const eventType = await this.eventTypeRepo.findOneByName(request.eventTypeName);
+    const eventType = await this.eventTypeRepo.findOneByName(
+      request.eventTypeName,
+    );
 
     if (!eventType) {
       const newEventType = await this.eventTypeRepo.createOnePlain({
-          name: request.eventTypeName,
-          description: 'not set',
-        }
-      );
+        name: request.eventTypeName,
+        description: 'not set',
+      });
       idToInsert = newEventType.id;
     } else {
       idToInsert = eventType.id;
     }
 
-    const insertedEvent = await this.createOneWithId(
-      {
-        eventTypeId: idToInsert,
-        completionTime: request.completionTime,
-        description: request.description,
-        reservoirId: request.reservoirId,
-        }
-    );
+    const insertedEvent = await this.createOneWithId({
+      eventTypeId: idToInsert,
+      completionTime: request.completionTime,
+      description: request.description,
+      reservoirId: request.reservoirId,
+    });
 
     return insertedEvent;
-  }
+  };
   createOneWithId = createOnePlain(this.repo)<Config>();
 
   findByData = async (
@@ -96,7 +90,6 @@ export class EventRepo {
     });
   };
 
-  
   createManyPlain = createManyPlain(this.repo)<Config>();
 
   updateManyPlain = updateManyPlain(this.repo)<Config>();
