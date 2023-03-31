@@ -8,8 +8,8 @@ import {
 } from 'class-validator';
 
 export class CreateOneEventRequestDTO {
-  @IsNumber()
-  eventTypeId!: number;
+  @IsString()
+  eventTypeName!: string;
 
   @Type(() => Date)
   @IsDate()

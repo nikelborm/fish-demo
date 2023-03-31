@@ -29,6 +29,11 @@ export class EventTypeRepo {
   ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
     await findOnePlainByIdentity(this.repo)<Config>()({ id });
 
+    findOneByName = async (
+      name: string,
+    ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
+      await this.repo.findOne({where: { name }});
+
   createOnePlain = createOnePlain(this.repo)<Config>();
   createManyPlain = createManyPlain(this.repo)<Config>();
 
