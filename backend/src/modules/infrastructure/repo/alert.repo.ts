@@ -12,7 +12,7 @@ import {
   updateOneWithRelations,
 } from 'src/tools';
 import type { EntityRepoMethodTypes } from 'src/types';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { Alert } from '../model';
 import { SelectedOnePlainAlertType } from './alertType.repo';
 import { SelectedOnePlainReservoir } from './reservoir.repo';
@@ -30,6 +30,18 @@ export class AlertRepo {
     id: number,
   ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
     await findOnePlainByIdentity(this.repo)<Config>()({ id });
+
+  findByData = async (
+    createdAt: Date,
+  ): Promise<RepoTypes['SelectedOnePlainEntity'][] | null> => {
+    const startDate = new Date(createdAt);
+    startDate.setHours(0, 0, 0, 0);
+    const endDate = new Date(createdAt);
+    endDate.setHours(23, 59, 59, 999);
+    return await this.repo.find({
+      where: { createdAt: Between(startDate, endDate) },
+    });
+  };
 
   findOneByIdWithAlertTypeAndReservoir = async (
     id: number,

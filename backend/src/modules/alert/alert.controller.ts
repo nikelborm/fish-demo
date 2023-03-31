@@ -40,6 +40,15 @@ export class AlertController {
     return alert;
   }
 
+  @Get('/:createdAt')
+  async findEventsByData(
+    @Param('createdAt')
+    createdAt: Date,
+  ): Promise<GetOneAlertByIdResponseDTO[] | null> {
+    const event = await this.alertUseCase.getOneByData(createdAt);
+    return event;
+  }
+
   // @Post('updateAlert')
   // async updateAlert(
   //   @ValidatedBody()

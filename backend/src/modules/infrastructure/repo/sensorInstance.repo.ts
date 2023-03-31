@@ -14,6 +14,7 @@ import {
 import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
 import { SensorInstance } from '../model';
+import { SelectedOnePlainReservoir } from './reservoir.repo';
 
 @Injectable()
 export class SensorInstanceRepo {
@@ -23,6 +24,38 @@ export class SensorInstanceRepo {
   ) {}
 
   getAll = getAllEntities(this.repo)<Config>();
+
+  async getSensorInstanceBySensorParameterInstanceId(
+    sensorParameterInstanceId: number,
+  ): Promise<
+    | (RepoTypes['SelectedOnePlainEntity'] & {
+        reservoir: SelectedOnePlainReservoir;
+      })
+    | null
+  > {
+    return await this.repo
+      .createQueryBuilder('sensorInstance')
+      .leftJoinAndSelect(
+        'sensorInstance.sensorParameterInstance',
+        'sensorParameterInstance',
+      )
+      .leftJoinAndSelect('sensorInstance.reservoir', 'reservoir')
+      .where('sensorParameterInstance.sensorParameterInstanceId = :id', {
+        id: sensorParameterInstanceId,
+      })
+      .select([
+        'sensorInstance.id',
+        'sensorInstance.createdAt',
+        'sensorInstance.updatedAt',
+        'reservoir.id',
+        'reservoir.createdAt',
+        'reservoir.updatedAt',
+        'reservoir.name',
+        'reservoir.fishCount',
+        'reservoir.fishBatchId',
+      ])
+      .getOne();
+  }
 
   findOneById = async (
     id: number,
