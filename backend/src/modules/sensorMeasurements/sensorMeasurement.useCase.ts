@@ -3,10 +3,12 @@ import {
   CreateSensorMeasurementDTO,
   FindSensorMeasurementsDTO,
   FlatSensorMeasurement,
+  SensorParameterValueType,
 } from 'src/types';
 import { repo } from '../infrastructure';
 import { SensorMeasurementConstraintRepo } from '../infrastructure/repo';
 import { SensorMeasurementWSGateway } from './sensorMeasurements.gateway';
+import { groupByKey } from 'src/tools';
 
 @Injectable()
 export class SensorMeasurementUseCase {
@@ -27,6 +29,49 @@ export class SensorMeasurementUseCase {
   ): Promise<FlatSensorMeasurement[]> {
     const insertedSensorMeasurements =
       await this.sensorMeasurementRepo.createManyPlain(sensorMeasurements);
+    const sensorParameterInstanceIds = sensorMeasurements.map(
+      (sensorMeasurement) => sensorMeasurement.sensorParameterInstanceId,
+    );
+    const uniqueSensorParameterInstanceIds = [
+      ...new Set(sensorParameterInstanceIds),
+    ];
+    const constraints =
+      await this.sensorMeasurementConstraintRepo.findAllBySensorParameterInstanceIds(
+        uniqueSensorParameterInstanceIds,
+      );
+    function satisfiesAllConstraints(
+      value: SensorParameterValueType,
+      constraintArr: typeof constraints,
+    ): boolean {
+      return true;
+    }
+
+    function createAlertForExtremeSensorMeasurement(...args: any[]): void {
+      return;
+    }
+
+    const groupedConstraints = groupByKey(
+      constraints,
+      'sensorParameterInstanceId',
+    );
+    for (const sensorMeasurement of sensorMeasurements) {
+      const filteredConstraints = groupedConstraints.get(
+        sensorMeasurement.sensorParameterInstanceId,
+      );
+      let doesValueSatisfyConstraints = false;
+      if (!filteredConstraints) {
+        doesValueSatisfyConstraints = true;
+      } else {
+        doesValueSatisfyConstraints = satisfiesAllConstraints(
+          sensorMeasurement.value,
+          filteredConstraints,
+        );
+      }
+      if (!doesValueSatisfyConstraints) {
+        createAlertForExtremeSensorMeasurement();
+      }
+    }
+
     this.wsGateway.broadcastManyNew(insertedSensorMeasurements);
     return insertedSensorMeasurements;
   }
@@ -38,15 +83,40 @@ export class SensorMeasurementUseCase {
       await this.sensorMeasurementRepo.createOnePlain(sensorMeasurement);
     this.wsGateway.broadcastManyNew([insertedSensorMeasurement]);
     const sensorParameterInstanceId =
-      CreateSensorMeasurementDTO.sensorParameterInstanceId;
+      sensorMeasurement.sensorParameterInstanceId;
     const constraints =
-      await this.sensorMeasurementConstraintRepo.findAllBySensorParameterInstanceId(
-        sensorParameterInstanceId,
+      await this.sensorMeasurementConstraintRepo.findAllBySensorParameterInstanceIds(
+        [sensorParameterInstanceId],
       );
-    if (constraints.length > 0) {
-      return { insertedSensorMeasurement, constraints };
-    } else {
-      return insertedSensorMeasurement;
+    function satisfiesAllConstraints(
+      value: SensorParameterValueType,
+      constraintArr: typeof constraints,
+    ): boolean {
+      return true;
     }
+
+    function createAlertForExtremeSensorMeasurement(...args: any[]): void {
+      return;
+    }
+    const groupedConstraints = groupByKey(
+      constraints,
+      'sensorParameterInstanceId',
+    );
+    const filteredConstraints = groupedConstraints.get(
+      sensorMeasurement.sensorParameterInstanceId,
+    );
+    let doesValueSatisfyConstraints = false;
+    if (!filteredConstraints) {
+      doesValueSatisfyConstraints = true;
+    } else {
+      doesValueSatisfyConstraints = satisfiesAllConstraints(
+        sensorMeasurement.value,
+        filteredConstraints,
+      );
+    }
+    if (!doesValueSatisfyConstraints) {
+      createAlertForExtremeSensorMeasurement();
+    }
+    return insertedSensorMeasurement;
   }
 }
