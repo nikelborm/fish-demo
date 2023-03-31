@@ -13,14 +13,13 @@ import {
 } from 'src/tools';
 import type { EntityRepoMethodTypes } from 'src/types';
 import { Repository } from 'typeorm';
-import { BehaviorType } from '../model';
-import { SelectedOnePlainFishInfo } from './fishInfo.repo';
+import { FishInfo } from '../model';
 
 @Injectable()
-export class BehaviorTypeRepo {
+export class FishInfoRepo {
   constructor(
-    @InjectRepository(BehaviorType)
-    private readonly repo: Repository<BehaviorType>,
+    @InjectRepository(FishInfo)
+    private readonly repo: Repository<FishInfo>,
   ) {}
 
   getAll = getAllEntities(this.repo)<Config>();
@@ -29,20 +28,6 @@ export class BehaviorTypeRepo {
     id: number,
   ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
     await findOnePlainByIdentity(this.repo)<Config>()({ id });
-
-  findOneByIdWithInfo = async (
-    id: number,
-  ): Promise<
-    | (RepoTypes['SelectedOnePlainEntity'] & {
-        fishInfo: SelectedOnePlainFishInfo;
-      })
-    | null
-  > => {
-    return await this.repo.findOne({
-      relations: { fishInfo: true },
-      where: { id },
-    });
-  };
 
   createOnePlain = createOnePlain(this.repo)<Config>();
   createManyPlain = createManyPlain(this.repo)<Config>();
@@ -58,13 +43,14 @@ export class BehaviorTypeRepo {
 }
 
 type RepoTypes = EntityRepoMethodTypes<
-  BehaviorType,
+  FishInfo,
   {
-    EntityName: 'BehaviorType';
+    EntityName: 'FishInfo';
     RequiredToCreateAndSelectRegularPlainKeys:
       | 'createdAt'
       | 'updatedAt'
       | 'name'
+      | 'behavior_id'
       | 'description';
     OptionalToCreateAndSelectRegularPlainKeys: null;
 
@@ -77,4 +63,10 @@ type RepoTypes = EntityRepoMethodTypes<
 
 type Config = RepoTypes['Config'];
 
-export type SelectedOnePlainBehaviorType = RepoTypes['SelectedOnePlainEntity'];
+export type OnePlainFishInfoToBeCreated =
+  RepoTypes['OnePlainEntityToBeCreated'];
+export type OnePlainFishInfoToBeUpdated =
+  RepoTypes['OnePlainEntityToBeUpdated'];
+export type OneFishInfoWithRelationsToBeUpdated =
+  RepoTypes['OneEntityWithRelationsToBeUpdated'];
+export type SelectedOnePlainFishInfo = RepoTypes['SelectedOnePlainEntity'];

@@ -1,5 +1,5 @@
 //
-import type { IBehavior } from '.';
+import type { IBehavior, IFishInfo } from '.';
 
 export class IBehaviorType {
   id!: number;
@@ -13,4 +13,6 @@ export class IBehaviorType {
   updatedAt!: Date;
 
   behaviors!: IBehavior[];
+
+  fishInfo!: IFishInfo;
 }

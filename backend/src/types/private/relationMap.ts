@@ -147,7 +147,8 @@ const RelationMapValue = {
   BehaviorType: {
     identityKeys: ['id'],
     relationToEntityNameMap: {
-      behavior: ['Behavior'],
+      behavior: 'Behavior',
+      fishInfo: 'FishInfo',
       // BehaviorType relationToEntityNameMap token
     },
   },
@@ -203,6 +204,13 @@ const RelationMapValue = {
     identityKeys: ['id'],
     relationToEntityNameMap: {
       // AlertType relationToEntityNameMap token
+    },
+  },
+  FishInfo: {
+    identityKeys: ['id'],
+    relationToEntityNameMap: {
+      behaviorType: 'BehaviorType',
+      // FishInfo relationToEntityNameMap token
     },
   },
   // RelationMapValue end token

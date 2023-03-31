@@ -21,3 +21,4 @@ export * from './taskTime.model';
 export * from './taskToReservoir.model';
 export * from './behavior.model';
 export * from './alertType.model';
+export * from './fishInfo.model';
