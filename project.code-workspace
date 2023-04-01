@@ -747,7 +747,7 @@
       "**/.github": true
     },
     "window.title": "${dirty}${activeEditorLong}${separator}${profileName}",
-    "peacock.color": "ffc845"
+    "peacock.color": "#704f02"
   },
   "launch": {
     "version": "0.2.0",
