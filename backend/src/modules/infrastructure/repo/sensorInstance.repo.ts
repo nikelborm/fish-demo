@@ -36,8 +36,8 @@ export class SensorInstanceRepo {
     return await this.repo
       .createQueryBuilder('sensorInstance')
       .leftJoinAndSelect(
-        'sensorInstance.sensorParameterInstance',
-        'sensorParameterInstance',
+        'sensorInstance.sensorParameterInstances',
+        'sensorParameterInstances',
       )
       .leftJoinAndSelect('sensorInstance.reservoir', 'reservoir')
       .where('sensorParameterInstance.sensorParameterInstanceId = :id', {
