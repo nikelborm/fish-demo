@@ -36,6 +36,15 @@ const rawMessages = {
     notSingleSuperAdminScope: `${messagesRepeating.moreThanOne} Super Admin access scope in the database`,
     cannotPromoteYourself: 'Cannot set additional role for yourself',
   },
+  sensorMeasurementConstraints: {
+    doesNotReturnBoolean: (
+      constraintId: number,
+      formulaParams: Record<string, any>,
+    ) =>
+      `Constraint with id={${constraintId}} did not return boolean when called with parameters ${JSON.stringify(
+        formulaParams,
+      )}`,
+  },
   types: {
     shouldBeDate: 'Validation failed. Date should be in ISO format',
   },

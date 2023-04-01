@@ -12,7 +12,7 @@ import {
   updateOneWithRelations,
 } from 'src/tools';
 import type { EntityRepoMethodTypes } from 'src/types';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { SensorMeasurementConstraint } from '../model';
 
 @Injectable()
@@ -28,6 +28,16 @@ export class SensorMeasurementConstraintRepo {
     id: number,
   ): Promise<RepoTypes['SelectedOnePlainEntity'] | null> =>
     await findOnePlainByIdentity(this.repo)<Config>()({ id });
+
+  findAllBySensorParameterInstanceIds = async (
+    sensorParameterInstanceIds: number[],
+  ): Promise<SensorMeasurementConstraint[]> => {
+    return await this.repo.find({
+      where: {
+        sensorParameterInstanceId: In(sensorParameterInstanceIds),
+      },
+    });
+  };
 
   createOnePlain = createOnePlain(this.repo)<Config>();
   createManyPlain = createManyPlain(this.repo)<Config>();
