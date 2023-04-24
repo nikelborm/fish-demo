@@ -75,9 +75,7 @@ export function AccountPagesWrapper({
                 routesOnlyForAuthedUsers[deepestPathPart as RoutesEnum]?.Extras;
               return Extras ? { extra: <Extras /> } : {};
             })()}
-            title={
-              routesOnlyForAuthedUsers[deepestPathPart as RoutesEnum]?.pageTitle
-            }
+            title="Данные по бассейну"
             subTitle={
               routesOnlyForAuthedUsers[deepestPathPart as RoutesEnum]
                 ?.description
