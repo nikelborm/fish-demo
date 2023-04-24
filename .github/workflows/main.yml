@@ -31,7 +31,8 @@ jobs:
           install: true
           # linux/amd64,linux/arm64
           platforms: linux/amd64
-      - name: 'Copy env file'
+      -
+        name: 'Copy env file'
         run: |
           cp -v ./env/prod.template.env ./env/prod.env
       -

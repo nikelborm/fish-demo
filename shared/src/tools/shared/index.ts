@@ -10,3 +10,4 @@ export * from './intersectionOfArrays';
 export * from './iterateInChunks';
 export * from './remapToIndexedObject';
 export * from './validate';
+export * from './isSuperset';
