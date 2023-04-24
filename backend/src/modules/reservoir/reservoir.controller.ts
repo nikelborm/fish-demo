@@ -9,8 +9,7 @@ import {
 import {
   CreateOneReservoirResponse,
   CreateReservoirDTO,
-  GetOneFishBatchByIdForReservoirResponseDTO,
-  ReservoirInfoWithBatchDTO,
+  FindOneReservoirByIdResponseDTO,
   UpdateOneReservoirResponse,
   UpdateReservoirDTO,
 } from 'src/types';
@@ -33,16 +32,11 @@ export class ReservoirController {
   @AuthorizedOnly()
   async getOneByIdWithFishBatch(
     @Param('reservoirIdWithBatch', ParseIntPipe) reservoirId: number,
-  ): Promise<
-    ReservoirInfoWithBatchDTO & {
-      fishBatch: GetOneFishBatchByIdForReservoirResponseDTO;
-    }
-  > {
-    const reservoir =
-      await this.reservoirUseCase.findOneReservoirByIdWithFishBatch(
-        reservoirId,
-      );
-    return reservoir;
+  ): Promise<FindOneReservoirByIdResponseDTO> {
+    const reservoir = await this.reservoirUseCase.findOneReservoirById(
+      reservoirId,
+    );
+    return { reservoir };
   }
 
   @Post('updateReservoir')

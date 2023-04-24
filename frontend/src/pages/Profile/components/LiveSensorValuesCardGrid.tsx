@@ -57,7 +57,13 @@ export function LiveSensorValuesCardGrid({
             key={id}
           >
             <RealTimeSensorName>
-              {shortName}
+              {shortName === 'o2' ? (
+                <>
+                  O<sub>2</sub>
+                </>
+              ) : (
+                shortName
+              )}
               {unit ? `, ${unit}` : ''}
             </RealTimeSensorName>
             <RealTimeSensorValue>

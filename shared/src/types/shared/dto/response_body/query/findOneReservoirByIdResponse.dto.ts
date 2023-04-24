@@ -59,8 +59,8 @@ export class ReservoirInfoDTO {
   @IsString()
   name!: string;
 
-  @NestedDTO(() => GetOneFishBatchByIdForReservoirResponseDTO)
-  fishBatch!: GetOneFishBatchByIdForReservoirResponseDTO;
+  // @NestedDTO(() => GetOneFishBatchByIdForReservoirResponseDTO)
+  // fishBatch!: GetOneFishBatchByIdForReservoirResponseDTO;
 
   @NestedArrayDTO(() => SensorInstanceInReservoir)
   sensorInstances!: SensorInstanceInReservoir[];

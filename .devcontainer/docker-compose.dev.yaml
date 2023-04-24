@@ -140,6 +140,38 @@ services:
     networks:
       pgcli-db-net-dev:
 
+  frontend-dev:
+    image: "${DOCKER_HUB_NICKNAME}/${DOCKER_REGISTRY_REPO_NAME}:${COMPOSE_PROJECT_NAME}-frontend-dev"
+    restart: unless-stopped
+    build:
+      context: ../
+      dockerfile: ./frontend/Dockerfile
+      target: dev_front
+      args:
+        - INNER_DEV_FRONT_LIVE_RELOAD_SERVER_PORT=${INNER_DEV_FRONT_LIVE_RELOAD_SERVER_PORT}
+    environment:
+      - TZ=${TZ}
+      - GENERATE_SOURCEMAP=${GENERATE_SOURCEMAP}
+      - DANGEROUSLY_DISABLE_HOST_CHECK=${DANGEROUSLY_DISABLE_HOST_CHECK}
+      - REACT_APP_NAME=${COMPOSE_PROJECT_NAME}
+      - TSC_WATCHFILE=UseFsEvents
+    volumes:
+      - type: bind
+        source: ../frontend/src
+        target: /app/src
+        consistency: delegated
+      - type: bind
+        source: ../shared/src/types/shared
+        target: /app/src/types/shared
+        consistency: delegated
+      - type: bind
+        source: ../shared/src/tools/shared
+        target: /app/src/tools/shared
+        consistency: delegated
+    networks:
+      nginx-front-net-dev:
+      vscode-front-net-dev:
+
 
 networks:
   nginx-front-net-dev: {}
@@ -161,35 +193,3 @@ networks:
   vscode-back-net-dev: {}
   vscode-db-net-dev: {}
   vscode-front-net-dev: {}
-
-# frontend-dev:
-#   image: "${DOCKER_HUB_NICKNAME}/${DOCKER_REGISTRY_REPO_NAME}:${COMPOSE_PROJECT_NAME}-frontend-dev"
-#   restart: unless-stopped
-#   build:
-#     context: ../
-#     dockerfile: ./frontend/Dockerfile
-#     target: dev_front
-#     args:
-#       - INNER_DEV_FRONT_LIVE_RELOAD_SERVER_PORT=${INNER_DEV_FRONT_LIVE_RELOAD_SERVER_PORT}
-#   environment:
-#     - TZ=${TZ}
-#     - GENERATE_SOURCEMAP=${GENERATE_SOURCEMAP}
-#     - DANGEROUSLY_DISABLE_HOST_CHECK=${DANGEROUSLY_DISABLE_HOST_CHECK}
-#     - REACT_APP_NAME=${COMPOSE_PROJECT_NAME}
-#     - TSC_WATCHFILE=UseFsEvents
-#   volumes:
-#     - type: bind
-#       source: ../frontend/src
-#       target: /app/src
-#       consistency: delegated
-#     - type: bind
-#       source: ../shared/src/types/shared
-#       target: /app/src/types/shared
-#       consistency: delegated
-#     - type: bind
-#       source: ../shared/src/tools/shared
-#       target: /app/src/tools/shared
-#       consistency: delegated
-#   networks:
-#     nginx-front-net-dev:
-#     vscode-front-net-dev:
