@@ -66,7 +66,7 @@ export function Profile() {
       <video
         loop
         autoPlay
-        src="/IPCAM_2023-01-30-15-25-53.mp4"
+        src="/video.mp4"
         style={{
           width: '100%',
           height: '100%',
