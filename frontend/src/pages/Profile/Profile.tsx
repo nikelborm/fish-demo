@@ -63,17 +63,28 @@ export function Profile() {
 
   return (
     <MainWrapper>
-      <video
-        loop
-        autoPlay
-        src="/video.mp4"
+      <div
         style={{
           width: '100%',
           height: '100%',
           border: 'none',
           gridArea: '1 / 1 / 2 / 2',
+          display: 'flex',
         }}
-      />
+      >
+        <video
+          loop
+          autoPlay
+          src="/video.mp4"
+          style={{
+            maxWidth: '100%',
+            margin: '0 auto',
+            maxHeight: '100%',
+            border: 'none',
+            // gridArea: '1 / 1 / 2 / 2',
+          }}
+        />
+      </div>
       {/* <div style={{ backgroundColor: 'red' }}>asd</div> */}
 
       <img
