@@ -14,14 +14,15 @@ export function SensorMeasurementPlot({
   min?: number;
   max?: number;
 }) {
-  const dates = measurementsByOneSensor.map(({ recordedAt }) => {
-    const dateModified = new Date(recordedAt);
-    dateModified.setHours(recordedAt.getHours() + 13);
-    dateModified.setMinutes(recordedAt.getMinutes() + 7);
-    // console.log('date.getHours(): ', dateModified.getHours());
-    // console.log('dateModified: ', dateModified);
-    return dateModified;
-  });
+  // const dates = measurementsByOneSensor.map(({ recordedAt }) => {
+  //   const dateModified = new Date(recordedAt);
+  //   dateModified.setHours(recordedAt.getHours() + 13);
+  //   dateModified.setMinutes(recordedAt.getMinutes() + 7);
+  //   // console.log('date.getHours(): ', dateModified.getHours());
+  //   // console.log('dateModified: ', dateModified);
+  //   return dateModified;
+  // });
+  const dates = measurementsByOneSensor.map(({ recordedAt }) => recordedAt);
   const datesNumbers = dates.map((e) => e.getTime());
   const maxDate = new Date(Math.max(...datesNumbers));
   const minDate = new Date(Math.min(...datesNumbers));

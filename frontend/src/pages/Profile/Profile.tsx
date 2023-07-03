@@ -61,7 +61,7 @@ export function Profile() {
     .filter(({ sensorParameterInstanceId }) => sensorParameterInstanceId === 2)
     .map((measurement) => ({
       ...measurement,
-      value: +measurement.value * 100,
+      value: +measurement.value,
     }));
 
   return (
