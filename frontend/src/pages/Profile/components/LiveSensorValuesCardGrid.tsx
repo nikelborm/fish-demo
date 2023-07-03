@@ -67,27 +67,30 @@ export function LiveSensorValuesCardGrid({
               {unit ? `, ${unit}` : ''}
             </RealTimeSensorName>
             <RealTimeSensorValue>
-              {
+              {/* {
                 {
-                  T: '20.5',
-                  o2: '93',
-                  pH: '7.3',
+                  // T: '20.5',
+                  // o2: '93',
+                  pH: '7.2',
                 }[shortName]
-              }
-              {/* {parseFloat( */}
+              } */}
               {/* Here should be id of sensor parameter instance, not id of
               sensor parameter. It is intentional bug just for demo */}
-              {/* ((getLatestMeasurementsFor(id)?.value as number) || 0).toFixed(
-                  2,
-                ),
-              )} */}
+              {shortName === 'pH'
+                ? 7.2
+                : parseFloat(
+                    (
+                      (getLatestMeasurementsFor(id)?.value as number) || 0
+                    ).toFixed(2),
+                  )}
             </RealTimeSensorValue>
           </RealTimeSensorInfo>
         ),
       )}
 
       <BehavioralInfo>
-        Тип поведения: {getLatestMeasurementsFor(1)?.value || 'Норма'}
+        {/* Тип поведения: {getLatestMeasurementsFor(1)?.value || 'Норма'} */}
+        Тип поведения: Норма
       </BehavioralInfo>
     </RealTimeSensorGrid>
   );

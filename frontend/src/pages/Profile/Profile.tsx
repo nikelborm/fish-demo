@@ -4,8 +4,11 @@ import { useParams } from 'react-router';
 import { remapToIndexedObject } from 'tools';
 import { SensorParameterInstanceInReservoir } from 'types';
 // import { useFishRecognitionVideoStream } from './hooks';
-import { dashboard } from 'assets';
-import { LiveSensorValuesCardGrid, MainWrapper } from './components';
+import {
+  LiveSensorValuesCardGrid,
+  MainWrapper,
+  SensorMeasurementPlot,
+} from './components';
 
 export function Profile() {
   const reservoirId = parseInt(useParams().reservoirId ?? '0', 10);
@@ -72,53 +75,43 @@ export function Profile() {
           display: 'flex',
         }}
       >
-        <video
-          loop
-          autoPlay
-          src="/video.mp4"
+        <iframe
+          src="http://myrena-fish.ru:8889/recoded/"
+          title="realtime video"
           style={{
-            maxWidth: '100%',
             margin: '0 auto',
-            maxHeight: '100%',
+            aspectRatio: '795/720',
             border: 'none',
             // gridArea: '1 / 1 / 2 / 2',
           }}
         />
-      </div>
-      {/* <div style={{ backgroundColor: 'red' }}>asd</div> */}
+        {/* <video
+          loop
+          autoPlay
+          src="/video.mp4"
 
-      <img
-        src={dashboard}
-        alt="dashboard"
-        style={{
-          width: '100%',
-          height: '100%',
-          border: 'none',
-          gridArea: '1 / 2 / 3 / 3',
-        }}
-        title="superset experiment"
-        // src="http://81.200.147.139:8088/superset/dashboard/p/M5yWz7EGoa4/"
-      />
-      {/* <SensorMeasurementPlot
+        /> */}
+      </div>
+      <SensorMeasurementPlot
         title="Кислород (%)"
         measurementsByOneSensor={o2Measurements}
-        color="blue"
+        color="#053565"
         min={80}
         max={120}
-      /> */}
+      />
       <LiveSensorValuesCardGrid
         reservoirId={reservoirId}
         abstractSensorsMentionedInReservoir={
           abstractSensorsMentionedInReservoir
         }
       />
-      {/* <SensorMeasurementPlot
+      <SensorMeasurementPlot
         title="Температура (°C)"
         color="red"
         min={20}
         max={40}
         measurementsByOneSensor={tempMeasurements}
-      /> */}
+      />
     </MainWrapper>
   );
 }

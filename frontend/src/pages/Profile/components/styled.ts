@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { mockVideoSrc2 } from 'assets';
 
 export const RealTimeSensorGrid = styled.div`
+  --brand-color: #053565;
   display: grid;
   width: 100%;
   gap: 0px;
@@ -16,8 +17,9 @@ export const RealTimeSensorInfo = styled.div<{ invert?: boolean }>`
   border-radius: 15px;
   width: 170px;
   height: 180px;
-  color: ${(props) => (props.invert ? 'white' : '#5aa7ff')};
-  background-color: ${(props) => (!props.invert ? 'white' : '#5aa7ff')};
+  color: ${(props) => (props.invert ? 'white' : 'var(--brand-color)')};
+  background-color: ${(props) =>
+    !props.invert ? 'white' : 'var(--brand-color)'};
   font-weight: 700;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
   border-top: 1px solid #eee;
@@ -32,8 +34,9 @@ export const BehavioralInfo = styled.div<{ invert?: boolean }>`
   height: 60px;
   grid-column: 1 / -1;
   font-size: 26px;
-  color: ${(props) => (props.invert ? 'white' : '#5aa7ff')};
-  background-color: ${(props) => (!props.invert ? 'white' : '#5aa7ff')};
+  color: ${(props) => (props.invert ? 'white' : 'var(--brand-color)')};
+  background-color: ${(props) =>
+    !props.invert ? 'white' : 'var(--brand-color)'};
   font-weight: 700;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
   border-top: 1px solid #eee;
