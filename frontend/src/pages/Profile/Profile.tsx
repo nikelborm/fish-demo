@@ -96,6 +96,7 @@ export function Profile() {
         /> */}
       </div>
       <SensorMeasurementPlot
+        id="o2plot"
         title="Кислород (%)"
         measurementsByOneSensor={o2Measurements}
         color="#053565"
@@ -109,6 +110,7 @@ export function Profile() {
         }
       />
       <SensorMeasurementPlot
+        id="tempplot"
         title="Температура (°C)"
         color="red"
         min={20}

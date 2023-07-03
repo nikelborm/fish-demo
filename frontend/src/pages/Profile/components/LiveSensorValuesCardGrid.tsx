@@ -1,8 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { Socket } from 'socket.io-client';
 import { getWsMessageValidator, useSocket } from 'tools';
-import { FlatSensorMeasurement, ISensorMeasurement } from 'types';
-import { useQueryClient } from 'react-query';
+import { ISensorMeasurement } from 'types';
 import { useLatestMeasurementsStore } from '../hooks';
 import {
   BehavioralInfo,
@@ -21,7 +20,6 @@ export function LiveSensorValuesCardGrid({
 }) {
   const { getLatestMeasurementsFor, setNewLatestMeasurements } =
     useLatestMeasurementsStore();
-  const client = useQueryClient();
 
   const onConnect = useCallback(
     (socket: Socket) => {
@@ -37,19 +35,28 @@ export function LiveSensorValuesCardGrid({
     const reactToMeasurements = (messages: any[]) => {
       const manyNewMeasurements = messages.map(validateAndTransformMeasurement);
       setNewLatestMeasurements(manyNewMeasurements);
-      client.setQueryData(
-        ['sensor_measurements'],
-        (old: FlatSensorMeasurement[] | undefined) => [
-          ...(old || []),
-          ...(manyNewMeasurements as FlatSensorMeasurement[]),
-        ],
-      );
+      manyNewMeasurements.forEach((e) => {
+        const update = {
+          x: [[new Date(e.recordedAt)]],
+          y: [[e.value]],
+        };
+        if (e.sensorParameterInstanceId === 1) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore asd
+          void window.Plotly.extendTraces('tempplot', update, [0]);
+        }
+        if (e.sensorParameterInstanceId === 2) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore asd
+          void window.Plotly.extendTraces('o2plot', update, [0]);
+        }
+      });
     };
     return {
       many: reactToMeasurements,
       latest: reactToMeasurements,
     };
-  }, [setNewLatestMeasurements, client]);
+  }, [setNewLatestMeasurements]);
 
   useSocket({
     namespace: '/sensorMeasurement',

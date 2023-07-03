@@ -5,12 +5,14 @@ export function SensorMeasurementPlot({
   measurementsByOneSensor,
   title,
   color,
+  id,
   min,
   max,
 }: {
   measurementsByOneSensor: FlatSensorMeasurement[];
   title: string;
   color: string;
+  id: string;
   min?: number;
   max?: number;
 }) {
@@ -31,6 +33,7 @@ export function SensorMeasurementPlot({
   const minValue = Math.min(...values);
   return (
     <Plot
+      divId={id}
       data={[
         {
           type: 'scatter',
