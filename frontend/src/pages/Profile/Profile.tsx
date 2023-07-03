@@ -16,8 +16,10 @@ export function Profile() {
   const { isSuccess, sensorMeasurements } = useSensorsMeasurementsData({
     reservoirId,
   });
+
   const { reservoir } = useReservoirInfo(reservoirId);
   if (!reservoir) return <div>wait</div>;
+
   const abstractSensorsMentionedInReservoir = remapToIndexedObject(
     reservoir.sensorInstances.map(
       ({
@@ -33,6 +35,7 @@ export function Profile() {
       }),
     ),
   );
+
   console.log(abstractSensorsMentionedInReservoir);
   const mappedSensorParameterInstanceMap: Record<
     number,

@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { Socket } from 'socket.io-client';
 import { getWsMessageValidator, useSocket } from 'tools';
-import { ISensorMeasurement } from 'types';
+import { FlatSensorMeasurement, ISensorMeasurement } from 'types';
+import { useQueryClient } from 'react-query';
 import { useLatestMeasurementsStore } from '../hooks';
 import {
   BehavioralInfo,
@@ -20,6 +21,7 @@ export function LiveSensorValuesCardGrid({
 }) {
   const { getLatestMeasurementsFor, setNewLatestMeasurements } =
     useLatestMeasurementsStore();
+  const client = useQueryClient();
 
   const onConnect = useCallback(
     (socket: Socket) => {
@@ -31,15 +33,23 @@ export function LiveSensorValuesCardGrid({
     [reservoirId],
   );
 
-  const handlers = useMemo(
-    () => ({
-      many: (messages) =>
-        setNewLatestMeasurements(messages.map(validateAndTransformMeasurement)),
-      latest: (messages) =>
-        setNewLatestMeasurements(messages.map(validateAndTransformMeasurement)),
-    }),
-    [setNewLatestMeasurements],
-  );
+  const handlers = useMemo(() => {
+    const reactToMeasurements = (messages: any[]) => {
+      const manyNewMeasurements = messages.map(validateAndTransformMeasurement);
+      setNewLatestMeasurements(manyNewMeasurements);
+      client.setQueryData(
+        ['sensor_measurements'],
+        (old: FlatSensorMeasurement[] | undefined) => [
+          ...(old || []),
+          ...(manyNewMeasurements as FlatSensorMeasurement[]),
+        ],
+      );
+    };
+    return {
+      many: reactToMeasurements,
+      latest: reactToMeasurements,
+    };
+  }, [setNewLatestMeasurements, client]);
 
   useSocket({
     namespace: '/sensorMeasurement',
