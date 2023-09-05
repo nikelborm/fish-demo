@@ -66,7 +66,15 @@ jobs:
           key: ${{ secrets.SSH_DEPLOYMENT_SERVER_PRIVATE_KEY }}
           port: 22
           script: |
+            # mkdir -p /home/nikel/fish-demo
             cd /home/nikel/fish-demo
+            # git init
             git pull
+            # curl -o ./docker-compose.yaml https://raw.githubusercontent.com/nikelborm/fish-demo/main/docker-compose.yaml
+            # curl -o ./env/prod.template.env https://raw.githubusercontent.com/nikelborm/fish-demo/main/env/prod.template.env
+            # curl -o ./env/dev.template.env https://raw.githubusercontent.com/nikelborm/fish-demo/main/env/dev.template.env
+            # todo for loading infrastructure and especially migrations (because obviously backend needs them or insert this shit into a service container where it belongs)
+            # currently we have to have entire repo present instead of only loading env.template files and compose.yaml
+            # git clone --depth 1 git@github.com:nikelborm/fish-demo.git --branch main --single-branch
             DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose --env-file ./env/prod.env -f ./docker-compose.yaml pull
             DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose --env-file ./env/prod.env -f ./docker-compose.yaml up --no-build --pull always --remove-orphans --force-recreate -d
