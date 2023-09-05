@@ -83,7 +83,8 @@ export function Profile() {
           title="realtime video"
           style={{
             margin: '0 auto',
-            aspectRatio: '795/720',
+            // aspectRatio: '795/720',
+            aspectRatio: '1280/720',
             border: 'none',
             // gridArea: '1 / 1 / 2 / 2',
           }}
